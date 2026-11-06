@@ -305,14 +305,34 @@ of racks as a water buffer (+41 kg/m^2 of water). Result: **189 MW** (food **10.
 lights and fans ~10.1, microbes, fungi, dairy and algae 0.5), crops **78%** of kcal on **55 m^2**
 of racks a person (59 with the gardens), protein **2.5 g/kg/day**; 19.4 million t.
 
-## Next (pass 6)
+## Pass 6 (2026-11-06): the active shield, computed
 
-1. **cortenforge-cfsem: the active shield** (coils, field, forces, stored energy -> structure
-   mass), the only option that could cut the 18.5 Mt water shield several times; then the
-   collider's dipoles round the ring and the hospital's MRI magnet.
-2. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
+Built in cortenforge-cfsem as `projects/active-shield` (README there): a confined toroidal field
+between two windings round the tube, cfsem's oriented-loop field, stored energy and forces (15
+checks against closed forms), cosmic-ray transmission by backtracing, a free-space dose model
+checked against Ambroglini et al. 2016, and sizing.
+
+- Half the cosmic rays get through at ~1.1 x c B d; thicker, weaker shells are sharper and store
+  less energy (100 T m: 1.04e15 J at d = 10 m, 3.10e14 at d = 40 m).
+- **A magnet + water hybrid is ~3x lighter than water alone**: 150-200 T m with a 40-60 m shell
+  plus ~0.8-1.2 t/m^2 of water, 5.6-5.8 Mt against 18.6 Mt for 10 mSv/yr.
+  `habitat.shield.active_mass_per_area` 1.1 -> **1.23 t/m^2** and `active_residual` 0.5 -> **1.24**.
+- Its costs: **~131 MW of cryocoolers** (as much as the ship uses now), ~7e14 J stored (a
+  quench hazard), a structure whose virial factor Q (3 with ties, ~10 as hoops) needs a stress
+  solution, and a transport calculation for the secondaries (x2 assumed).
+- No drag on the spinning hull (the field is axisymmetric); leakage under 0.07 mT at the habitat
+  with 2,000+ turns; solar particle events stopped outright.
+
+## Next (pass 7)
+
+1. **Jon's call on the shield**: water (18.5 Mt, passive, simple) or the magnet + water hybrid
+   (~5.8 Mt, ~131 MW, cryogenics and a quench to manage).
+2. **cortenforge-cfsem: the active shield, next steps**: transport for the secondaries, the
+   support structure's stresses, quench protection and the cryogenic budget; then the collider's
+   dipoles round the ring and the hospital's MRI magnet.
+3. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
    water gives 0.112 kg of H2 a kg), moon flybys in the Jupiter and Saturn systems.
-3. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
+4. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
    enough", Kiss 2014), O'Neill cylinders; heat pumps on the habitat radiators; the lifelong
    ceiling (VO2max falls ~10% a decade even in trained people, Tanaka & Seals 2008; lifelong
    exercisers at ~75 keep about 1.5x the VO2max of sedentary peers, Gries 2018).

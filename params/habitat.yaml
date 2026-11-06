@@ -136,19 +136,19 @@ shield:
       conf: "medium"
       source: "derived from Table 2: 1 / ln(22.8 / 14.5) = 2.21 (10 -> 11 t/m^2), 2.30 (9 -> 10), 2.51 (8 -> 9)"
   active_mass_per_area:
-    value: 1.1
-    low: 0.4
-    high: 6
-    unit: t/m^2 of superconducting magnet and structure for a ~30 GV cutoff (an option)
+    value: 1.23
+    low: 0.85
+    high: 3.9
+    unit: t/m^2 of superconducting magnet and structure, over the habitat's shield area (an option)
     conf: "low"
-    source: "derived (pass 3 researcher) from stored energy (B d)^2 A / (2 mu0 d) at ~100 T m and a 20 m field depth, structure mass >= Q (rho / sigma) E: 0.9-13 Mt of structure + ~0.18 Mt of conductor over the shield's area; checked against SP-413 ch. 4's 'structural mass of about 10 kt' for a 0.5 GeV/nucleon cutoff, which it rejected: 'the structural mass required to resist the magnetic forces between superconducting coils precludes this design'. SR2S: 'At 100 Tm, the field represents 70% of the observed dose reduction' (Ambroglini et al. 2016). Only SP-413 studied one at settlement scale"
+    source: "computed in cortenforge-cfsem projects/active-shield (`size`, 2026-11-06): a confined toroidal field between windings at 75 and 115 m round the tube, 150 T m (3.75 T), half the cosmic rays stopped below 44.5 GV; stored 6.97e14 J; REBCO at 1,000 A/mm^2 ('Record JE values for commercial wires of over 1000 A/mm2 at 20 K, 20 T', Molodyk et al. 2021) 0.16 Mt; carbon fibre at 1,200 MPa, Q = 3 (virial M >= rho E / sigma) 2.70 Mt; 2.86 Mt over 2.326e6 m^2. Range: Q 2-10 (windings as hoops only: ~10). Costs not in the mass: ~131 MW of cryocoolers for the inner winding's heat leak (1.25 W/m^2 at 43 W/W, judgement) and a quench hazard (~170 kt of TNT stored); leakage at the habitat < 0.07 mT with 2,000+ turns; the field is axisymmetric, so no drag on the spinning hull"
   active_residual:
-    value: 0.5
-    low: 0.2
-    high: 1.3
-    unit: t/m^2 of hydrogen-rich passive shield still needed with an active shield
+    value: 1.24
+    low: 0.5
+    high: 2.1
+    unit: t/m^2 of water still needed behind the active shield for the dose target
     conf: "low"
-    source: "judgement between Clowdsley 2021 ('Do not add mass to go beyond 20 g/cm2', 0.2 t/m^2) and SP-413 ch. 4 ('Only the addition of shielding to an extent of 1.3 t/m^2 could reduce the dosage'); 'An active deflector shield system would never be a replacement for passive shielding' (Bamford et al. 2014). A storm shelter (~0.3 t/m^2 of water, ~1.4 kt for 10,000) would be needed with it"
+    source: "computed in cortenforge-cfsem projects/active-shield (`size`): the 150 T m magnet lets through ~9 mSv/yr of free-space dose equivalent as primaries (BPH00 spectrum, force field at 420 MV, Bethe, ICRP 60 Q; free space checks at 129 cSv/yr skin against Ambroglini et al. 2016's 117.7), ~19 with x2 for secondaries (judgement); water at 2.01 t/m^2 an e-fold brings it to 10 mSv/yr: 1.24 t/m^2. Low: no secondaries (0.5, the thin layer kept anyway); high: x3. Published magnets (4-23 T m) reach up to ~10x below free space; this needs ~100x, so it pairs with water"
   gap:
     value: 1.5
     low: 1
