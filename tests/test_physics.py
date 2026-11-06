@@ -148,3 +148,48 @@ def test_box_tube_radius_and_rocket():
     prop = ph.rocket_propellant(m_f, dv, isp)
     assert isp * G0 * np.log((m_f + prop) / m_f) == pytest.approx(dv, rel=1e-12)
     assert ph.rocket_propellant(m_f, 0.0, isp) == 0.0
+
+
+def test_ground_area_reproduces_sp413():
+    # SP-413: 67 m^2 of projected area a person for 10,000 on a 65 m tube whose outer floor is
+    # 894 m out; the widest ground (across the tube's centre, inside the 0.9-1 g band) is
+    # 2 r x 2 pi (R - r).
+    R = ph.spin_radius(1.0, 1.0)
+    g = ph.ground_area(R, 65.0, 0.1)
+    assert g == pytest.approx(2 * 65.0 * 2 * np.pi * (R - 65.0))
+    assert g == pytest.approx(10_000 * 67, rel=0.02)
+    # a band too shallow to reach the centre: the ground sits at the band's top, narrower
+    d = 0.05 * R
+    assert ph.ground_area(R, 65.0, 0.05) == pytest.approx(2 * np.sqrt(d * (130 - d)) * 2 * np.pi * (R - d))
+    # the solver finds the smallest tube that holds both
+    r = ph.tube_radius_for(R, 0.1, 1.7e7, 10_000 * 67, 30.0, 200.0)
+    assert ph.ground_area(R, r, 0.1) == pytest.approx(10_000 * 67, rel=1e-6)
+    assert ph.band_volume(R, r, 0.1) >= 1.7e7
+    assert ph.tube_radius_for(R, 0.1, 1.0, 1.0, 30.0, 200.0) == pytest.approx(30.0)  # r_min binds
+
+
+def test_edelbaum():
+    assert ph.edelbaum_dv(29.78, 24.07, 0.0) == pytest.approx(5.71)
+    v, di = 7.5, 1e-3
+    assert ph.edelbaum_dv(v, v, di) == pytest.approx(0.5 * np.pi * v * di, rel=1e-6)
+    assert ph.circular_speed(398600.4418, 6378.137) == pytest.approx(7.905, abs=1e-3)
+
+
+def test_collider_energy_lhc():
+    # LHC design: 8.33 T dipoles bending on 2,804 m give 7 TeV protons.
+    assert ph.collider_energy_tev(8.33, 2804.0) == pytest.approx(7.0, abs=0.01)
+
+
+def test_orbit_helpers():
+    # LEO (300 km) to GEO, coplanar Hohmann: the textbook ~3.89 km/s
+    assert ph.hohmann_dv(398600.4418, 6678.0, 42164.0) == pytest.approx(3.89, abs=0.01)
+    # same node: the planes differ by the difference of inclinations
+    d = ph.relative_inclination(np.radians(1.85), 0.5, np.radians(10.6), 0.5)
+    assert np.degrees(d) == pytest.approx(10.6 - 1.85)
+    # Mars to Ceres with their nodes (49.56, 80.2 deg): ~9.05 deg
+    d = ph.relative_inclination(*np.radians([1.85, 49.56, 10.6, 80.2]))
+    assert np.degrees(d) == pytest.approx(9.05, abs=0.02)
+    # the spiral factor against MIT 16.522's table: 0.9245 at eps 1e-4, 0.8657 at 1e-3
+    g = 398600.0 / 7000.0**2 * 1e3  # m/s^2 at 7,000 km
+    assert ph.spiral_factor(1e-4 * g, 398600.0, 7000.0, 0.754) == pytest.approx(0.9245, abs=5e-4)
+    assert ph.spiral_factor(1e-3 * g, 398600.0, 7000.0, 0.754) == pytest.approx(0.8657, abs=5e-4)

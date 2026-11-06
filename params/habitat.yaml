@@ -18,18 +18,25 @@ rpm:
   source: "Jon's decision (2026-11-06): 1 rpm, the hockey ship's spin; faster spin worsens skating along the ring (at 2 rpm a skater at 11 m/s weighs 1.52 with the spin, 0.58 against), slower needs a far bigger, heavier ship. Comfort limits: SP-413 ch. 3: '1 rpm is set as the upper limit of permissible rotation rate for the principal living quarters'; Globus & Hall 2015: 'Up to 2 rpm should be no problem for residents'. Up to 4 rpm may be acceptable with training for visitors (Globus & Hall 2015), but nothing covers children or lifetimes"
 gravity_band:
   value: 0.1
-  low: 0.05
-  high: 0.2
+  low: 0.06
+  high: 0.15
   unit: fraction of floor gravity spanned by the lived-in band (floors from R (1 - band) to R)
   conf: "low"
-  source: "SP-413 ch. 3 sets the band at 0.9-1 g and calls the 10% range arbitrary; habitable volume is where 'the pseudogravity does not vary more than the specified amount' (app. 4B)"
-tube_ratio:
-  value: 0.073
-  low: 0.05
-  high: 0.2
-  unit: tube radius / outer floor radius
+  source: "SP-413 ch. 3: 'This choice of a 10 percent variation is arbitrary, but also maintains conditions as Earth-like as possible'. Low: Queijo 1988 (NASA CR-181617 sec. 5.2.1), decks +-3% about 1 g, 'This difference is not expected to have any significant influence on human physiology and performance' (6.2% span). High: Jensen 2024 designs over 0.95-1.1 g (13.6%). No physiological data on floor-to-floor gravity: 'It is not known if the gravity gradient has any critical influences on the cardiovascular and neurovestibular systems' (Clement et al. 2015). Head-to-foot gradient at 894 m is 0.0011 g/m, far inside Hall's listed limits (AIAA 99-4524 Table 1)"
+ground_area_per_person:
+  value: 67
+  low: 40
+  high: 155
+  unit: m^2 of ground (projected area) a person
   conf: "medium"
-  source: "SP-413 Table 4-1: major radius 830 m, minor radius 65 m (65 / 895 = 0.073); 'The desire to keep structural mass small favors small radii of curvature' (ch. 4). The high end is not sourced"
+  source: "SP-413 ch. 3: 'there should be at least 40 m^2 of projected area per inhabitant. Projected area means area projected onto the largest plane perpendicular to the direction of the pseudogravity'; Table 3-2 totals 67.0 m^2 projected (155.2 m^2 of floor) a person, incl. ~20 of farms. App. 4B: 'In a torus the projected area is a strip through the diameter of the tube of the torus', Ap = 4 pi r R; ch. 5: 'the central plain running the full circumference of the torus along the middle of the tube'; ch. 4: 'the radius needed to enclose the 670,000 m^2 of projected area can be quite small' (test_ground_area_reproduces_sp413). High: roomier living, SP-413's whole floor area 155 or Kalpana One's '170m2 living area for each of 3,000 residents' (Globus et al. 2007)"
+max_tube_ratio:
+  value: 0.2
+  low: 0.15
+  high: 0.25
+  unit: largest tube radius / outer floor radius before adding rings
+  conf: "low"
+  source: "judgement: SP-413 ch. 4 'The desire to keep structural mass small favors small radii of curvature' (its own 0.073); a cap so a fast-spinning ship stacks rings rather than fattening one tube. At 1 rpm one ring holds the ship well under it"
 usable_volume_per_person:
   value: 1738
   low: 1040
@@ -60,9 +67,11 @@ air_temperature:
   source: "room temperature; sets the air's mass with air_pressure"
 min_inertia_ratio:
   value: 1.2
+  low: 1.05
+  high: 1.5
   unit: spin-axis / largest cross-axis moment of inertia, least allowed
-  conf: "placeholder"
-  source: "placeholder margin above 1 (a body spins stably, with energy loss, only about its largest axis; Explorer 1 tumbled in 1958)"
+  conf: "medium"
+  source: "Globus et al. 2007 (Kalpana One) sec. III: 'Experience with spin-stabilized spacecraft suggests that the desired axis of rotation should have an angular moment of inertia at least 1.2 times greater than any other axis' (citing Brown, Elements of Spacecraft Design, AIAA 2002); Hubert, NASA/TP-2013-217917: 'energy dissipation will cause the vehicle to ultimately converge to a state of simple spin about the major axis' and ratios 'between 0.96 and 1.04 ... are usually considered unacceptable' (low end); high end judgement for flexible structure and moving masses. One SP-413 ring has 1.99"
 shell:
   density:
     value: 7850
@@ -70,20 +79,41 @@ shell:
     conf: "high"
     source: "structural steel"
   allowable_stress:
-    value: 300
-    low: 200
-    high: 450
+    value: 320
+    low: 215
+    high: 460
     unit: MPa
-    conf: "placeholder"
-    source: "placeholder: high-strength steel with a safety margin; to set from a code (research queue)"
+    conf: "medium"
+    source: "A514-class quenched and tempered steel plate (ASTM A514: 760-895 MPa tensile, 690 MPa minimum yield). Central ASME VIII-2 style min(UTS / 2.4, 2/3 yield) = 317; NASA-STD-5001B Table 5 (habitable modules, 'Internal pressure only': yield factor 1.65, ultimate 2.0) gives 380; low: ASME VIII-1 (UTS / 3.5) 217, or NASA's factors on SP-413's rolled steel 213; high: SP-413 app. 4A's rule, 'A safety factor of 1.5 is applied to the yield stress to give safe working values' (690 / 1.5). SP-413 itself used aluminium ('aluminum is assumed as the principal structural material', working stress 234 MPa at 2,650 kg/m^3): allowable per density steel 41, aluminium 2219-T87 84, carbon/epoxy ~320 kN m/kg, so an aluminium shell would weigh ~0.48 of steel's"
 shield:
   areal_density:
-    value: 10
-    low: 6.5
-    high: 11
-    unit: t/m^2
+    value: 10.3
+    low: 9.5
+    high: 11.1
+    unit: t/m^2 of regolith (the design's shield)
     conf: "medium"
-    source: "Globus & Strout 2017 (OLTARIS, free-space GCR, solar minimum): 20 mSv/yr 'requires 10-11 tonnes of lunar regolith per square meter' (10 t/m^2: 22.8 mSv/yr, 11: 14.5); '6-7 tonnes of water or polyethylene ... is sufficient' (7 t/m^2 water 16.1, polyethylene 12.3 mSv/yr); SP-413's 4.5 t/m^2 'is quite low'. Central value regolith (built from lunar or asteroid material); low end water/polyethylene. Lifelong residents: NASA's 600 mSv career limit is 30 years at 20 mSv/yr"
+    source: "Globus & Strout 2017 (OLTARIS, free-space GCR, solar minimum, 'conservative'): 20 mSv/yr 'requires 10-11 tons of lunar regolith per square meter'; Table 2: 10 t/m^2 22.8, 11 t/m^2 14.5 mSv/yr, log-interpolated to 20 at 10.3; range for the transport code (Geant3 vs Geant4 free-space doses differ ~30%, Ambroglini et al. 2016). Dose falls by e every ~2.2 t/m^2 here (10 mSv/yr ~11.8); the plateau ('Adding more than 20 g/cm2 is not helpful, unless you are adding meters of material', Clowdsley 2021) is far thinner. Lifelong residents: NASA's 600 mSv career limit is 30 years at 20 mSv/yr"
+  water_areal_density:
+    value: 6.6
+    low: 6.0
+    high: 7.2
+    unit: t/m^2 of water for the same dose (an option)
+    conf: "medium"
+    source: "Globus & Strout 2017: '6-7 tons of water or polyethylene radiation shielding per square meter of hull is sufficient in deep space'; Table 2: water 6 t/m^2 26.5, 7 t/m^2 16.1 mSv/yr, log-interpolated to 20 at 6.6. Water from C-type asteroids ('A 500-t, carbonaceous C-type asteroid may contain up to 100 t of water', KISS 2018), Ceres, icy moons; ~2 MJ/kg to extract at 10% water (Janhunen et al., EMMI)"
+  active_mass_per_area:
+    value: 1.1
+    low: 0.4
+    high: 6
+    unit: t/m^2 of superconducting magnet and structure for a ~30 GV cutoff (an option)
+    conf: "low"
+    source: "derived (pass 3 researcher) from stored energy (B d)^2 A / (2 mu0 d) at ~100 T m and a 20 m field depth, structure mass >= Q (rho / sigma) E: 0.9-13 Mt of structure + ~0.18 Mt of conductor over the shield's area; checked against SP-413 ch. 4's 'structural mass of about 10 kt' for a 0.5 GeV/nucleon cutoff, which it rejected: 'the structural mass required to resist the magnetic forces between superconducting coils precludes this design'. SR2S: 'At 100 Tm, the field represents 70% of the observed dose reduction' (Ambroglini et al. 2016). Only SP-413 studied one at settlement scale"
+  active_residual:
+    value: 0.5
+    low: 0.2
+    high: 1.3
+    unit: t/m^2 of hydrogen-rich passive shield still needed with an active shield
+    conf: "low"
+    source: "judgement between Clowdsley 2021 ('Do not add mass to go beyond 20 g/cm2', 0.2 t/m^2) and SP-413 ch. 4 ('Only the addition of shielding to an extent of 1.3 t/m^2 could reduce the dosage'); 'An active deflector shield system would never be a replacement for passive shielding' (Bamford et al. 2014). A storm shelter (~0.3 t/m^2 of water, ~1.4 kt for 10,000) would be needed with it"
   gap:
     value: 1.5
     low: 1

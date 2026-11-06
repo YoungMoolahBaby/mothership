@@ -38,12 +38,12 @@ plant_radiator_temp:
   conf: "medium"
   source: "same Siamidis range, 400-600 K, at the efficiencies above; JIMO NaK radiator 556 K in, 399 K out. Hotter (Discovery II 966-1325 K) needs other efficiencies, not modelled"
 habitat_radiator_temp:
-  value: 290
-  low: 275
-  high: 305
+  value: 280
+  low: 260
+  high: 300
   unit: K
-  conf: "placeholder"
-  source: "placeholder: rejects heat from a habitat kept near room temperature"
+  conf: "medium"
+  source: "SP-413 ch. 5: 'Assuming a radiator temperature of 280 K, corresponding to a black body radiation of 348 W/m^2'; ISS EATCS: 'Ammonia supply temperature is currently set at 37 F (2.8 C)', 'a temperature goal of -40 F at the radiator outlet' (NASA ISS ATCS overview): a loop cooling 290 -> 250 K radiates like a plate at ~269 K (derived). High: habitat air at 293 K less the heat exchanger. Heat pumps could lift it (a lunar-base study's optimum: 'the optimal TCS mass is 5940kg at a radiator temperature of 362K', NASA-CR-190663), trading radiator for power"
 emissivity:
   value: 0.9
   low: 0.8

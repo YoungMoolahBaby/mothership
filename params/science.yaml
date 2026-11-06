@@ -1,0 +1,77 @@
+# Science with sports (Jon, 2026-11-06): "it should be like cern too. like basically science with
+# sports". Labs for the people doing science, a data centre, and big instruments: a proton
+# collider riding round the ring inside the still shield (it doesn't spin, space gives the
+# vacuum, the shield takes its outward beam losses), a light source, a zero-g lab at the hub.
+# Research pass 3 (2026-11-06).
+
+share:
+  value: 0.3
+  low: 0.1
+  high: 0.6
+  unit: fraction of people doing science (full-time equivalent)
+  conf: "low"
+  source: "judgement: a campus where everyone plays and many do science; CERN has 'around 2500' staff and 'over 12 200 scientists' as users (home.cern, our people); DESY 'approximately 3000, including 1300 scientists'"
+lab_volume_per_researcher:
+  value: 55
+  low: 25
+  high: 120
+  unit: m^3 of lab and office a researcher beyond SP-413's offices and service industry
+  conf: "low"
+  source: "derived (pass 3): USC Keck '1 paid staff/student FTE for wet lab research = 150 assignable square feet' (13.9 m^2) and '75 ASF of dry laboratory space' (7.0 m^2), averaged, x 1.8 net-to-gross (NIH guide 1.7-2.0, unverified) x 3.0 m (preferred lab ceiling 8.5-10 ft, U. Arkansas lab criteria)"
+kw_per_researcher:
+  value: 1.2
+  low: 0.4
+  high: 2.5
+  unit: kW electric a researcher, labs (not big facilities or computing)
+  conf: "medium"
+  source: "derived: ENERGY STAR US medians (2024) 'Laboratory 318.2 115.3' kBtu/ft^2 source/site = 364 kWh/m^2/yr site, 2.2x an office; I2SL UK 'the target EUI is 305 kWh/m2/yr' to 'closer to 700'; ~25 m^2 gross a wet-lab researcher -> 1.0-2.0 kW, dry lab 0.25-0.5"
+data_kw_per_person:
+  value: 0.4
+  low: 0.15
+  high: 1.2
+  unit: kW a person of data centre (with cooling)
+  conf: "medium"
+  source: "CERN data centre 'from the current 4 MW (megawatts) of capacity to the future 12 MW' for ~17,500 people = 0.23-0.69 kW a person; ENERGY STAR average PUE 1.82"
+collider:
+  field:
+    value: 16
+    low: 8.33
+    high: 20
+    unit: T, dipole field
+    conf: "medium"
+    source: "LHC 'allow fields up to B = 8.33 T and p = 7 TeV/c' (Bruning, Burkhardt & Myers 2012); Nb3Sn record 'a field of 14.1 T' (CERN Courier 2019); FCC-hh '14 T Nb3Sn', HTS '14 to 20 T' (CERN Courier 2025; CERN HFM programme 'from 14 T up to 20 T'); 16 T was FCC-hh's earlier target (Beacham & Zimmermann 2022 Table I)"
+  fill:
+    value: 0.67
+    low: 0.6
+    high: 0.7
+    unit: bending radius / ring radius (dipole filling factor)
+    conf: "high"
+    source: "Beacham & Zimmermann 2022 (New J. Phys. 24 023029): 'Fdip ~ 0.67 the dipole filling factor, similar to the LHC's'; LHC: rho = 2804 m on 26,659 m (0.66)"
+  cold_mass:
+    value: 1.35
+    low: 1.0
+    high: 3.0
+    unit: t a metre of ring (magnets and cryostats)
+    conf: "medium"
+    source: "LHC: 'some 36,000 tonnes of magnet cold masses' (CERN cryogenics page) / 26.66 km = 1.35 t/m; dipoles 'each 15 metres long and weighing in at 35 tonnes'; high end for stronger, heavier magnets (judgement)"
+  power_mw:
+    value: 15
+    low: 5
+    high: 40
+    unit: MW electric (cryogenics, magnets, RF, injectors)
+    conf: "low"
+    source: "derived: LHC 'Total grid power [MW]' 87 incl. cryogenics, excluding injectors (Lebrun, CERN 2014) x 5.2 / 26.7 km = 17 MW; cryo plants at 'a COP of about 900 W/W' (1.8 K) and ~230 W/W (4.5 K) (Claudet et al. 2008); low: HTS at 20 K (~50 W/W) with the cold side of the still shield; high: injectors and detectors. CERN as a whole: 'yearly average electricity consumption of 1.2 TWh' (137 MW), the LHC ~55%"
+light_source_mw:
+  value: 6
+  low: 4
+  high: 9
+  unit: MW electric, a synchrotron light source
+  conf: "medium"
+  source: "ESRF: 'a circular tunnel measuring 844 metres in circumference', 'more than 9000 scientists' a year, 'used 65GWh of electricity' in 2018 and 'an immediate 20% saving in electricity' after its upgrade (6-7.4 MW average, derived)"
+zero_g_kw:
+  value: 60
+  low: 30
+  high: 500
+  unit: kW, a zero-g lab at the still hub
+  conf: "medium"
+  source: "ISS: 'Power 30kw average' for payloads over 24 internal racks ('13 U.S. Lab', '5 ESA Lab', '6 JAXA Lab'), ~1.25 kW a rack (NASA ISS Capabilities and Payload Accommodations); ~50 racks (judgement)"

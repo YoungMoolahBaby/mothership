@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .model import SCENARIOS, run
+from .model import SCENARIOS, TOUR, run, tour_dv
 from .params import Param, draw, values
 
 SHIP_ROWS = [
@@ -27,12 +27,16 @@ SHIP_ROWS = [
     ("bodywork_stations", "robotic massage tables", "", "{:,.0f}"),
     ("kitchen_lines", "robotic kitchen lines", "", "{:,.0f}"),
     ("humanoids", "humanoid robots (hands-on care, chores)", "", "{:,.0f}"),
+    ("researchers", "people doing science (FTE)", "", "{:,.0f}"),
+    ("science_m3_per_person", "labs per person (beyond SP-413)", "m^3", "{:,.0f}"),
+    ("collider_tev", "collider round the ring, energy a beam", "TeV", "{:.1f}"),
     ("landers", "landers", "", "{:,.0f}"),
     ("sortie_propellant_t", "propellant a sortie", "t", "{:,.0f}"),
     ("power_mw", "electric power", "MW", "{:,.0f}"),
     ("food_kw_per_person", "of which food, per person", "kW", "{:,.1f}"),
     ("ice_mw", "of which ice plants", "MW", "{:,.1f}"),
     ("robot_mw", "of which robots", "MW", "{:,.1f}"),
+    ("science_mw", "of which science (labs, computing, collider, light source)", "MW", "{:,.1f}"),
     ("plants", "fusion plants (with spares)", "", "{:,.0f}"),
     ("radiator_km2", "radiator panels", "km^2", "{:,.2f}"),
     ("shield_t", "shield", "t", "{:,.0f}"),
@@ -44,6 +48,7 @@ SHIP_ROWS = [
     ("plants_t", "fusion plants", "t", "{:,.0f}"),
     ("radiators_t", "radiators", "t", "{:,.0f}"),
     ("expeditions_t", "landers and their propellant", "t", "{:,.0f}"),
+    ("collider_t", "collider magnets", "t", "{:,.0f}"),
     ("dry_t", "ship without drive", "t", "{:,.0f}"),
     ("habitat_t_per_person", "per person", "t", "{:,.0f}"),
 ]
@@ -121,12 +126,46 @@ def build(params: dict[str, Param], n: int = 5000, seed: int = 1) -> str:
         f"Across the draws: spin stable with margin in {float(np.mean(mc['ship']['spin_stable'])):.0%}; "
         f"rings needed P10 / P50 / P90 {' / '.join(f'{x:.0f}' for x in _pct(np.asarray(mc['ship']['rings'], dtype=float)))}.",
     ]
+    parts = tour_dv(values(params))
+    lines += [
+        "",
+        f"## The tour: {' -> '.join(['earth', *TOUR, 'earth'])}",
+        "",
+        "Low-thrust legs between the planets (Edelbaum) and spirals into a low parking orbit at "
+        "each stop and out again (for a moon, down its planet's well first). Central values:",
+        "",
+        "| part | delta-v (km/s) |",
+        "|---|---|",
+    ]
+    for key, val in parts.items():
+        if key != "total_km_s":
+            lines.append(f"| {key.removesuffix('_km_s')} | {float(val):.1f} |")
+    tot = _pct(np.asarray(tour_dv(d)["total_km_s"], dtype=float))
+    lines.append(f"| **total** | **{float(parts['total_km_s']):.1f}** (P10-P90 {tot[0]:.1f}-{tot[2]:.1f}) |")
+    lines += [
+        "",
+        "## Shield options",
+        "",
+        "The design's shield is regolith; these would replace it (or, spinning, add to it):",
+        "",
+        "| | central | P10 | P50 | P90 | unit |",
+        "|---|---|---|---|---|---|",
+    ]
+    for key, label in (
+        ("shield_t", "regolith (the design)"),
+        ("shield_water_t", "water, same dose"),
+        ("shield_active_t", "active magnetic + thin passive"),
+        ("spinning_shield_extra_t", "extra ring structure to spin the regolith shield"),
+    ):
+        c = float(base["ship"][key])
+        p10, p50, p90 = _pct(np.asarray(mc["ship"][key], dtype=float))
+        lines.append(f"| {label} | {_fmt('{:,.0f}', c)} | {_fmt('{:,.0f}', p10)} | {_fmt('{:,.0f}', p50)} | {_fmt('{:,.0f}', p90)} | t |")
     for sc in SCENARIOS:
-        dv = params[f"mission.scenario.{sc}.dv"].value
+        dv = float(base[sc]["dv_km_s"])
         yr = params[f"mission.scenario.{sc}.years"].value
         lines += [
             "",
-            f"## Scenario `{sc}`: delta-v {dv:g} km/s over {yr:g} years",
+            f"## Scenario `{sc}`: delta-v {dv:.1f} km/s over {yr:g} years",
             "",
             "| | central | P10 | P50 | P90 | unit |",
             "|---|---|---|---|---|---|",

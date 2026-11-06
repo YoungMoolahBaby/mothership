@@ -14,6 +14,63 @@ from . import physics as ph
 from .constants import DAY, G0, HOUR, M_AIR, R_GAS, WEEK, YEAR
 
 SCENARIOS = ("park", "tour", "brisk")
+# The tour's stops after leaving home (Earth orbit) and before coming back: a planet, or a moon
+# inside its planet's well ("planet.moon"). Ceres is the water stop; Callisto lies outside
+# Jupiter's worst radiation belts; Titan has methane and a thick atmosphere (pass 3).
+TOUR = ("mars", "ceres", "jupiter.callisto", "saturn.titan")
+
+
+def _world(v, body: str, key: str):
+    return v[f"worlds.{body}.{key}"]
+
+
+def _spiral(v, gm, r):
+    """A low-thrust spiral between a circular orbit at r and escape (km/s)."""
+    k = ph.spiral_factor(v["tour.acceleration"], gm, r, v["tour.spiral_coefficient"])
+    return k * ph.circular_speed(gm, r)
+
+
+def tour_dv(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
+    """Delta-v (km/s) of the tour, built from its stops: a spiral out of the home orbit round
+    Earth; legs between the planets' orbits, Edelbaum spirals (with the change of plane) where
+    the drive's thrust is small against the Sun's pull, Hohmann transfers (plus the plane change
+    at the slow end) beyond that (edelbaum_eps_max); at each stop a spiral down into a parking
+    orbit and back out (for a moon, first down the planet's well to the moon's orbit); a spiral
+    home at the end. Spirals cost 1 - c eps^(1/4) of the circular speed at their low end."""
+    w = lambda body, key: _world(v, body, key)
+    sun, acc = v["worlds.sun.gm"], v["tour.acceleration"]
+    out = {"home_km_s": 2.0 * _spiral(v, w("earth", "gm"), v["tour.home_radius"] * w("earth", "radius"))}
+    path = ["earth"] + [stop.split(".")[0] for stop in TOUR] + ["earth"]
+    legs = 0.0
+    for a, b in zip(path, path[1:]):
+        ra, rb = w(a, "orbit"), w(b, "orbit")
+        di = ph.relative_inclination(
+            *(np.radians(w(x, k)) for x, k in ((a, "inclination"), (a, "node"), (b, "inclination"), (b, "node")))
+        )
+        va, vb = ph.circular_speed(sun, ra), ph.circular_speed(sun, rb)
+        eps = acc / (sun / np.maximum(ra, rb) ** 2 * 1e3)
+        spiral = ph.edelbaum_dv(va, vb, di)
+        hohmann = ph.hohmann_dv(sun, ra, rb) + 2.0 * np.minimum(va, vb) * np.sin(0.5 * di)
+        legs = legs + np.where(eps <= v["tour.edelbaum_eps_max"], spiral, hohmann)
+    out["legs_km_s"] = legs
+    for stop in TOUR:
+        planet, _, moon = stop.partition(".")
+        body = moon or planet
+        local = _spiral(v, w(body, "gm"), v["tour.park_radius"] * w(body, "radius"))
+        well = _spiral(v, w(planet, "gm"), w(moon, "orbit")) if moon else 0.0
+        out[f"{body}_km_s"] = 2.0 * (well + local)
+    out["total_km_s"] = sum(out.values())
+    return out
+
+
+def sortie_dv(v: Mapping[str, float | np.ndarray], body: str):
+    """A lander's round trip (km/s) from the ship's parking orbit at `body`: the low-orbit round
+    trip (expeditions.sortie_dv) plus a Hohmann transfer between the parking and low orbits each
+    way."""
+    gm, radius = _world(v, body, "gm"), _world(v, body, "radius")
+    park, low = v["tour.park_radius"] * radius, v["tour.low_orbit_radius"] * radius
+    extra = np.where(park > low, 2.0 * ph.hohmann_dv(gm, low, np.maximum(park, low)), 0.0)
+    return v["expeditions.sortie_dv"] + extra
 
 
 def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
@@ -25,9 +82,11 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     w = ph.omega(rpm)
     R = ph.spin_radius(g, rpm)
     # R is the outer floor's distance from the spin axis (gravity_g there). People live where
-    # gravity is within gravity_band of that (SP-413: 0.9-1 g), so a ring holds the tube's
-    # volume within band x R of the floor; as many rings as the usable volume needs, stacked along
-    # the spin axis, each in its own still shield.
+    # gravity is within gravity_band of that (SP-413: 0.9-1 g), and on ground: the tube is the
+    # smallest that holds the lived-in volume within the band and, across its widest chord in the
+    # band, the ground everyone and every rink stand on (SP-413 sized its 65 m tube this way: 67
+    # m^2 a person). Past max_tube_ratio, rings are added, stacked along the spin axis, each in its
+    # own still shield.
     #
     # Hockey: rinks lie across the tube, their long side parallel to the spin axis, so rushes end
     # to end feel no Coriolis force; skating along the ring changes a skater's weight
@@ -44,10 +103,20 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     games = v["athletics.game_share"]
     rate = games * v["athletics.injury_rate_game"] + (1.0 - games) * v["athletics.injury_rate_practice"]
     injuries = (v["athletics.ice_hours"] + v["athletics.roller_hours"]) * (YEAR / WEEK) * rate / 1e3
-    lived_in = n * v["habitat.usable_volume_per_person"] + athletic_volume
-    r = np.maximum(v["habitat.tube_ratio"] * R, ph.box_tube_radius(pad_l, pad_h))
-    usable_ring = ph.band_volume(R, r, v["habitat.gravity_band"])
-    rings = np.ceil(lived_in / usable_ring)
+    # Science (Jon: "like cern too"): labs for the people doing it.
+    researchers = n * v["science.share"]
+    science_volume = researchers * v["science.lab_volume_per_researcher"]
+    lived_in = n * v["habitat.usable_volume_per_person"] + athletic_volume + science_volume
+    ground = n * v["habitat.ground_area_per_person"] + (ice_sheets + roller_rinks) * (
+        pad_l * pad_w + v["athletics.rink.support_area"]
+    )
+    band = v["habitat.gravity_band"]
+    r_min = ph.box_tube_radius(pad_l, pad_h)  # a rink hall across the tube
+    r_max = np.maximum(v["habitat.max_tube_ratio"] * R, r_min)
+    rings = np.maximum(
+        np.ceil(lived_in / ph.band_volume(R, r_max, band)), np.ceil(ground / ph.ground_area(R, r_max, band))
+    )
+    r = ph.tube_radius_for(R, band, lived_in / rings, ground / rings, r_min, r_max)
     Rf = R
     R = Rf - r  # the torus's major radius (tube centre)
     volume = rings * ph.torus_volume(R, r)
@@ -62,7 +131,8 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     interior = n * v["habitat.interior_mass_per_person"] * 1e3
 
     # Care by robots (Jon: massage, cooking etc. are AI/robotic): massage tables sized by the
-    # hours of table massage a person gets, kitchen lines by meals, humanoid robots by the hours
+    # hours of table massage a person gets, kitchen lines by meals (their power by energy a
+    # meal, cooking included), humanoid robots by the hours
     # of hands-on care (stretching, physio) and chores (cooking prep, cleaning, laundry) they do,
     # at a robot's pace; spares for the time robots are down.
     spare = 1.0 + v["care.spares"]
@@ -73,7 +143,7 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     robots = (stations * v["care.station_mass"] + kitchens * v["care.kitchen_mass"] + humanoids * v["care.humanoid_mass"]) * 1e3
     robot_w = (
         n * v["care.bodywork_hours"] / (WEEK / HOUR) * v["care.station_kw"]
-        + kitchens * v["care.kitchen_hours"] / (DAY / HOUR) * v["care.kitchen_kw"]
+        + n * v["care.meals_per_day"] * v["care.kitchen_kwh_per_meal"] / (DAY / HOUR)
         + humanoids * v["care.humanoid_kw"]
     ) * 1e3  # average over a week
 
@@ -85,11 +155,27 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     gap = v["habitat.shield.gap"]
     shield_area = rings * ph.torus_area(R, r + gap)
     shield = shield_area * v["habitat.shield.areal_density"] * 1e3
+    # Options (not in the total): water instead of regolith; an active magnetic shield over a thin
+    # passive one; spinning the shield with the habitat (its ring must then carry it, SP-413's
+    # reason for a still shield).
+    shield_water = shield_area * v["habitat.shield.water_areal_density"] * 1e3
+    shield_active = shield_area * (v["habitat.shield.active_mass_per_area"] + v["habitat.shield.active_residual"]) * 1e3
 
     # Power: food under lights plus everything else; all of it ends as heat in the habitat.
     food_w = ph.food_power(v["life.food_energy"], v["life.led_to_par"], v["life.par_to_food"])
     ice_w = ice_sheets * v["athletics.ice_plant_kw"] * 1e3
-    p_elec = n * (food_w + v["life.other_power_per_person"] * 1e3) + ice_w + robot_w
+    # Science power: labs, the data centre, a collider round the ring inside the still shield
+    # (at its outer equator, Rf + gap from the axis), a light source, a zero-g lab at the hub.
+    collider_ring = Rf + v["habitat.shield.gap"]
+    collider_tev = ph.collider_energy_tev(v["science.collider.field"], v["science.collider.fill"] * collider_ring)
+    collider = 2.0 * np.pi * collider_ring * v["science.collider.cold_mass"] * 1e3
+    science_w = (
+        researchers * v["science.kw_per_researcher"] * 1e3
+        + n * v["science.data_kw_per_person"] * 1e3
+        + (v["science.collider.power_mw"] + v["science.light_source_mw"]) * 1e6
+        + v["science.zero_g_kw"] * 1e3
+    )
+    p_elec = n * (food_w + v["life.other_power_per_person"] * 1e3) + ice_w + robot_w + science_w
     unit = v["power.unit_mwe"] * 1e6
     plants = np.ceil(p_elec / unit) + v["power.spares"]
     plant_mass = plants * v["power.unit_mwe"] * v["power.specific_mass"] * 1e3
@@ -111,17 +197,21 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
 
     # Expeditions: reusable landers in a hangar at the still hub, each carried with propellant
     # for `sorties_carried` round trips from low orbit to the surface and back.
+    # Propellant for each stop's sorties, from the ship's parking orbit there.
     lander_end = (v["expeditions.lander_dry"] + v["expeditions.payload"]) * 1e3
-    sortie = ph.rocket_propellant(lander_end, v["expeditions.sortie_dv"] * 1e3, v["expeditions.isp"])
+    stops = [stop.partition(".")[2] or stop for stop in TOUR]
+    sorties = [ph.rocket_propellant(lander_end, sortie_dv(v, b) * 1e3, v["expeditions.isp"]) for b in stops]
+    sortie = sum(sorties) / len(sorties)
     landers = v["expeditions.landers"]
-    expeditions = landers * (v["expeditions.lander_dry"] * 1e3 + v["expeditions.sorties_carried"] * sortie)
+    expeditions = landers * v["expeditions.lander_dry"] * 1e3 + v["expeditions.sorties_per_stop"] * sum(sorties)
 
-    dry = shield + shell + ring + air + interior + robots + plant_mass + radiators + expeditions
+    dry = shield + shell + ring + air + interior + robots + plant_mass + radiators + expeditions + collider
     return {
         "radius_m": Rf,
         "tube_centre_m": R,
         "tube_radius_m": r,
         "tube_over_radius": r / Rf,
+        "ground_m2_per_person": rings * ph.ground_area(Rf, r, band) / n,
         "volume_per_person_m3": volume / n,
         "rings": rings,
         "ice_sheets": ice_sheets,
@@ -140,12 +230,20 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         "landers": landers * np.ones_like(np.asarray(n, dtype=float)),
         "sortie_propellant_t": sortie / 1e3,
         "expeditions_t": expeditions / 1e3,
+        "researchers": researchers,
+        "science_m3_per_person": science_volume / n,
+        "science_mw": science_w / 1e6,
+        "collider_tev": collider_tev,
+        "collider_t": collider / 1e3,
         "spin_stable": i_spin / i_cross >= v["habitat.min_inertia_ratio"],
         "rim_speed_m_s": w * Rf,
         "shell_thickness_mm": t_shell * 1e3,
         "ring_spin_factor": k,
         "spin_inertia_ratio": i_spin / i_cross,
         "shield_t": shield / 1e3,
+        "shield_water_t": shield_water / 1e3,
+        "shield_active_t": shield_active / 1e3,
+        "spinning_shield_extra_t": ph.ring_structure_mass(shield, k) / 1e3,
         "shell_t": shell / 1e3,
         "ring_t": ring / 1e3,
         "air_t": air / 1e3,
@@ -163,7 +261,7 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
 
 def voyage(v: Mapping[str, float | np.ndarray], dry_t, scenario: str) -> dict[str, np.ndarray]:
     """The drive for one scenario, carrying the whole ship (`dry_t`, tonnes) as its payload."""
-    dv = v[f"mission.scenario.{scenario}.dv"] * 1e3
+    dv = (tour_dv(v)["total_km_s"] if scenario in ("tour", "brisk") else v[f"mission.scenario.{scenario}.dv"]) * 1e3
     t = v[f"mission.scenario.{scenario}.years"] * YEAR
     alpha = v["propulsion.jet_specific_power"]
     frac, u, v_ch = ph.stuhlinger(dv, t, alpha, v["propulsion.tankage"])
@@ -184,6 +282,7 @@ def voyage(v: Mapping[str, float | np.ndarray], dry_t, scenario: str) -> dict[st
         "jet_power_mw": jet_mw,
         "exhaust_km_s": np.where(dv > 0, u * v_ch / 1e3, np.nan),
         "payload_fraction": frac,
+        "dv_km_s": dv / 1e3 * np.ones_like(np.asarray(frac, dtype=float)),
     }
 
 

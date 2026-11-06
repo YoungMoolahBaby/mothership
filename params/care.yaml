@@ -48,12 +48,12 @@ chore_hours:
   conf: "low"
   source: "US time use 2025 (BLS ATUS news release): 'On an average day, 81 percent of people engaged in household activities', about 2 hours a day (14 h a week, the high end); less what doesn't exist aboard (lawns, cars) and the meal assembly done by kitchen lines (judgement)"
 robot_pace:
-  value: 1.5
+  value: 2
   low: 1
-  high: 3
+  high: 4
   unit: robot hours per hour of human work
-  conf: "placeholder"
-  source: "placeholder: no data found on humanoid task speed against people; kitchen robots are counted as 'a 1:1 worker equivalent' (Chef Robotics) and a hospital TUG replaced ~1.1 staff ('allowed him to hire about 30 fewer workers' for 27 robots, PBS 2016)"
+  conf: "low"
+  source: "structured work near human pace: Dyna-1 'operating at 60% of human throughput' folding napkins (2025, pace 1.67); Figure F.03 sorted '12,732 packages (2.83 seconds/package)' against a person's '12,924 packages (2.79 seconds/package)' in a 10-hour contest (ForkLog 2026-05-18, company-run). General laundry ~3.4: 'SpeedFolding achieves 30-40 FPH' (IROS 2022) against towels folded 'by hand at a rate of 120 pieces per hour' (American Laundry News 2020). No robot-vs-human data for cleaning or cooking prep; throughput roughly doubles every 1-2 years (pi*0.6: 'more than doubles task throughput')"
 humanoid_duty_hours:
   value: 140
   low: 112
@@ -101,15 +101,15 @@ kitchen_mass:
   low: 1
   high: 6
   unit: t a kitchen line
-  conf: "placeholder"
-  source: "placeholder: no mass published for Sweetgreen, Hyphen, Miso or Moley systems"
-kitchen_kw:
-  value: 30
-  low: 15
-  high: 60
-  unit: kW a kitchen line running
-  conf: "placeholder"
-  source: "placeholder: no power or cooking energy per meal found"
+  conf: "low"
+  source: "judgement: no mass published for Sweetgreen, Hyphen, Miso, Spyce or Autocado systems (Spyce 'can make up to 200 meals an hour' with 'seven induction-heated woks', MIT Technology Review 2018); immaterial (15 lines ~45 t)"
+kitchen_kwh_per_meal:
+  value: 1.6
+  low: 0.75
+  high: 5.0
+  unit: kWh electric a meal, cooking and kitchen
+  conf: "low"
+  source: "LBNL-53478 (Aebischer et al. 2003) Table 4, 1996 California survey: fast food / self service kWh/meal min 0.74, median 1.88, table service median 4.93; 'About 15% of energy is used for space heating/cooling' (1.88 x 0.85 = 1.6); 'Energy per meal in a fast food restaurant is in all regions of the same order of magnitude (2 kWh/meal)'. Electricity only, UK kitchens: '1.52 kWh/meal' to '3.32 kWh/meal' (Mudie et al. 2016)"
 spares:
   value: 0.15
   low: 0.05

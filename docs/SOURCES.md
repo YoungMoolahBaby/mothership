@@ -91,6 +91,57 @@ Sources behind parameters and checks. Exact quotes live in the `source` fields o
   lunar g on ISS (Comm Biol 2023, doi:10.1038/s42003-023-04769-3).
 - ISRU: MOXIE (Hoffman 2022, doi:10.1126/sciadv.abp8636); LCROSS (Colaprete 2010).
 
+## Ground, gravity band, structure (pass 3)
+
+- SP-413 app. 4A (materials, 'A safety factor of 1.5 is applied to the yield stress'), app. 4B
+  (projected area of a torus), ch. 5 (the central plain, the aluminium shell, 280 K radiators):
+  https://settlement.nss.org/75SummerStudy/
+- SP-428 (Bock, Lambrou & Simon): https://ntrs.nasa.gov/api/citations/19790024054/downloads/19790024054.pdf
+- Kalpana One (Globus et al. 2007): https://nss.org/wp-content/uploads/2017/07/Kalpana-One-2007.pdf
+  and http://alglobus.net/NASAwork/papers/2007KalpanaOne.pdf (Iz >= 1.2 Ix); Lewis One (Globus
+  1991): http://alglobus.net/NASAwork/papers/RNR-91-018/lewisOnePaper.pdf
+- Queijo 1988, NASA CR-181617: https://ntrs.nasa.gov/api/citations/19880017013/downloads/19880017013.pdf
+- Jensen 2024: https://arxiv.org/pdf/2408.00152, https://arxiv.org/pdf/2408.00155
+- Hubert, NASA/TP-2013-217917 (spin stability): https://ntrs.nasa.gov/api/citations/20160001550/downloads/20160001550.pdf
+- NASA-STD-5001B w/Change 3 (structural design factors): https://standards.nasa.gov/sites/default/files/standards/NASA/B-w/CHANGE-3/3/2022-10-24-NASA-STD-5001B-w-Change-3-Approved.pdf
+- ASTM A514 (steel plate); Aerospace Specification Metals (2219-T87, Ti-6Al-4V); Toray T700S data sheet.
+- NASA ISS ATCS overview: https://www.nasa.gov/pdf/473486main_iss_atcs_overview.pdf
+
+## The tour (pass 3)
+
+- JPL Solar System Dynamics: https://ssd.jpl.nasa.gov/astro_par.html,
+  https://ssd.jpl.nasa.gov/planets/phys_par.html, https://ssd.jpl.nasa.gov/planets/approx_pos.html,
+  satellite physical parameters and elements, SBDB (Ceres).
+- Edelbaum 1961 (ARS J. 31(8)), via Oleson, NASA CR-191129:
+  https://ntrs.nasa.gov/api/citations/19930017871/downloads/19930017871.pdf
+- Joosten & White 2014, NTRS 20140013174 (Edelbaum vs minimum-time; Callisto outside the belts).
+- Dawn (Rayman & Garner 2018, NTRS 20210008613); BepiColombo (Jehn & Schoenmaekers, ISSFD 2014);
+  JIMO (Whiffen & Lam 2006, NTRS 20060043641); Hayabusa2 (Nishiyama et al., IAC-21).
+- Moon tours with flybys: Ross et al. 2003 (AAS-03-143); Lantoine, Russell & Campagnola, IAC-09;
+  Fantino et al. 2023 (arXiv 2305.17548).
+- Water and methane on the way: Prettyman et al. 2016 (Ceres); Anderson et al. 1997 (Callisto);
+  NASA/JPL 2008-025 (Titan); HOPE (NTRS 20030063128).
+
+## Shield options (pass 3)
+
+- Globus & Strout 2017 (Table 2, regolith / water / polyethylene against dose); Norman et al.
+  2017 (NTRS 20170005580); Clowdsley 2021 (NTRS 20210009760); Wilson et al. 1995 (liquid hydrogen).
+- Active shields: SP-413 ch. 4 'Active Shields' and app. 4D; Westover et al., MAARSS 2019 (NTRS
+  20190002579); Ambroglini, Battiston & Burger 2016 (SR2S); Slough NIAC 2021; Bamford et al. 2014.
+- Water: KISS ARM report 2018; Janhunen et al., EMMI (arXiv 1409.1036).
+- Solar particle events: Wilson et al. 2006 (NTRS 20060046504); Simon et al., RadWorks (NTRS
+  20170002287).
+
+## Science (pass 3)
+
+- CERN: our people, environment report 2023-2024, electricity, LHC, cryogenics, data centre pages
+  (home.cern); Lebrun 2014, 'Why are particle accelerators so inefficient?'; Bruning, Burkhardt &
+  Myers 2012 (LHC); Claudet et al. 2008 (LHC cryogenics); CERN Courier 2019, 2025 (Nb3Sn, FCC).
+- Beacham & Zimmermann 2022, a collider on the Moon (New J. Phys. 24 023029, arXiv:2106.02048).
+- ESRF: https://www.esrf.fr/about and ESRF News Dec 2022; DESY; Fermilab FY21 Site Sustainability Plan.
+- NASA ISS Capabilities and Payload Accommodations; ENERGY STAR US median EUI table (2024);
+  I2SL; USC Keck lab space standards.
+
 ## Food and power
 
 - Kusuma, Pattison & Bugbee 2020, "From physics to fixtures to food", Horticulture Research:

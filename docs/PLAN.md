@@ -38,6 +38,20 @@ computed properly instead of guessed.
 - Next: size the tube from ground area (it now drives 91% of the spread), build the tour's
   delta-v from its stops (one Callisto visit is about half of it), the shield (pass 3).
 
+## Research pass 3: ground, tour, shield, science (done 2026-11-06)
+
+- Five topics in parallel; placeholders 7 -> 0 (122 parameters); `params/tour.yaml`,
+  `worlds.yaml`, `science.yaml` (`docs/RESEARCH.md`).
+- Model: the tube sized from ground area a person, as SP-413 did (reproduced within 2%); the
+  tour's delta-v built from its stops (Edelbaum legs, Hohmann past Jupiter, thrust-dependent
+  spirals, parking at 7 body radii with landers carrying the rest); shield options (water,
+  active, spinning); science (labs, computing, a collider round the ring in the still shield, a
+  light source, a zero-g lab).
+- Result: 25.1 million t, 228 MW; the tour is 69 km/s (not 30) and needs 1.7 TW of jet power;
+  the collider reaches 2.9 TeV a beam with 16 T magnets; water would shield for 36% less mass.
+- Next: Jon's choices (how roomy, which shield, the dose target), refuelling on the tour, the
+  magnet projects in cortenforge-cfsem (pass 4).
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or
@@ -66,6 +80,12 @@ computed properly instead of guessed.
   - Care is automated (Jon): "the masages, cooking, etc would all be ai/automated/robotic". So
     the "LeBron" care hours are robot hours: the model sizes robots (count, mass, power, upkeep),
     and people's time stays theirs for play.
+- **2026-11-06, science with sports** (Jon): "it should be like cern too. like basically science
+  with sports. as youd imagine life aboard a mothership like this would look like". The ship is a
+  research campus as well as a club: labs, big instruments, the expeditions' planetary science,
+  sports science and medicine itself. To size: lab space and power, big facilities (a collider
+  could run round the ring inside the still shield, which doesn't spin and shields its beam
+  losses; a light source; telescopes; a zero-g lab at the hub; a data centre).
 - **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
   planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
   body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
@@ -74,8 +94,8 @@ computed properly instead of guessed.
 
 ## Next
 
-1. **Research pass 3** (`docs/RESEARCH.md`): the tube from ground area, the tour from its stops,
-   the shield.
+1. **Pass 4** (`docs/RESEARCH.md`): Jon's choices (ground area a person, shield, dose target),
+   refuelling and moon flybys on the tour.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;
    reactor magnets (the stellarator project: stored energy, forces, structure mass); spin dynamics

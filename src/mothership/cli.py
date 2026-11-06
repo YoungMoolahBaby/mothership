@@ -16,7 +16,7 @@ from .report import write
 def cmd_check(args) -> int:
     params = load_params()
     problems = check_params(params)
-    needed = [f"mission.scenario.{s}.{k}" for s in SCENARIOS for k in ("dv", "years")]
+    needed = [f"mission.scenario.{s}.years" for s in SCENARIOS] + ["mission.scenario.park.dv"]
     problems += [f"missing parameter {k}" for k in needed if k not in params]
     if not problems:
         r = run(values(params))

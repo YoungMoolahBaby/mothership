@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 
 from mothership.cli import main
-from mothership.model import SCENARIOS, run
+from mothership.model import SCENARIOS, TOUR, run, tour_dv
 from mothership.params import check_params, draw, load_params, values
 
-PARTS = ("shield_t", "shell_t", "ring_t", "air_t", "interior_t", "robots_t", "plants_t", "radiators_t", "expeditions_t")
+PARTS = ("shield_t", "shell_t", "ring_t", "air_t", "interior_t", "robots_t", "plants_t", "radiators_t", "expeditions_t", "collider_t")
 
 
 def test_params_clean():
@@ -52,8 +52,41 @@ def test_hockey_ship_parts():
     assert float(s["tube_radius_m"]) >= ph.box_tube_radius(v["athletics.rink.length"], v["athletics.rink.height"])
     # skaters are heavier with the spin, lighter against it
     assert float(s["skate_weight_with_spin"]) > 1.0 > float(s["skate_weight_against_spin"])
-    # landers: dry mass plus the propellant carried
+    # landers: dry mass plus the propellant carried (the mean sortie x sorties at every stop)
     sortie = float(s["sortie_propellant_t"])
     assert float(s["expeditions_t"]) == pytest.approx(
-        v["expeditions.landers"] * (v["expeditions.lander_dry"] + v["expeditions.sorties_carried"] * sortie)
+        v["expeditions.landers"] * v["expeditions.lander_dry"] + len(TOUR) * v["expeditions.sorties_per_stop"] * sortie
     )
+    # parked higher than low orbit, a lander's round trip costs more than from low orbit
+    from mothership.model import sortie_dv
+    assert float(sortie_dv(v, "callisto")) > v["expeditions.sortie_dv"]
+
+
+def test_tour_dv_adds_up():
+    v = values(load_params())
+    t = tour_dv(v)
+    assert float(t["total_km_s"]) == pytest.approx(sum(float(x) for k, x in t.items() if k != "total_km_s"))
+    # coplanar, out and back through planets ever farther from the Sun: the legs climb out of the
+    # Sun's well and fall back in, 2 (v_earth - v_outermost)
+    flat = dict(v)
+    for body in ("earth", "mars", "ceres", "jupiter", "saturn"):
+        flat[f"worlds.{body}.inclination"] = 0.0
+    flat["tour.edelbaum_eps_max"] = 1e9  # every leg an Edelbaum spiral
+    from mothership import physics as ph
+    vc = lambda b: ph.circular_speed(v["worlds.sun.gm"], v[f"worlds.{b}.orbit"])
+    outer = TOUR[-1].split(".")[0]
+    assert float(tour_dv(flat)["legs_km_s"]) == pytest.approx(2 * (vc("earth") - vc(outer)))
+
+
+def test_science_parts():
+    v = values(load_params())
+    s = run(v)["ship"]
+    from mothership import physics as ph
+    ring = float(s["radius_m"]) + v["habitat.shield.gap"]
+    assert float(s["collider_t"]) == pytest.approx(2 * np.pi * ring * v["science.collider.cold_mass"])
+    rho = v["science.collider.fill"] * ring
+    assert float(s["collider_tev"]) == pytest.approx(ph.collider_energy_tev(v["science.collider.field"], rho))
+    n = v["mission.population"]
+    mw = (n * v["science.share"] * v["science.kw_per_researcher"] + n * v["science.data_kw_per_person"] + v["science.zero_g_kw"]) / 1e3
+    mw += v["science.collider.power_mw"] + v["science.light_source_mw"]
+    assert float(s["science_mw"]) == pytest.approx(mw)

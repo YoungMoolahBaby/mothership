@@ -1,5 +1,6 @@
 # Who lives aboard, and what the ship is asked to do. Scenarios are definitions, not estimates:
 # each is a speed change (delta-v) spread over a burn time; the report sizes the ship for each.
+# `tour` and `brisk` take their delta-v from the tour's stops (model.tour_dv, params/tour.yaml).
 
 population:
   value: 10000
@@ -20,24 +21,14 @@ scenario:
       conf: "high"
       source: "scenario: no burn"
   tour:
-    dv:
-      value: 30
-      unit: km/s
-      conf: "high"
-      source: "scenario: a slow solar-system tour, roughly Earth orbit to the outer planets and back over decades"
     years:
       value: 20
       unit: years of thrusting
       conf: "high"
-      source: "scenario definition"
+      source: "scenario definition: the grand tour (model.TOUR, delta-v built from its stops, params/tour.yaml)"
   brisk:
-    dv:
-      value: 30
-      unit: km/s
-      conf: "high"
-      source: "scenario: the same delta-v in 2 years"
     years:
       value: 2
       unit: years of thrusting
       conf: "high"
-      source: "scenario definition"
+      source: "scenario: the same tour's delta-v in 2 years"

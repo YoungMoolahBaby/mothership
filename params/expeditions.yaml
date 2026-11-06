@@ -38,10 +38,10 @@ isp:
   unit: s
   conf: "high"
   source: "methalox: Polsgrove 2017 'propulsion systems with an Isp of 360 s'; DRA 5.0 'an Isp of 369 sec'; storable NTO/MMH 'specific impulse (Isp) of 335 s' (Polsgrove). Methane and oxygen can be made on Mars (O2 from the air: DRA 5.0 sec. 5.3, MOXIE), the lunar poles ('water ice in the regolith ... 5.6 +- 2.9% by mass', Colaprete 2010), icy moons and Titan"
-sorties_carried:
-  value: 10
-  low: 4
-  high: 20
-  unit: round trips of propellant carried a lander
-  conf: "placeholder"
-  source: "placeholder: about a sortie a stop on a tour of ~10 stops; propellant made on the surface (DRA 5.0; HOPE: 'begin fuel production; top off tanks in surface hab lander') would cut it; Mercury has none"
+sorties_per_stop:
+  value: 3
+  low: 1
+  high: 6
+  unit: lander round trips a stop, propellant carried from home
+  conf: "low"
+  source: "judgement: two crews down at once and a crew change at each stop of the tour (model.TOUR); propellant made on the surface (DRA 5.0; HOPE: 'begin fuel production; top off tanks in surface hab lander') would cut it"

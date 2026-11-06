@@ -134,19 +134,83 @@ each orbit at ~0.93 of the circular speed each way (MIT 16.522): a visit to low 
 body radii) cuts a visit about 3x but asks ~1.5x more of the landers. The tour's delta-v should be
 built from its stops (pass 3).
 
-## Next (pass 3)
+## Research pass 3 (2026-11-06): ground, the tour, the shield, science
 
-1. **Tube from ground area** (model): size the tube by projected area a person (SP-413 67 m^2, at
-   least 40), the lived-in volume in the band and the rink fit, instead of `tube_ratio`.
-2. **Tour from stops** (model): heliocentric legs plus spirals at each stop (or a high parking
-   orbit and bigger landers); gravity assists in the Jupiter and Saturn systems.
-3. `habitat.shield.areal_density` (+0.33): shield material (water from asteroids vs slag) and an
-   active magnetic shield (a cortenforge-cfsem project).
-4. Placeholders (7): `care.robot_pace`, `care.kitchen_mass`, `care.kitchen_kw`,
-   `expeditions.sorties_carried`, `habitat.shell.allowable_stress`, `power.habitat_radiator_temp`,
-   `habitat.min_inertia_ratio`.
-5. `habitat.gravity_band` (SP-413 calls its 10% arbitrary) matters again once the tube is fitted.
-6. Model: farms in low-g decks (plants may not need 1 g), a spinning-shield variant, O'Neill
-   cylinders; the lifelong ceiling (VO2max falls ~10% a decade even in trained people, Tanaka &
-   Seals 2008; lifelong exercisers at ~75 keep about 1.5x the VO2max of sedentary peers, Gries
-   2018).
+Five topics in parallel (habitat geometry and the gravity band; the tour; the shield; the
+remaining placeholders; science aboard, after Jon's "like cern too ... science with sports").
+Placeholders 7 -> **0** (122 parameters). New: `params/tour.yaml`, `params/worlds.yaml` (JPL
+data), `params/science.yaml`; references in `docs/SOURCES.md`. Key quotes rechecked by hand
+against the fetched pages and PDFs the researchers saved (SP-413 ch. 4-5 and app. 4A-4B, MIT
+16.522, Globus & Strout, ESRF, CERN).
+
+1. [x] **Tube from ground area** (model). SP-413: "In a torus the projected area is a strip
+   through the diameter of the tube of the torus", Ap = 4 pi r R, on "the central plain running
+   the full circumference of the torus along the middle of the tube"; "the radius needed to
+   enclose the 670,000 m^2 of projected area can be quite small". `physics.ground_area` (the
+   widest chord in the band, at the tube's centre unless the band stops lower) reproduces it
+   within 2% (`test_ground_area_reproduces_sp413`). `habitat.tube_ratio` -> **`ground_area_per_
+   person` 67** (40-155: SP-413's minimum 40; its whole floor 155, Kalpana One 170) and
+   `max_tube_ratio` 0.2 (more rings past it). The rinks' 54,000 m^2 of ground make the tube
+   **70 m** (SP-413: 65).
+2. [x] **Tour from stops** (model, `model.tour_dv`): Earth (home orbit at 60 Earth radii) ->
+   Mars -> Ceres (water) -> Callisto (outside Jupiter's worst belts) -> Titan (methane) -> Earth.
+   Legs: Edelbaum spirals with the true plane change (nodes included) while the drive's
+   acceleration is under 0.3 of the Sun's pull, Hohmann transfers beyond (Jupiter outward:
+   months of thrust against years of coast). Spirals cost 1 - 0.754 eps^(1/4) of circular speed
+   (MIT 16.522). The ship parks at **7 body radii** (Deimos's orbit at Mars, ~1/3 of the Hill
+   radius at Callisto and Titan); landers carry the rest (Hohmann to low orbit and back). Result:
+   **69.1 km/s** (P10-P90 68.8-72.4): home 1.4, legs 40.5 (15.7 of it the Hohmann home from
+   Saturn), Mars 2.3, Ceres 0.2, Callisto 14.6, Titan 10.2; pass 2's flat 30 km/s was 2.3x low.
+   Checks: Dawn's ion drive gave "almost 11.5 km/s" (Rayman & Garner 2018); JIMO's Callisto-
+   Ganymede-Europa tour needed "nearly 25 km/s". Moon flybys could cut the Jupiter and Saturn
+   spirals by ~30% and more (Ross et al. 2003: "using only 22 m/s" between Callisto, Ganymede and
+   Europa with years of flight), not modelled.
+3. [x] **Shield**: regolith 10 -> **10.3 t/m^2** (9.5-11.1, log-interpolated to 20 mSv/yr in
+   Globus & Strout's Table 2). Options now in the report: **water 6.6 t/m^2 (15.3 Mt against
+   23.9)**, the same dose for 36% less; an **active magnetic shield over 0.5 t/m^2 of passive
+   (~3.7 Mt, low confidence: only SP-413 studied one at settlement scale and rejected it)**;
+   **spinning the shield** with the habitat costs ~6.6 Mt more ring (SP-413's reason for a still
+   one; Kalpana One spins it to avoid "catastrophic failure modes"). Water for a shield is ~360x
+   the settlement's own water; at ~2 MJ/kg to extract (EMMI), 15 Mt is ~0.9 GW-yr.
+4. [x] **Placeholders**: `habitat.shell.allowable_stress` **320 MPa** (A514 steel, ASME VIII-2 /
+   NASA-STD-5001B; SP-413 used aluminium at 234); `power.habitat_radiator_temp` **280 K** (SP-413
+   "Assuming a radiator temperature of 280 K"); `care.robot_pace` **2** (Dyna-1 "60% of human
+   throughput", laundry folding ~3.4x slower); `care.kitchen_kw` -> **`kitchen_kwh_per_meal`
+   1.6** (LBNL, fast food median 1.88 less heating); `habitat.min_inertia_ratio` **1.2** ("at
+   least 1.2 times greater than any other axis", Globus et al. 2007); `expeditions.sorties_
+   carried` -> `sorties_per_stop` 3 (judgement); `habitat.gravity_band` **0.1** (0.06-0.15:
+   Queijo 1988's +-3% decks, Jensen 2024's 0.95-1.1 g).
+5. [x] **Science** (Jon: "like cern too"): **3,000** people doing science (0.3 of the ship, judgement;
+   CERN 2,500 staff and 12,200 users), **16 m^3** a person of labs, **28.7 MW**: labs 3.6, data
+   centre 4.0 (CERN's 4 -> 12 MW), a **collider round the ring inside the still shield** 15 MW
+   (the LHC's 87 MW scaled by length), a light source 6 (ESRF), a zero-g lab 0.06. With 16 T
+   dipoles the collider reaches **2.9 TeV a beam** (5.8 TeV collisions; Tevatron ~1, LHC 6.8),
+   7,600 t of magnets. Space gives its vacuum ("at least 100 times better than the vacuum in the
+   beam pipes of the LHC" on the Moon, Beacham & Zimmermann 2022); the shield absorbs its outward
+   losses, its inward side needs metres of local shielding at collimators and dumps.
+
+**Result** (`uv run mothership report`, 5,000 draws): **25.1 million t central** (P50 31.5,
+P10-P90 22.6-45.7), shield 23.9 of it; **228 MW** (science 29, robots 2.7, ice 1.0). The tour
+needs **1.7 TW of jet power** and 3.6 million t of drive and propellant (start 28.7 Mt); `brisk`
+6.7 TW and 14.8 Mt. Spin stable in all draws.
+
+**Finding: how roomy the ship is drives everything.** `habitat.ground_area_per_person` is +0.99:
+SP-413's minimum 40 m^2 a person gives 16 Mt, its 67 gives 25, 100 gives 36, and Kalpana One's
+~170 needs two rings and ~60 Mt. That is a choice for Jon, not a fact to research.
+
+**Finding: water is the cheaper shield and the tour passes water.** The same 20 mSv/yr for 36%
+less mass, and Ceres, Callisto and Titan are on the route; regolith is only cheaper where the ship
+is built (lunar material at L5).
+
+## Next (pass 4)
+
+1. **Jon's choices**: ground area a person (how roomy), the shield (regolith, water, active),
+   the dose target for lifelong residents (10 mSv/yr is ~11.8 t/m^2 of regolith).
+2. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
+   water gives 0.112 kg of H2 a kg), moon flybys in the Jupiter and Saturn systems.
+3. **cortenforge-cfsem projects**: the active shield's coils (field, forces, stored energy), the
+   collider's dipoles round the ring, the hospital's MRI magnet.
+4. Model: farms in low-g decks (plants may not need 1 g), O'Neill cylinders; heat pumps on the
+   habitat radiators (fewer m^2 for more power); the lifelong ceiling (VO2max falls ~10% a decade
+   even in trained people, Tanaka & Seals 2008; lifelong exercisers at ~75 keep about 1.5x the
+   VO2max of sedentary peers, Gries 2018).

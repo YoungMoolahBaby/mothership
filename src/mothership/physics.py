@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from .constants import G0, KCAL, DAY, SIGMA
+from .constants import C_LIGHT, G0, KCAL, DAY, SIGMA
 
 
 def omega(rpm):
@@ -143,3 +143,71 @@ def rocket_propellant(final_mass, dv, isp):
     """Propellant for a burn of delta-v `dv` (m/s) at specific impulse `isp` (s) that ends with
     `final_mass` (Tsiolkovsky): final_mass (e^(dv / (isp g0)) - 1), same unit as final_mass."""
     return final_mass * np.expm1(np.asarray(dv, dtype=float) / (np.asarray(isp, dtype=float) * G0))
+
+
+def ground_area(R_floor, r, band):
+    """Area of the widest ground a tube holds within the gravity band: a floor across the tube at
+    depth d above the outer floor (the tube's centre, d = r, where the chord is widest, unless the
+    band stops lower: d = band x R_floor), its width the chord there, times its circumference."""
+    d = np.minimum(r, band * R_floor)
+    chord = 2.0 * np.sqrt(np.maximum(d * (2.0 * r - d), 0.0))
+    return chord * 2.0 * np.pi * (R_floor - d)
+
+
+def tube_radius_for(R_floor, band, volume, ground, r_min, r_max, iterations=80):
+    """Smallest tube radius (between r_min and r_max) whose gravity band holds `volume` and whose
+    widest ground holds `ground`; both grow with r, so bisect. Returns r_max where even that
+    falls short (the caller then adds rings)."""
+    R_floor, band, volume, ground, r_min, r_max = np.broadcast_arrays(
+        *(np.asarray(a, dtype=float) for a in (R_floor, band, volume, ground, r_min, r_max))
+    )
+    lo, hi = np.minimum(r_min, r_max), r_max.copy()
+    ok = lambda r: (band_volume(R_floor, r, band) >= volume) & (ground_area(R_floor, r, band) >= ground)
+    done = ok(lo)
+    for _ in range(iterations):
+        mid = 0.5 * (lo + hi)
+        good = ok(mid)
+        hi = np.where(good, mid, hi)
+        lo = np.where(good, lo, mid)
+    return np.where(done, np.minimum(r_min, r_max), hi)
+
+
+def circular_speed(gm, r):
+    """Circular orbit speed sqrt(GM / r) (units of gm and r: km^3/s^2 and km give km/s)."""
+    return np.sqrt(gm / r)
+
+
+def edelbaum_dv(v1, v2, di):
+    """Low-thrust transfer between circular orbits of speeds v1 and v2 with a plane change of di
+    (radians), thrust steered optimally (Edelbaum 1961): sqrt(v1^2 + v2^2 - 2 v1 v2 cos(pi/2 di)).
+    Coplanar it is |v1 - v2|; a pure plane change costs (pi/2) v di for small di."""
+    return np.sqrt(v1**2 + v2**2 - 2.0 * v1 * v2 * np.cos(0.5 * np.pi * di))
+
+
+def collider_energy_tev(field, bend_radius):
+    """Beam energy (TeV) of a proton ring with dipoles of `field` (T) bending on `bend_radius`
+    (m): p = e B rho, so pc in eV = c B rho; at these energies E = pc."""
+    return C_LIGHT * np.asarray(field, dtype=float) * bend_radius / 1e12
+
+
+def relative_inclination(i1, node1, i2, node2):
+    """Angle (radians) between two orbit planes given their inclinations and ascending nodes
+    (radians) to a common reference plane: cos d = cos i1 cos i2 + sin i1 sin i2 cos(node1 - node2)."""
+    c = np.cos(i1) * np.cos(i2) + np.sin(i1) * np.sin(i2) * np.cos(node1 - node2)
+    return np.arccos(np.clip(c, -1.0, 1.0))
+
+
+def hohmann_dv(gm, r1, r2):
+    """Two-burn Hohmann transfer between coplanar circular orbits (units of gm and r: km^3/s^2
+    and km give km/s)."""
+    a = 0.5 * (r1 + r2)
+    v1, v2 = np.sqrt(gm / r1), np.sqrt(gm / r2)
+    return np.abs(np.sqrt(gm * (2.0 / r1 - 1.0 / a)) - v1) + np.abs(v2 - np.sqrt(gm * (2.0 / r2 - 1.0 / a)))
+
+
+def spiral_factor(acceleration, gm, r, coefficient):
+    """Delta-v of a low-thrust spiral between circular speed at r and escape, over that circular
+    speed: 1 - c eps^(1/4), eps = thrust acceleration / local gravity (MIT 16.522 lecture 6,
+    c = 0.754). `acceleration` in m/s^2, gm in km^3/s^2, r in km."""
+    eps = acceleration / (gm / r**2 * 1e3)
+    return np.clip(1.0 - coefficient * eps**0.25, 0.0, 1.0)
