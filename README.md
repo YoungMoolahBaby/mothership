@@ -29,9 +29,10 @@ uv run pytest               # the physics against closed forms and textbook valu
   volume in that band and the farms; past a size limit, rings are stacked along the spin axis.
   With the Stanford torus study's numbers it reproduces that design (67 m^2 a person on a 65 m
   tube).
-- **Shield**: a still (non-spinning) shell of water round each ring, thick enough for 10 mSv/yr
-  (Jon's choice), from the OLTARIS dose tables; the report also prices regolith, an active
-  magnetic shield and spinning the shield.
+- **Shield**: a still (non-spinning) fail-safe hybrid round each ring: water thick enough for 50
+  mSv/yr with the magnet off (OLTARIS dose tables) and a low-field magnet for 10 mSv/yr with it
+  on (cortenforge-cfsem); the report also prices water alone, regolith, the full magnet hybrid
+  and spinning the shield.
 - **Structure**: the pressure shell (thin torus, peak stress on the inner equator) and the
   spinning hoop that holds everything against the spin (k = rho w^2 R^2 / sigma).
 - **Spin stability**: the stack's spin-axis over cross-axis moment of inertia; a body spins
@@ -65,11 +66,14 @@ uv run pytest               # the physics against closed forms and textbook valu
 
 For 10,000 people (central / P50 / P10-P90):
 
-- Ship without drive: 19.4 / 24.5 / 17.4-35.8 million t, about 1,900 t a person. The shield is
-  8.0 t/m^2 of water for 10 mSv/yr: 18.5 million t (regolith for the same dose 27.4).
+- Ship without drive: 12.4 / 15.9 / 11.3-23.4 million t, about 1,240 t a person. The shield is a
+  fail-safe hybrid, 11.4 million t: 4.72 t/m^2 of water (within ICRP's 50 mSv single-year ceiling
+  with the magnet off) and a low-field magnet (50 T m, 0.48 million t, 55 MW of cryocoolers) that
+  brings it to 9-10 mSv/yr; water alone would be 18.5 million t (computed in cortenforge-cfsem
+  `projects/active-shield`).
 - One ring: outer floor 894 m from the axis at 1 rpm and 1 g, a 70 m tube (SP-413's 65 m plus the
-  rinks' ground); 67 m^2 of ground a person, all for living. Electric power 189 MW: food 10.7 kW a
-  person, science 29 MW; 2 plants with the spare.
+  rinks' ground); 67 m^2 of ground a person, all for living. Electric power 244 MW: food 10.7 kW a
+  person, the shield magnet's cryocoolers 55 MW, science 29 MW; 2 plants with the spare.
 - Food (vegan): 78% of the athletes' 2,700 kcal from 13 crops on 55 m^2 of racks a person (59 with
   herbs, spices, medicine and the grove), the rest from microbial protein, fungi on crop waste,
   precision-fermented dairy and algae; protein 2.5 g/kg a day. High-pressure mist (0.3 MW for the
@@ -85,9 +89,9 @@ For 10,000 people (central / P50 / P10-P90):
 - Science: 3,000 people doing it, 16 m^3 a person of labs; a collider round the ring with 16 T
   magnets reaches 2.9 TeV a beam (the Tevatron ~1, the LHC 6.8) for 15 MW and 7,600 t.
 - The tour is 69 km/s, not the 30 assumed before: Callisto inside Jupiter's well costs 14.6 and
-  Titan 10.2, coming home from Saturn 15.7. It needs about 1.4 TW of jet power and 2.8 million t
-  of drive and propellant over 20 years of thrust; `brisk` (2 years) 5.2 TW and 11.4 million t.
-  Living needs 0.19 GW.
+  Titan 10.2, coming home from Saturn 15.7. It needs about 0.86 TW of jet power and 1.8 million t
+  of drive and propellant over 20 years of thrust; `brisk` (2 years) 3.3 TW and 7.3 million t.
+  Living needs 0.24 GW.
 - Expeditions: 4 reusable 6-crew landers, about 90 t of propellant a round trip from the ship's
   parking orbit at 7 body radii; surface stays of about two weeks (radiation, coming back to 1 g).
 - Details and sources: `docs/RESEARCH.md`, `docs/SOURCES.md`.

@@ -323,16 +323,31 @@ checked against Ambroglini et al. 2016, and sizing.
 - No drag on the spinning hull (the field is axisymmetric); leakage under 0.07 mT at the habitat
   with 2,000+ turns; solar particle events stopped outright.
 
+**The call: a fail-safe hybrid** (Jon: "it being basically failsafe is quite important", then
+"your call, engineering wise"). Water sized for the dose with the magnet off, a small magnet for
+the target with it on (cortenforge-cfsem active-shield `failsafe`, 40 m shells):
+
+| magnet-off limit | water t/m^2 | magnet | shield Mt | dose on | stored |
+|---|---|---|---|---|---|
+| 20 mSv/yr | 6.56 | 30 T m, 0.14 Mt | 15.4 | 7.6 | 7 kt TNT |
+| **50 mSv/yr** | **4.72** | **50 T m, 0.35-0.48 Mt** | **11.3-11.5** | **9.1** | **18 kt TNT** |
+| 100 mSv/yr | 3.33 | 100 T m, 1.31 Mt | 9.05 | 6.6 | 74 kt TNT |
+
+50 mSv/yr is ICRP's occupational single-year ceiling ("no single year exceeding 50 mSv", ICRP 103
+Table 6), so any repair time is survivable. New: `habitat.shield.failsafe_dose` 50,
+`magnet_mass_per_area` 0.207 t/m^2 (run warm at ~65 K: ~3x the conductor, 0.48 Mt), `magnet_cryo_mw`
+55 (131 at 40 K). Result: **12.4 million t** (was 19.4), **244 MW**, the tour **0.86 TW** (was
+1.35).
+
 ## Next (pass 7)
 
-1. **Jon's call on the shield**: water (18.5 Mt, passive, simple) or the magnet + water hybrid
-   (~5.8 Mt, ~131 MW, cryogenics and a quench to manage).
-2. **cortenforge-cfsem: the active shield, next steps**: transport for the secondaries, the
-   support structure's stresses, quench protection and the cryogenic budget; then the collider's
-   dipoles round the ring and the hospital's MRI magnet.
-3. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
+1. **cortenforge-cfsem: the hybrid's open items**: transport for the secondaries (x2 assumed: at
+   x3 the dose with the magnet on is ~14 mSv/yr; the fail-safe limit doesn't move), the support
+   structure's stresses (Q), quench protection, the cryogenic budget and REBCO's current at 65 K
+   and ~1-2 T; then the collider's dipoles round the ring and the hospital's MRI magnet.
+2. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
    water gives 0.112 kg of H2 a kg), moon flybys in the Jupiter and Saturn systems.
-4. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
+3. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
    enough", Kiss 2014), O'Neill cylinders; heat pumps on the habitat radiators; the lifelong
    ceiling (VO2max falls ~10% a decade even in trained people, Tanaka & Seals 2008; lifelong
    exercisers at ~75 keep about 1.5x the VO2max of sedentary peers, Gries 2018).

@@ -3,7 +3,8 @@
 # no structure. People live on a ground plane across the tube and in floors within gravity_band
 # of the outer floor's gravity; farms (aeroponic racks) go anywhere in the tube. The tube is the
 # smallest that holds the ground, the lived-in volume in the band and the farms (pass 3-4,
-# docs/RESEARCH.md). The shield is water for the dose target (Jon's choices, pass 4).
+# docs/RESEARCH.md). The shield is the fail-safe hybrid: water for the dose with the magnet off,
+# a low-field magnet for the dose target (pass 6).
 
 gravity_g:
   value: 1.0
@@ -92,6 +93,25 @@ shield:
     unit: mSv a year inside the shield (galactic cosmic rays, deep space)
     conf: "high"
     source: "Jon's choice (2026-11-06): half the 20 mSv/yr Globus & Strout set for adults ('For adults only the average dose over many years is relevant'), for people who live aboard for life, children included; NASA's 600 mSv career limit is 30 years at 20 mSv/yr, 60 at 10"
+  failsafe_dose:
+    value: 50
+    unit: mSv a year inside the shield with the magnet off
+    conf: "high"
+    source: "design decision (pass 6, 2026-11-06; Jon: 'your call, engineering wise'): the water alone keeps the dose within ICRP's occupational single-year ceiling, '20 mSv per year, averaged over defined periods of 5 years, with no single year exceeding 50 mSv' (ICRP Publication 103, Table 6), so a magnet failure is survivable for as long as repairs take; 4.7 t/m^2 of water also stops solar particle events outright. The magnet brings it to dose_target"
+  magnet_mass_per_area:
+    value: 0.207
+    low: 0.16
+    high: 0.51
+    unit: t/m^2 of the fail-safe hybrid's magnet over the habitat's shield area
+    conf: "low"
+    source: "computed in cortenforge-cfsem projects/active-shield (`failsafe`, 2026-11-06): with 4.72 t/m^2 of water, the smallest magnet for 10 mSv/yr is 50 T m (1.25 T across a 40 m shell, 75-115 m round the tube): leftovers 47.9 mSv/yr of primaries, x2 for secondaries, through the water -> 9.1 mSv/yr; stored 7.74e13 J (~18 kt of TNT); carbon-fibre structure at 1,200 MPa, Q = 3, 0.30 Mt; REBCO at ~65 K (J_e ~300 A/mm^2, judgement from Jc ~ exp(-T/T*), T* 20-30 K, Senatore et al. 2016) 0.18 Mt; 0.48 Mt over 2.326e6 m^2. Range: Q 2-10"
+  magnet_cryo_mw:
+    value: 55
+    low: 20
+    high: 150
+    unit: MW electric for the magnet's cryocoolers
+    conf: "low"
+    source: "computed in cortenforge-cfsem active-shield: heat leak ~1.25 W/m^2 onto the 2.44e6 m^2 inner winding from the 293 K habitat (multilayer insulation at an effective emissivity ~0.003, judgement) lifted at ~65 K for ~18 W/W (cryocoolers at 20-30% of Carnot at megawatt scale: 'increasing to roughly 30% in the megawatt-range', ter Brake & Wiegerinck 2002); 131 MW if run at 40 K. A cryocooler failure warms the magnet, which quenches and turns off: the fail-safe case"
   code_factor:
     value: 1.0
     low: 0.77

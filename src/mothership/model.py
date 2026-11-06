@@ -225,19 +225,27 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     # Still shield round the tube.
     gap = v["habitat.shield.gap"]
     shield_area = rings * ph.torus_area(R, r + gap)
-    # Water, thick enough for the dose target (Jon's choices: water, 10 mSv/yr), from the deepest
-    # row of the OLTARIS table and its e-fold. Options (not in the total): regolith for the same
-    # dose; an active magnetic shield over a thin passive one; spinning the shield with the
-    # habitat (its ring must then carry it, SP-413's reason for a still shield).
-    dose = v["habitat.shield.dose_target"] / v["habitat.shield.code_factor"]
-    areal = {
-        m: ph.shield_areal_density(
-            v[f"habitat.shield.{m}.anchor_areal"], v[f"habitat.shield.{m}.anchor_dose"], v[f"habitat.shield.{m}.efold"], dose
-        )
-        for m in ("water", "regolith")
-    }
-    shield = shield_area * areal["water"] * 1e3
-    shield_regolith = shield_area * areal["regolith"] * 1e3
+    # The fail-safe hybrid (pass 6): water thick enough that the dose stays under the fail-safe
+    # limit with the magnet off (the OLTARIS table's deepest rows and their e-fold), and a low-
+    # field magnet that brings it to the dose target with the magnet on (computed in
+    # cortenforge-cfsem active-shield `failsafe`), cooled by cryocoolers. Options (not in the
+    # total): water alone for the target; regolith for the target; the full magnet + thin water
+    # hybrid; spinning the shield with the habitat (SP-413's reason for a still shield).
+    code = v["habitat.shield.code_factor"]
+    water_at = lambda dose: ph.shield_areal_density(
+        v["habitat.shield.water.anchor_areal"], v["habitat.shield.water.anchor_dose"], v["habitat.shield.water.efold"], dose / code
+    )
+    water_fs = water_at(v["habitat.shield.failsafe_dose"])
+    water_only = water_at(v["habitat.shield.dose_target"])
+    regolith = ph.shield_areal_density(
+        v["habitat.shield.regolith.anchor_areal"], v["habitat.shield.regolith.anchor_dose"], v["habitat.shield.regolith.efold"],
+        v["habitat.shield.dose_target"] / code,
+    )
+    magnet = shield_area * v["habitat.shield.magnet_mass_per_area"] * 1e3
+    shield = shield_area * water_fs * 1e3 + magnet
+    shield_water_only = shield_area * water_only * 1e3
+    shield_regolith = shield_area * regolith * 1e3
+    cryo_w = v["habitat.shield.magnet_cryo_mw"] * 1e6
     shield_active = shield_area * (v["habitat.shield.active_mass_per_area"] + v["habitat.shield.active_residual"]) * 1e3
 
     # Power: food under lights plus everything else; all of it ends as heat in the habitat.
@@ -254,7 +262,7 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         + (v["science.collider.power_mw"] + v["science.light_source_mw"]) * 1e6
         + v["science.zero_g_kw"] * 1e3
     )
-    p_elec = n * (food_w + v["life.other_power_per_person"] * 1e3) + ice_w + robot_w + science_w
+    p_elec = n * (food_w + v["life.other_power_per_person"] * 1e3) + ice_w + robot_w + science_w + cryo_w
     unit = v["power.unit_mwe"] * 1e6
     plants = np.ceil(p_elec / unit) + v["power.spares"]
     plant_mass = plants * v["power.unit_mwe"] * v["power.specific_mass"] * 1e3
@@ -329,7 +337,10 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         "ring_spin_factor": k,
         "spin_inertia_ratio": i_spin / i_cross,
         "shield_t": shield / 1e3,
-        "shield_t_per_m2": areal["water"],
+        "shield_t_per_m2": water_fs,
+        "magnet_t": magnet / 1e3,
+        "cryo_mw": cryo_w / 1e6,
+        "shield_water_only_t": shield_water_only / 1e3,
         "shield_regolith_t": shield_regolith / 1e3,
         "shield_active_t": shield_active / 1e3,
         "spinning_shield_extra_t": ph.ring_structure_mass(shield, k) / 1e3,

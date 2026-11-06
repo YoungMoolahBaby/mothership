@@ -125,6 +125,13 @@ computed properly instead of guessed.
   (~0.5-0.7 MPa, 10-30 um), ultrasonic or dry fog only on propagation benches and a test bench;
   many small independent loops with spare pumps and accumulators for ~1 h, lights dimmed on a mist
   fault, UV and filtration on every return, ~20% of racks deep-flow hydroponics as a buffer.
+- **2026-11-06, the shield: a fail-safe hybrid** (Jon: "that is a lot of weight savings and it
+  being basically failsafe is quite important", then "your call, engineering wise"): water thick
+  enough that the dose stays within ICRP's 50 mSv single-year ceiling with the magnet off (4.72
+  t/m^2), and a low-field 50 T m magnet (1.25 T across a 40 m shell, ~65 K) that brings it to 10
+  mSv/yr with the magnet on (9.1, computed in cortenforge-cfsem active-shield). A magnet or
+  cryocooler failure is survivable, solar storms are stopped by the water alone, and the shield
+  is 11.4 Mt against 18.5 Mt of water alone, for 55 MW of cryocoolers and ~18 kt of TNT stored.
 - **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
   planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
   body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
@@ -133,8 +140,9 @@ computed properly instead of guessed.
 
 ## Next
 
-1. **Pass 6** (`docs/RESEARCH.md`): the active shield as a cortenforge-cfsem project, then
-   refuelling and moon flybys on the tour.
+1. **Pass 7** (`docs/RESEARCH.md`): the hybrid's open items in cortenforge-cfsem (transport for
+   the secondaries, the structure, quench protection, the cryogenic budget), refuelling and moon
+   flybys on the tour.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;
    reactor magnets (the stellarator project: stored energy, forces, structure mass); spin dynamics
