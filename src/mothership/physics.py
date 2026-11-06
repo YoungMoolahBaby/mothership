@@ -122,3 +122,24 @@ def band_volume(R_floor, r, band):
     depth = band * R_floor
     centre = R_floor - r
     return 2.0 * np.pi * (centre + segment_centroid(r, depth)) * segment_area(r, depth)
+
+
+def ring_weight_factor(w, gravity, v):
+    """Apparent weight over floor weight for something moving at v (m/s) along the floor of a
+    spinning ring, v > 0 with the spin, v < 0 against it; `gravity` (m/s^2) is the floor's spin
+    gravity. Its speed past the axis is w R + v on the radius R = gravity / w^2, so the floor
+    pushes (w R + v)^2 / R = gravity (1 + v w / gravity)^2. Motion parallel to the spin axis
+    feels no change (the Coriolis force is w x v = 0), so rinks lie across the tube."""
+    return (1.0 + np.asarray(v, dtype=float) * w / gravity) ** 2
+
+
+def box_tube_radius(width, height):
+    """Smallest tube radius whose circular cross-section holds a box `width` across and `height`
+    tall (the box centred, its corners on the circle): sqrt(width^2 + height^2) / 2."""
+    return 0.5 * np.hypot(width, height)
+
+
+def rocket_propellant(final_mass, dv, isp):
+    """Propellant for a burn of delta-v `dv` (m/s) at specific impulse `isp` (s) that ends with
+    `final_mass` (Tsiolkovsky): final_mass (e^(dv / (isp g0)) - 1), same unit as final_mass."""
+    return final_mass * np.expm1(np.asarray(dv, dtype=float) / (np.asarray(isp, dtype=float) * G0))

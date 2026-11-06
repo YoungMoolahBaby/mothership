@@ -13,11 +13,9 @@ gravity_g:
   source: "SP-413 ch. 3: 'humans permanently in space should live between 0.9 g and 1 g'; no human data on long-term partial g (Clement et al. 2015: 'It is not known whether Mars gravity is effective or not'); mice lose bone in proportion to unloading even at 70% load (Ellman et al. 2013), so nothing supports going lower"
 rpm:
   value: 1
-  low: 1
-  high: 2
   unit: revolutions per minute
-  conf: "medium"
-  source: "SP-413 ch. 3: '1 rpm is set as the upper limit of permissible rotation rate for the principal living quarters'; Globus & Hall 2015: 'Up to 2 rpm should be no problem for residents'. Up to 4 rpm may be acceptable with training for visitors (Globus & Hall 2015), but nothing covers children or lifetimes"
+  conf: "high"
+  source: "Jon's decision (2026-11-06): 1 rpm, the hockey ship's spin; faster spin worsens skating along the ring (at 2 rpm a skater at 11 m/s weighs 1.52 with the spin, 0.58 against), slower needs a far bigger, heavier ship. Comfort limits: SP-413 ch. 3: '1 rpm is set as the upper limit of permissible rotation rate for the principal living quarters'; Globus & Hall 2015: 'Up to 2 rpm should be no problem for residents'. Up to 4 rpm may be acceptable with training for visitors (Globus & Hall 2015), but nothing covers children or lifetimes"
 gravity_band:
   value: 0.1
   low: 0.05

@@ -2,12 +2,12 @@
 # Food power per person = food_energy / (led_to_par x par_to_food).
 
 food_energy:
-  value: 2500
-  low: 2000
-  high: 3000
-  unit: kcal per person per day
-  conf: "medium"
-  source: "typical adult intake range 2,000-3,000 kcal a day; NASA BVAD Rev2 (2022) plans '12.707 MJ/CM-d (~3000 kcal' per crew member"
+  value: 2700
+  low: 2200
+  high: 3300
+  unit: kcal per person per day, the whole population (athletes and children)
+  conf: "low"
+  source: "pass 2 (athletes, 2026-11-06): adults ~70 kg at 40 (35-48) kcal/kg a day, 20% children at ~2,000 (judgement): 0.8 x 2,800 + 0.2 x 2,000 = 2,640 -> 2,700. ISSN (Kerksick et al. 2018): general fitness '1800-2400 kcals/day or about 25-35 kcals/kg/day'; 'moderate levels of intense training (e.g., 2-3 h per day ...) ... may approach 40-70 kcals/kg/day'; this ship trains ~1-1.5 h a day, between the two. Women's varsity hockey: 'Average 7-day energy intake (EI) and TDEE were 2354 +- 353 and 2304 +- 204 kcal' (Vermeulen et al. 2021); pro hockey diaries ~51-52 kcal/kg (Lokbas et al. 2020). No doubly-labelled-water study of hockey exists. Was 2,500 (2,000-3,000) in pass 1; NASA BVAD Rev2 plans '12.707 MJ/CM-d (~3000 kcal' per crew member"
 led_to_par:
   value: 0.45
   low: 0.3

@@ -1,0 +1,117 @@
+# Hockey (Jon, 2026-11-06): the ship is built around adult ice and roller hockey; everyone pursues
+# and keeps their athletic ceiling. Rinks lie across the tube (long side parallel to the spin
+# axis, where motion feels no Coriolis force). Research pass 2 (2026-11-06).
+
+skate_speed:
+  value: 8.7
+  low: 7
+  high: 11.15
+  unit: m/s, a trained player's top speed (for the weight swing skating along the ring)
+  conf: "medium"
+  source: "varsity players in games '(31.16 +- 1.64 vs. 28.73 +- 1.51 km/h)' men vs women, 8.66 / 7.98 m/s (Gamble et al. 2022, Front Physiol); low: recreational adults (judgement, no study found); high: the NHL EDGE record 24.94 mph (Malenstyn, 2026). At 1 rpm the rim moves 93.6 m/s, so weight goes as (1 +- v / 93.6)^2: Hall (AIAA 99-4524) reports comfort criteria set for walking and carrying, 15% (Hill & Schnitzer) and 25% ('an object's apparent gravity should not change by more than 25% when carried at 1.2 meters per second', Stone) weight change, reached spinward at 6.8 and 11.0 m/s. No study covers fast skating or sport at ~1 rpm; limbs adapt 'with 10-20 additional movements' even at 10 rpm (Lackner & DiZio 1998), and 'A home team could take advantage of their adaptation' (Globus & Hall 2015)"
+rink:
+  length:
+    value: 64
+    low: 62
+    high: 66
+    unit: m, rink hall across the tube (ice plus ~2 m round the boards)
+    conf: "high"
+    source: "IIHF Official Ice Arena Guide 2024 p. 38: 'Single rink 2.000 m2 2.200 m2' for 'Size of an ice rink 28 m x 58 m 30 m x 60 m' (practice vs competition); IIHF Rule Book 2023/24 rule 1.2: 'The official size of the Rink shall be 60 m long and 26 m to 30 m wide'; roller rinks are smaller (World Skate: 'The ideal size of the rink is 50x25 meters'), sized here like ice so a pad can be either"
+  width:
+    value: 34
+    low: 32
+    high: 36
+    unit: m, rink hall along the ring
+    conf: "high"
+    source: "IIHF Arena Guide 2024 p. 38 (2,000-2,200 m2 halls, above); benches 'should be 10m in length and 1.50m in width' (p. 25). The ice should follow the ring's curve across its width: 30 m along the ring at R = 894 m drops 0.13 m (derived)"
+  height:
+    value: 7
+    low: 5
+    high: 8
+    unit: m, clear height over the ice
+    conf: "high"
+    source: "IIHF Arena Guide 2024 p. 34: 'The free height above the rink is at least 5m for practice arenas and at least 7m for competition arenas'; high end judgement"
+  support_area:
+    value: 800
+    low: 700
+    high: 1500
+    unit: m^2 of rooms a sheet (dressing rooms, ice plant, resurfacer, ventilation)
+    conf: "medium"
+    source: "IIHF Arena Guide 2024 pp. 38-40 practice-arena space plan, rooms beyond the hall ~790 m2 (dressing rooms 4 x 40, refrigeration 80, ventilation 60, ice resurfacer 60, ...; sum by the pass-2 researcher); high end Schwan Super Rink, 'a 300,000-square-foot (28,000 m2) ice rink facility' with 'eight sheets of ice' = 3,480 m2 a sheet, less a 2,000 m2 hall"
+  support_height:
+    value: 4
+    low: 3
+    high: 5
+    unit: m, room height
+    conf: "medium"
+    source: "SP-413 Table 3-2 room heights for service and shops, 3.2-6 m (judgement within it)"
+ice_hours:
+  value: 4
+  low: 2.5
+  high: 6
+  unit: hours a person a week on ice (games and practice)
+  conf: "low"
+  source: "judgement (pass 2) within 5 (3-8) h a week of rink time for ice and roller together: lifelong exercisers 'exercised 5 day/wk for 7 h/wk over the past 52 +- 1 yr' (Gries et al. 2018); masters athletes '4.1+-1.9 times/week and 80.7+-44.3 mins/session' (Dogra & McCracken 2016); a varsity week '~1 home game, 1 away game, 3 practice days, and 2 rest days' (Vermeulen et al. 2021); off-ice training ~3 h a week is in facility_volume_per_person"
+roller_hours:
+  value: 1
+  low: 0
+  high: 2.5
+  unit: hours a person a week on roller rinks
+  conf: "low"
+  source: "judgement: the rest of the 5 (3-8) h a week of rink time (see ice_hours)"
+skaters_per_session:
+  value: 24
+  low: 20
+  high: 30
+  unit: people on a sheet at once
+  conf: "low"
+  source: "judgement: 20-30 adults a practice; games: 'No more than twenty (20) Skaters and two (2) Goalkeepers shall be permitted' a team (IIHF Rule Book 2023/24), rec games ~12-15 a side"
+rink_open_hours:
+  value: 121
+  low: 85
+  high: 140
+  unit: hours a week a sheet is in use
+  conf: "medium"
+  source: "North Dumfries Arena Strategy (Monteith Brown, Oct 2020): prime and non-prime windows 7:00-24:00 weekdays, 6:00-24:00 weekends = 121 h (derived); the busiest pad 'was used for 68.5 hours'. Cross-check: Earth provision 'one ice pad per 400 youth participants' to 'one ice pad per 650 youth and adult participants' gives 15-25 sheets for 10,000 players"
+ice_plant_kw:
+  value: 68
+  low: 51
+  high: 165
+  unit: kW electric a sheet, year-round average (refrigeration, dehumidifying, lighting)
+  conf: "medium"
+  source: "IIHF Sustainable Ice Arenas guide 2022 sec. 2.3-2.4: 'Total energy use 1000 MWh/year' inefficient vs '460 MWh/year' efficient, 'refrigeration contributes to the largest portion with around 43%', 'below 1500 kWh/day' for efficient rinks; Rogstam 2010 'about 2.2 kWh/day.m2'. Year-round with heat recovered (judgement): 1,500 kWh/day x 365 = 548 MWh/yr ~ 600 (68 kW); high 2.2 x 1,800 m2 x 365 = 1,445 MWh/yr (165 kW). Heat pulled from the ice ~100 W/m2 average (Bellache et al., CANMET: daily means 96.4 and 99.9 W/m2); plants are sized at 'approximately 300 - 400 kW of refrigeration capacity' for ice-making (IIHF 2024 p. 64)"
+facility_volume_per_person:
+  value: 15
+  low: 5
+  high: 60
+  unit: m^3 a person of training, recovery and sports-medicine space beyond SP-413's allotments
+  conf: "low"
+  source: "derived (pass 2), 3.0 (1.3-7.5) m^2 a person x 5 (3.5-8) m: gym floor 'A gym floor requires 6 or 7m^2 per person' (Les Mills), lockers 'should take up 10-15% of the facility' (Health & Fitness Association), 10,000 people x 1.5 h a day / 18 h open x 1.5 peak = 1,250 at once -> 1.2 m^2 a person; recovery (plunges, saunas) 0.6; sports clinic 0.5 (college training rooms 0.35-1.34 m^2 an athlete); a 50-bed hospital at ~200 m^2 a bed ('a range of 2,200 - 2,800 BGSF per bed is not uncommon', BDC Network 2013) is +0.7 m^2 over SP-413's '.3' m^2 hospital row. SP-413 Table 3-2 has no gyms, rinks or sports clinic: its recreation row is 'indoor activities, restaurants', 1 m^2 a person"
+game_share:
+  value: 0.4
+  low: 0.25
+  high: 0.5
+  unit: fraction of rink hours that are games
+  conf: "low"
+  source: "judgement: a varsity week is 2 games and 3-4.5 h of practice (Vermeulen et al. 2021); the NHL plays ~3.3 games a week ('82 games per team', Oct 7 - Apr 16 with a Feb 6-24 pause)"
+injury_rate_game:
+  value: 12
+  low: 8
+  high: 20
+  unit: injuries per 1,000 player game-hours (a game attended, about an hour)
+  conf: "medium"
+  source: "adult recreational: 'The injury incidence rate was found to be 12.2/1000 player-exposures' (Caputo & Mattson 2005, JSSM; non-checking, a game attended); 'The aggregate injury rate was 12.2/1000 player-exposures (12.3 AMRL and 12.0 OTL)' (Voaklander 1996); high: NCAA men 'competition 20.57' per 1000 AE (Boltz et al. 2021) for players at their ceiling. Pro roller hockey: 'roller hockey produces a higher rate of both contact and noncontact injuries than ice hockey' (Varlotta 2000); rates applied to roller hours too"
+injury_rate_practice:
+  value: 2
+  low: 1
+  high: 3.2
+  unit: injuries per 1,000 player practice-hours
+  conf: "low"
+  source: "NCAA men '2.23/1000 AEs ... during practice' (2000-07) and 3.14 (Boltz et al. 2021, incl. no-time-loss) per practice; at ~1.5-2 h a practice, 1.1-2.1 per 1,000 h (derived)"
+surgery_fraction:
+  value: 0.04
+  low: 0.02
+  high: 0.06
+  unit: fraction of injuries that need surgery
+  conf: "low"
+  source: "derived: NCAA men's ice hockey 0.94 severe injuries per 1000 AE of 7.65 in all (0.12, Kay et al. 2017, Boltz et al. 2021); 'Of all severe injuries, 974 (30.6%) of the 3183 required surgery' (Kay et al. 2017, all NCAA sports); 0.12 x 0.31 = 0.04"

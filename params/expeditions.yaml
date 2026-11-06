@@ -1,0 +1,47 @@
+# Expeditions (Jon, 2026-11-06): the ship parks in orbit and sends crews down to planets and
+# moons. Reusable landers in a hangar at the still hub (SP-413 docks at its non-spinning hub),
+# carried with propellant for some round trips (low orbit -> surface -> low orbit).
+# Research pass 2 (2026-11-06); limits on stays (dose, coming back to 1 g) are in docs/RESEARCH.md.
+
+landers:
+  value: 4
+  low: 2
+  high: 8
+  unit: landers
+  conf: "low"
+  source: "judgement: two crews down at once, each lander with a spare; NASA DRA 5.0 (SP-2009-566 ch. 4) sends one lander that 'nominally transports a crew of six' a mission"
+lander_dry:
+  value: 18
+  low: 12
+  high: 40
+  unit: t a lander, empty (6 crew)
+  conf: "low"
+  source: "6 crew (DRA 5.0 'a crew of six'; HOPE 'reusable 3 crew lander'; Polsgrove et al. 2017 'a crew of four') x ~3 t a crew member (judgement for a reusable lander, heavier than Apollo's staged 2.2-2.6 t a crew member: Apollo 17 LM 'The dry mass of the ascent stage was 2260 kg', descent 'dry mass (including stowed surface equipment) was 2935 kg', 2 crew, NSSDC 1972-096C). Low 6 x 2 t; high 8 x 5 t, a reusable lander with its own heat shield for Mars or Titan (DRA's single-use aeroshell and TPS are 40.7 t of 109.7 t at entry, Table 4-3)"
+payload:
+  value: 2
+  low: 1
+  high: 5
+  unit: t of crew, suits, gear and samples a sortie
+  conf: "low"
+  source: "judgement scaled from Polsgrove et al. 2017 (Mars ascent vehicle, NTRS 20170003404): 'a crew of four is assumed along with 250 kg of cargo' (~0.7 t in all), to 6 crew plus surface gear"
+sortie_dv:
+  value: 4.0
+  low: 3.4
+  high: 7.2
+  unit: km/s, low orbit -> surface -> low orbit
+  conf: "medium"
+  source: "Moon 4.0: Apollo descent 'The required 6827-fps AV is established by the automatically guided nominal' + 85 + 60 fps, ascent 'required 6056-fps AV' (Bennett, NASA TN D-6846): 6,972 + 6,056 fps = 3.97 km/s. Mars 4.8: DRA 5.0 Table 4-3 'Descent Delta-v 595' m/s after entry, ascent to 500 km 3,901 + 275 m/s (Polsgrove Table 2). Titan ~4.2: 'The total launch dV to Titan orbit is 3.9 km/s' (Smith 2022, NTRS 20220010389) + ~0.2 descent (judgement). Derived (Apollo-calibrated, 2 x 1.15 x ideal one-way): Europa 3.4, Callisto 4.0, Ganymede 4.5, Mercury 7.2 (a single stage is marginal there)"
+isp:
+  value: 360
+  low: 335
+  high: 375
+  unit: s
+  conf: "high"
+  source: "methalox: Polsgrove 2017 'propulsion systems with an Isp of 360 s'; DRA 5.0 'an Isp of 369 sec'; storable NTO/MMH 'specific impulse (Isp) of 335 s' (Polsgrove). Methane and oxygen can be made on Mars (O2 from the air: DRA 5.0 sec. 5.3, MOXIE), the lunar poles ('water ice in the regolith ... 5.6 +- 2.9% by mass', Colaprete 2010), icy moons and Titan"
+sorties_carried:
+  value: 10
+  low: 4
+  high: 20
+  unit: round trips of propellant carried a lander
+  conf: "placeholder"
+  source: "placeholder: about a sortie a stop on a tour of ~10 stops; propellant made on the surface (DRA 5.0; HOPE: 'begin fuel production; top off tanks in surface hab lander') would cut it; Mercury has none"

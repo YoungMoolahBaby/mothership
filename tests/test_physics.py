@@ -119,3 +119,32 @@ def test_stanford_torus_geometry():
     usable = ph.band_volume(R_floor, r, 0.1)
     assert usable > 10_000 * 1738  # one ring is enough
     assert usable < ph.torus_volume(R_floor - r, r)
+
+
+def test_ring_weight_factor_from_rotating_frame_forces():
+    # In the rotating frame the floor's push N balances centrifugal -w x (w x r), Coriolis
+    # -2 w x v and the path's own curvature (v^2 / R towards the axis for motion along the ring).
+    rpm, g = 1.0, G0
+    w = ph.omega(rpm)
+    R = ph.spin_radius(1.0, rpm)
+    W, pos = np.array([0, 0, w]), np.array([R, 0, 0])
+    for v in (-45.0, -8.0, 0.0, 6.0, 11.0, 45.0):
+        vel = np.array([0, v, 0])  # along the ring
+        a_path = np.array([-v**2 / R, 0, 0])
+        N = a_path + np.cross(W, np.cross(W, pos)) + 2 * np.cross(W, vel)
+        assert -N[0] / g == pytest.approx(ph.ring_weight_factor(w, g, v), rel=1e-12)
+        vel = np.array([0, 0, v])  # parallel to the spin axis: no Coriolis, straight path
+        N = np.cross(W, np.cross(W, pos)) + 2 * np.cross(W, vel)
+        assert -N[0] / g == pytest.approx(1.0, rel=1e-12)
+    assert ph.ring_weight_factor(w, g, 8.0) == pytest.approx(1.18, abs=0.005)
+    assert ph.ring_weight_factor(w, g, -8.0) == pytest.approx(0.84, abs=0.005)
+
+
+def test_box_tube_radius_and_rocket():
+    r = ph.box_tube_radius(66.0, 9.0)
+    assert np.hypot(33.0, 4.5) == pytest.approx(r)  # the corners touch the circle
+    assert ph.box_tube_radius(130.0, 0.0) == pytest.approx(65.0)
+    m_f, dv, isp = 10.0, 4000.0, 360.0
+    prop = ph.rocket_propellant(m_f, dv, isp)
+    assert isp * G0 * np.log((m_f + prop) / m_f) == pytest.approx(dv, rel=1e-12)
+    assert ph.rocket_propellant(m_f, 0.0, isp) == 0.0

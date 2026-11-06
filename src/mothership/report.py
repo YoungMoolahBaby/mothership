@@ -17,8 +17,22 @@ SHIP_ROWS = [
     ("rim_speed_m_s", "rim speed", "m/s", "{:,.0f}"),
     ("volume_per_person_m3", "enclosed volume per person", "m^3", "{:,.0f}"),
     ("shell_thickness_mm", "pressure shell", "mm steel", "{:,.0f}"),
+    ("ice_sheets", "ice sheets", "", "{:,.0f}"),
+    ("roller_rinks", "roller rinks", "", "{:,.0f}"),
+    ("athletic_m3_per_person", "rinks, training, recovery, sports medicine per person", "m^3", "{:,.0f}"),
+    ("injuries_per_person_year", "hockey injuries a person a year", "", "{:.1f}"),
+    ("surgeries_per_year", "of which surgeries, ship-wide a year", "", "{:,.0f}"),
+    ("skate_weight_with_spin", "skater at top speed along the ring, with the spin", "x weight", "{:.2f}"),
+    ("skate_weight_against_spin", "same, against the spin", "x weight", "{:.2f}"),
+    ("bodywork_stations", "robotic massage tables", "", "{:,.0f}"),
+    ("kitchen_lines", "robotic kitchen lines", "", "{:,.0f}"),
+    ("humanoids", "humanoid robots (hands-on care, chores)", "", "{:,.0f}"),
+    ("landers", "landers", "", "{:,.0f}"),
+    ("sortie_propellant_t", "propellant a sortie", "t", "{:,.0f}"),
     ("power_mw", "electric power", "MW", "{:,.0f}"),
     ("food_kw_per_person", "of which food, per person", "kW", "{:,.1f}"),
+    ("ice_mw", "of which ice plants", "MW", "{:,.1f}"),
+    ("robot_mw", "of which robots", "MW", "{:,.1f}"),
     ("plants", "fusion plants (with spares)", "", "{:,.0f}"),
     ("radiator_km2", "radiator panels", "km^2", "{:,.2f}"),
     ("shield_t", "shield", "t", "{:,.0f}"),
@@ -26,8 +40,10 @@ SHIP_ROWS = [
     ("ring_t", "spin ring structure", "t", "{:,.0f}"),
     ("air_t", "air", "t", "{:,.0f}"),
     ("interior_t", "interior", "t", "{:,.0f}"),
+    ("robots_t", "robots", "t", "{:,.0f}"),
     ("plants_t", "fusion plants", "t", "{:,.0f}"),
     ("radiators_t", "radiators", "t", "{:,.0f}"),
+    ("expeditions_t", "landers and their propellant", "t", "{:,.0f}"),
     ("dry_t", "ship without drive", "t", "{:,.0f}"),
     ("habitat_t_per_person", "per person", "t", "{:,.0f}"),
 ]
@@ -81,9 +97,11 @@ def build(params: dict[str, Param], n: int = 5000, seed: int = 1) -> str:
         f"{sum(p.conf == 'placeholder' for p in params.values())} still placeholders). "
         f"Monte Carlo: {n} draws, seed {seed}, triangular(low, value, high). Masses in tonnes.",
         "",
-        f"Population {params['mission.population'].value:,.0f}. Layout: a torus spun for gravity "
-        "inside a shield that does not spin; stellarator power plants and radiators off the spin; "
-        "a power-limited drive with its own plants.",
+        f"Population {params['mission.population'].value:,.0f}, built around adult ice and roller "
+        "hockey with robotic care for all, sending expeditions to planets and moons. Layout: a "
+        "torus spun for gravity inside a shield that does not spin, rinks across the tube; "
+        "stellarator power plants and radiators off the spin; landers at the still hub; a "
+        "power-limited drive with its own plants.",
         "",
         "## The ship",
         "",

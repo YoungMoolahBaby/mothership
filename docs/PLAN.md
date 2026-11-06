@@ -23,6 +23,21 @@ computed properly instead of guessed.
 - Result: 23.0 million t central (was 10.9), shield 95%; power 185 MW; `tour` ~660 GW, `brisk`
   ~2.3 TW. Next: the gravity band, farm volume, shield material (pass 2).
 
+## Research pass 2: the hockey ship (done 2026-11-06)
+
+- Five topics in parallel (rinks and spin, athletes, sports medicine, care robots, expeditions);
+  `params/athletics.yaml`, `care.yaml`, `expeditions.yaml` (38 parameters, 4 placeholders); key
+  quotes checked by hand (`docs/RESEARCH.md`).
+- Model: rinks across the tube (the tube must hold one), rinks counted from ice time, athletic
+  space, skaters' weight along the ring, injuries and surgeries, robots by hours of care and
+  chores, landers by the rocket equation; rpm fixed at 1.
+- Result: still 23.0 million t; everything athletic fits in SP-413's ring. 14 ice sheets and 4
+  roller rinks, 48 m^3 a person of athletic space, 1.6 injuries a person a year (~630
+  surgeries), 234 massage tables, 15 kitchen lines and 1,479 humanoids (230 t, 0.7 MW) instead
+  of ~1,300 human carers; power 197 MW. A trained skater weighs 1.19 / 0.82 along the ring.
+- Next: size the tube from ground area (it now drives 91% of the spread), build the tour's
+  delta-v from its stops (one Callisto visit is about half of it), the shield (pass 3).
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or
@@ -33,10 +48,34 @@ computed properly instead of guessed.
   an asteroid as the shield.
 - **2026-11-06, stellarators for power**: steady state, no plasma current to lose; the drive has
   its own plants (they may not be stellarators: open-ended designs suit exhaust).
+- **2026-11-06, the ship's purpose: hockey** (Jon): the ship is built around adult ice and roller
+  hockey. Everyone's purpose is having fun and pursuing, and keeping, their athletic ceiling
+  together, with sports science, sports medicine, massage and recovery for all: "basically like if
+  every person on the ship got lebron james treatment". What it sets:
+  - 1 g is a requirement, not a choice: the body's ceiling needs full loading.
+  - New loads to size: rinks (ice and roller), training and recovery space, athletes' diets (food
+    power), hours of hands-on care a person, a sports-medicine hospital.
+  - The spin: skating along the ring changes a skater's weight by (1 +- v w / g)^2 (at 1 rpm and
+    8 m/s, 1.18 spinward, 0.84 antispinward); skating parallel to the spin axis has no Coriolis
+    force, so rinks lie across the tube. Earth-feel hockey (+-10% at 8-11 m/s) needs 0.57-0.42 rpm
+    (floor radius 2.7-5.2 km) and a much heavier ship. Jon's call: **1 rpm is fine** (rinks across
+    the tube; side-to-side skating swings weight about +-15-25% and becomes the ship's home-ice
+    character).
+  - The feel (Jon): "like if the main ship in no mans sky was like equinox x schwans super rink":
+    a home base that travels, with a premium club and a rink complex at its heart.
+  - Care is automated (Jon): "the masages, cooking, etc would all be ai/automated/robotic". So
+    the "LeBron" care hours are robot hours: the model sizes robots (count, mass, power, upkeep),
+    and people's time stays theirs for play.
+- **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
+  planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
+  body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
+  easiest off the spin), crews away and coming back to 1 g, and the orbit insertion each stop
+  adds to the drive's delta-v.
 
 ## Next
 
-1. **Research pass 1**: source the placeholders in sensitivity order (`docs/RESEARCH.md`).
+1. **Research pass 3** (`docs/RESEARCH.md`): the tube from ground area, the tour from its stops,
+   the shield.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;
    reactor magnets (the stellarator project: stored energy, forces, structure mass); spin dynamics

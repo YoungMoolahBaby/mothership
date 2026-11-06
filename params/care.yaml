@@ -1,0 +1,119 @@
+# Care by robots (Jon, 2026-11-06): "the masages, cooking, etc would all be ai/automated/robotic".
+# Massage tables sized by the hours of table massage a person gets; kitchen lines by meals;
+# humanoid robots by the hours of hands-on care (stretching, physio, trainer work) and chores
+# (cooking prep, cleaning, laundry) they take over. Research pass 2 (2026-11-06).
+# Done by people, pro-level care would need about 0.13 carers a person (1,300 for 10,000; NHL
+# and NBA teams run ~0.4-0.8 care staff a player): docs/RESEARCH.md.
+
+bodywork_hours:
+  value: 1.5
+  low: 1
+  high: 3
+  unit: hours of robotic table massage a person a week
+  conf: "low"
+  source: "judgement (pass 2): massage is 'the most powerful technique for recovering from DOMS and fatigue' (Dupuy et al. 2018, Front Physiol, 99 studies) though with 'no evidence that massage improves measures of strength, jump, sprint, endurance or fatigue' (Davis et al. 2020); 'massage by international-level athletes (100% use)' (Crowther et al. 2017). No source gives pro players' massage hours a week; NHL teams carry 1-2 massage therapists for ~23 players (Bruins, Ducks, Sabres staff pages)"
+station_hours:
+  value: 74
+  low: 50
+  high: 100
+  unit: hours a week a massage table is in use
+  conf: "low"
+  source: "derived: ~14 sessions a day x 45 min x 7 days (16 open hours / (45 min + 10-15 min to clean and rescan) x 0.88 availability, judgement); Aescape sessions run '15, 30, and 60 minutes' (Nylon review at Equinox)"
+station_mass:
+  value: 0.4
+  low: 0.25
+  high: 0.8
+  unit: t a massage table
+  conf: "low"
+  source: "derived: two cobot-class arms (UR10e '33.5 kg' arm + '12 kg' control box each, UR10e technical details) ~91 kg, plus table, frame and sensor gantry (judgement); Aescape publishes no mass"
+station_kw:
+  value: 1.0
+  low: 0.7
+  high: 1.5
+  unit: kW a massage table in use
+  conf: "low"
+  source: "derived: two arms at the UR10e's 'Typical with moderate operating settings' 350 W (max 615 W) plus ~0.3 kW of computers, sensors and heated heads (judgement)"
+hands_on_hours:
+  value: 2
+  low: 1
+  high: 5
+  unit: hours of humanoid hands-on care a person a week (stretching, physio, athletic-trainer work)
+  conf: "low"
+  source: "judgement (pass 2): pro-level hands-on care 2.5-4 h a person a week in all (NHL staff pages: Ducks list one each of 'Head Athletic Trainer', 'Assistant Athletic Trainer', 'Physical Therapist', 'Massage Therapist' for ~23 players, ~5 contact hours a player-week at ~30 h each), less the table massage; massage tables can't do front-of-body work or stretching ('The massage started at my shoulders and ended at my glutes', Nylon) and 'No commercial robotic stretching machine' was found"
+chore_hours:
+  value: 10
+  low: 6
+  high: 14
+  unit: hours a person a week of chores the robots take over (cooking prep, cleaning, laundry)
+  conf: "low"
+  source: "US time use 2025 (BLS ATUS news release): 'On an average day, 81 percent of people engaged in household activities', about 2 hours a day (14 h a week, the high end); less what doesn't exist aboard (lawns, cars) and the meal assembly done by kitchen lines (judgement)"
+robot_pace:
+  value: 1.5
+  low: 1
+  high: 3
+  unit: robot hours per hour of human work
+  conf: "placeholder"
+  source: "placeholder: no data found on humanoid task speed against people; kitchen robots are counted as 'a 1:1 worker equivalent' (Chef Robotics) and a hospital TUG replaced ~1.1 staff ('allowed him to hire about 30 fewer workers' for 27 robots, PBS 2016)"
+humanoid_duty_hours:
+  value: 140
+  low: 112
+  high: 154
+  unit: hours a week a humanoid works (the rest charging)
+  conf: "medium"
+  source: "Agility Digit 5: '90 minutes of runtime from a nine-minute recharge', 'more than 20 hours of productive work in a 24-hour day' (Interesting Engineering 2026-10-17); Figure 03: '2.3 kWh enables 5 hours of run time at peak performance', '2 kW fast charge' (5 / 6.15 h = 19.5 h a day, derived); Atlas 'swaps out its own battery'"
+humanoid_mass:
+  value: 0.06
+  low: 0.03
+  high: 0.09
+  unit: t a humanoid
+  conf: "medium"
+  source: "1X NEO '66 lbs' (30 kg), Unitree G1 'About 35kg', Optimus Gen 1 '73 kg', Atlas '90 kg (198 lbs)' (maker pages)"
+humanoid_kw:
+  value: 0.33
+  low: 0.15
+  high: 0.5
+  unit: kW a humanoid, average over the day including charging
+  conf: "medium"
+  source: "derived: working draw ~0.35 kW (NEO 842 Wh / 4 h = 0.21 kW; Figure 03 2.3 kWh / 5 h = 0.46 kW; Optimus Gen 1 'Sitting: 100W', 'Brisk Walking: 500W') x 20 h / 0.9 charger efficiency = 7.8 kWh a day = 0.33 kW"
+meals_per_day:
+  value: 3
+  low: 3
+  high: 5
+  unit: plated meals a person a day (snacks need no line)
+  conf: "low"
+  source: "judgement: three meals a day, more for athletes who split their eating"
+kitchen_meals_per_hour:
+  value: 400
+  low: 120
+  high: 500
+  unit: meals an hour a robotic kitchen line assembles
+  conf: "medium"
+  source: "Sweetgreen Infinite Kitchen 'has the capacity to make 500 bowls an hour' (Restaurant Dive 2024-03-01); Hyphen Makeline 'between 120 to 180 bowls per hour' (Entrepreneur 2023-10-03); lines assemble, bulk prep and cooking are still people or ordinary appliances (counted in chore_hours)"
+kitchen_hours:
+  value: 6
+  low: 4
+  high: 10
+  unit: hours a day at the full rate (meal peaks)
+  conf: "low"
+  source: "judgement: meals bunch into ~6 peak hours a day"
+kitchen_mass:
+  value: 3
+  low: 1
+  high: 6
+  unit: t a kitchen line
+  conf: "placeholder"
+  source: "placeholder: no mass published for Sweetgreen, Hyphen, Miso or Moley systems"
+kitchen_kw:
+  value: 30
+  low: 15
+  high: 60
+  unit: kW a kitchen line running
+  conf: "placeholder"
+  source: "placeholder: no power or cooking energy per meal found"
+spares:
+  value: 0.15
+  low: 0.05
+  high: 0.3
+  unit: fraction of robots carried as spares
+  conf: "low"
+  source: "Formic: 'robot system failure occurs approximately 12% of the year on average' and 'With proper maintenance plans ... failure rates can be reduced to single-digit percentages'; 1 / 0.88 = 1.14; the high end for immature humanoids (judgement). Stationary robots last ~12 years: 'it is assumed that the average service life is 12 years' (IFR World Robotics 2017)"
