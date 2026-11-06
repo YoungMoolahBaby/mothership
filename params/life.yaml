@@ -1,5 +1,6 @@
-# Power to live: food grown under lights, and everything else. Research pass 1 (2026-11-06).
-# Food power per person = food_energy / (led_to_par x par_to_food).
+# Power to live: food (params/crops.yaml and params/food.yaml: an LED crop mix in aeroponic
+# racks plus fungi, fermentation, algae, insects, animals), and everything else. Research passes
+# 1, 2, 4 and 5 (2026-11-06). Crop lighting = the crops' daily light / (LED efficacy x delivery).
 
 food_energy:
   value: 2700
@@ -8,20 +9,97 @@ food_energy:
   unit: kcal per person per day, the whole population (athletes and children)
   conf: "low"
   source: "pass 2 (athletes, 2026-11-06): adults ~70 kg at 40 (35-48) kcal/kg a day, 20% children at ~2,000 (judgement): 0.8 x 2,800 + 0.2 x 2,000 = 2,640 -> 2,700. ISSN (Kerksick et al. 2018): general fitness '1800-2400 kcals/day or about 25-35 kcals/kg/day'; 'moderate levels of intense training (e.g., 2-3 h per day ...) ... may approach 40-70 kcals/kg/day'; this ship trains ~1-1.5 h a day, between the two. Women's varsity hockey: 'Average 7-day energy intake (EI) and TDEE were 2354 +- 353 and 2304 +- 204 kcal' (Vermeulen et al. 2021); pro hockey diaries ~51-52 kcal/kg (Lokbas et al. 2020). No doubly-labelled-water study of hockey exists. Was 2,500 (2,000-3,000) in pass 1; NASA BVAD Rev2 plans '12.707 MJ/CM-d (~3000 kcal' per crew member"
-led_to_par:
-  value: 0.45
-  low: 0.3
-  high: 0.65
-  unit: W of PAR reaching the canopy per W electric (fixture efficiency x delivery)
+protein_need:
+  value: 1.6
+  low: 1.2
+  high: 2.2
+  unit: g protein / kg body mass / day, athletes
   conf: "medium"
-  source: "fixtures: 'fixture efficacies of 2.5 to 2.8 umol J-1 for white + red fixtures' (Kusuma, Pattison & Bugbee 2020) at ~4.6-4.9 umol per J of PAR = ~0.54-0.57 W/W, limits 3.4-4.1 umol/J (~0.7-0.77); delivery: NASA BVAD Rev2 Table 4-86 'Light Delivery Efficiency' 0.3 low, 0.8 nominal. 0.57 x 0.8 = 0.45"
-par_to_food:
-  value: 0.02
-  low: 0.01
-  high: 0.04
-  unit: edible food energy / PAR energy at the canopy
+  source: "Morton et al. 2018 meta-analysis: 'break point=1.62 (1.03, 2.20) g/kg/day'; plant protein quality ~0.9 of animal ('Soy/wheat 90', 'Wheat/potato 100' DIAAS, Herreman et al. 2020)"
+body_mass:
+  value: 70
+  low: 60
+  high: 80
+  unit: kg, a mean adult
+  conf: "low"
+  source: "judgement (the pass-2 diet arithmetic's adult)"
+led_efficacy:
+  value: 3.0
+  low: 2.5
+  high: 4.1
+  unit: umol of PAR photons per J electric (fixture)
   conf: "medium"
-  source: "derived from NASA BVAD Rev2 Tables 4-89/4-90 (edible yield and light per crop): wheat ~1.3%, soybean ~1.4%, lettuce ~2%, rice ~2%, white potato ~5.4%, sweet potato ~6%; the all-crop diet ~2.7% before losses. Best-case wheat (Bugbee & Salisbury 1988) ~3%. Cross-check: 12-30 m^2 a person at ~600 W/m^2 of lighting = 7-18 kW (Salisbury, Bugbee & Bubenheim 1987)"
+  source: "'fixture efficacies of 2.5 to 2.8 umol J-1 for white + red fixtures' and 'efficacy limits of 3.4 umol J-1 for white + red fixtures, and 4.1 ... blue + red' (Kusuma, Pattison & Bugbee 2020); listed fixtures 'from 1.81 to 3.69', 'only about 6%' reach 3.0, 'around 25%' more possible 'but that could take a decade' (Runkle 2022). Humidity protection in mist farms costs '~10%' (Kusuma 2020)"
+light_delivery:
+  value: 0.8
+  low: 0.5
+  high: 0.9
+  unit: fraction of fixture photons reaching the canopy
+  conf: "medium"
+  source: "NASA BVAD Rev2 Table 4-86 'Light Delivery Efficiency' 0.3 low, 0.8 nominal (low end here 0.5 for close-coupled racks, judgement)"
+yield_gain:
+  value: 1.1
+  low: 1.0
+  high: 1.25
+  unit: yield / BVAD-BPC yield (transplanting, far-red, LED recipes)
+  conf: "low"
+  source: "BVAD Table 4-90: 'Productivities could increase for most species by ~10 to 15% by use of transplanting schemes'; far-red added up to 40% raised canopy photosynthesis 'equal to adding 400-700 nm photons' and lettuce '29 to 31% more biomass' (Zhen & Bugbee 2020); closed staple canopies gain less (judgement)"
+tier_overhead:
+  value: 0.4
+  low: 0.25
+  high: 0.6
+  unit: m of rack height above the crop (lamps) and below it (root chamber)
+  conf: "medium"
+  source: "BVAD Table 4-87 'Height of Lighting Assembly' 0.15-0.3 m plus a 0.1-0.3 m root chamber (pass 4 researcher)"
+access_factor:
+  value: 1.35
+  low: 1.25
+  high: 1.5
+  unit: farm floor / grow area (aisles, crew access)
+  conf: "medium"
+  source: "BVAD Rev2 p. 170: crew access '25 - 50% of the plant canopy area'"
+mist_w_per_grow_area:
+  value: 0.5
+  low: 0.1
+  high: 2.0
+  unit: W per m^2 of grow area for high-pressure misting (~0.5-0.7 MPa, 10-30 um)
+  conf: "low"
+  source: "Jon's choice (2026-11-06, on the pass-5 recommendation): high-pressure aeroponics as the backbone. Derived: pump work at 0.69 MPa ~0.19 Wh/L hydraulic, ~0.48 Wh/L at 40% pump efficiency, 3-10x overspray recirculated (scaled from Carel humiFog: 'just 4 watts for every l/h of capacity' at '70 bars'). Best growth in both comparative trials (Tunio et al. 2022, 2023: an 11.24 um nozzle first); fine 'dry-fog' (8.85 um) run continuously matched hydroponics ('no differences were found in growth and harvest quality', Hikosaka et al. 2014). Ultrasonic or dry fog stays on propagation benches and a test bench"
+ultrasonic_w_per_grow_area:
+  value: 30
+  low: 15
+  high: 60
+  unit: W per m^2 of grow area for 1.7 MHz ultrasonic fog (the option not taken)
+  conf: "low"
+  source: "derived (pass 5): ~4 L/m^2/d transpired (BVAD diet mix) fogged at ~90 Wh/L ('less than 80 W of electricity for each kg of evaporated water', Carel humiSonic) with half reaching the roots, all of it ending as root-zone heat. Grew plants worst of five systems, below soil (Tunio et al. 2023: shoot fresh weight 2.73 g/plant against 73.74 for an 11.24 um high-pressure nozzle); 'Aerosol droplets < 2 um are thought unlikely to deposit on the root surface' (Eldridge et al. 2020); it drifts the nutrient solution ('the EC value decreased and pH increased', Lakhiar et al. 2018). Company data only for it: LettUs Grow 'an average 22% uplift in yield compared to hydroponic systems'"
+deep_flow_share:
+  value: 0.2
+  low: 0.1
+  high: 0.3
+  unit: fraction of racks run as deep-flow hydroponics (a water-buffered hedge)
+  conf: "low"
+  source: "Jon's choice of the pass-5 recommendation: roots survive ~1 h without mist and die within ~12 h ('if an irrigation pump breaks down on a Friday night and it is not repaired in the following 12 hours ... the plants ... will die', CIP 2019; power cuts are 'the greatest risk factor'); deep flow's advantage is the 'buffer capacity of the nutrient solution (for water, nutrients, and temperature)' (Both 2003). Share a judgement. With it: many small independent mist loops, N+1 pumps and accumulators riding through ~1 h, lights dimmed on a mist fault, UV ('completely eliminated conidia of Fusarium at a UV-dose of 70 mJ cm-2', Runia 1994) and filtration on every return"
+deep_flow_extra_water:
+  value: 0.041
+  low: 0.03
+  high: 0.06
+  unit: t per m^2 more water in a deep-flow rack than an aeroponic one
+  conf: "medium"
+  source: "derived from Hikosaka et al. 2014: aeroponics holds ~15 L/m^2 (less than 10 L for a 0.66 m^2 chamber), deep flow ~56 L/m^2 (30 L for 0.53 m^2)"
+farm_mass_per_grow_area:
+  value: 0.08
+  low: 0.04
+  high: 0.11
+  unit: t per m^2 of grow area (racks, root chambers, water, nutrients, crop)
+  conf: "low"
+  source: "BVAD Rev2 Table 4-88: '101.5' kg/m^2 of crop growth system (HPS era), of which crops 20.0 and root-zone water and nutrients 36.8; aeroponics holds ~15 L/m^2 of solution against deep flow's ~56 (Hikosaka et al. 2014, derived); lighter with LEDs (judgement)"
+farm_aux_fraction:
+  value: 0.06
+  low: 0.05
+  high: 0.2
+  unit: farm fans and pumps / lighting power
+  conf: "low"
+  source: "Kozai 2013 (plant factories): lighting, air conditioning and the rest 'account for, respectively, 85%, 10% and 5%' of electricity; heat rejection is in the ship's radiators, so ~5-6% here; high end for forced air in lower gravity ('altered by reduction of free convection in lower gravity', Poulet 2018)"
 other_power_per_person:
   value: 5
   low: 3

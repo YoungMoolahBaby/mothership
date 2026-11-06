@@ -142,6 +142,48 @@ Sources behind parameters and checks. Exact quotes live in the `source` fields o
 - NASA ISS Capabilities and Payload Accommodations; ENERGY STAR US median EUI table (2024);
   I2SL; USC Keck lab space standards.
 
+## Aeroponic farms (pass 4)
+
+- NASA BVAD Rev2 (2022) Tables 4-59, 4-87, 4-88, 4-90, 4-91, 4-92 (above).
+- Johnson et al. 2021, Front. Astron. Space Sci. 8:734343 (crop area a person).
+- Salisbury & Bugbee 1988, HortScience 23(2) (https://ntrs.nasa.gov/citations/20040090305);
+  Salisbury, Gitelson & Lisovsky 1997, BioScience 47(9) (BIOS-3); Fu et al., Lunar Palace 365
+  (bioRxiv 10.1101/2021.01.12.426282).
+- Li et al. 2018, Horticulturae 4:35 (aeroponics vs hydroponics); Tunio et al. 2022, IJABE 15(1)
+  (https://ijabe.org/index.php/ijabe/article/view/6725); Lakhiar et al. 2018, IJABE 11(5)
+  (https://ijabe.org/index.php/ijabe/article/view/3790); Clawson et al. 2000, SAE 2000-01-2507.
+- Kozai 2013, Proc. Jpn. Acad. B 89:447 (PMC3881955), plant factories; Wheeler et al. 2008
+  (NASA BPC, doi 10.1016/j.asr.2007.06.059); Runkle 2022 (LED efficacy).
+- Plants and gravity: Kiss 2014; Manzano et al. 2018 (npj Microgravity); Link et al. 2014;
+  Khodadad et al. 2020 (Veggie), 2026 (XROOTS); Poulet 2018.
+
+## Farms, food system, medicine (pass 5)
+
+- Aeroponic engineering: Eldridge et al. 2020, New Phytologist (https://data.nbi.ac.uk/systems/OpenAccess/65288);
+  Tunio et al. 2022, 2023 (IJABE); Lakhiar et al. 2018 (IJABE); Hikosaka et al. 2014 (Adv. Hort.
+  Sci., dry fog); CIP aeroponic potato manual 2019 (https://cgspace.cgiar.org/items/2cd0778e-c5d4-4d08-b1ea-cb4162dc5375);
+  Both 2003 (Cornell lettuce); Runia 1994 (UV disinfection); Graamans et al. 2018 (plant factory
+  energy); Carel humiSonic and humiFog product data; Ikeuchi dry-fog catalogue.
+- Crops and diet: NASA BVAD Rev2 Tables 4-59, 4-86 to 4-92; NASA TM-2020-5008832 (vertical farming);
+  Wheeler et al. 2008 (BPC); Tibbitts & Wheeler 1988; NASA JSC sweet potato (NTRS 20100039591);
+  NASA TP-3422 (quinoa); Purdue cowpea; Zhen & Bugbee 2020 (far-red); USDA FoodData Central;
+  Morton et al. 2018 (protein); Herreman et al. 2020 (DIAAS); NIH ODS fact sheets; EDEN ISS
+  (eden-iss.net; D2.5 Design Report on Zenodo); Lunar Palace 365 (bioRxiv); Douglas et al. 2025
+  (ISS menu); Mauerer et al. 2016 (Antarctic fresh food).
+- Herbs, spices, medicine: Pennisi et al. 2020 (Eur. J. Hortic. Sci.); Larsen et al. 2020
+  (Front. Plant Sci.); Gao et al. 2023 (saffron, Sci. Rep.); Coffey et al. 2024 (ginger, ASHS);
+  Hayden 2006 (HortScience, aeroponic medicinals); Frontiers 2022 (Artemisia UV-B); Frontiers in
+  Plant Science 12:781236 (light and secondary metabolites); Akher et al. 2025 (molecular farming,
+  Int. J. Mol. Sci.); USDA ERS spice availability; CBI herb market.
+- Food system: Leger et al. 2021 (PNAS, microbial protein); Sillman et al. 2020; Hann et al. 2022
+  (acetate); Grimm & Wosten 2018 and Ramos et al. 2010 (mushrooms); Moore, 21st Century Guidebook
+  to Fungi (mycoprotein); Wiebe 2004 (Quorn); Zijffers et al. 2010 (algae on light); Watanabe et
+  al. 2014 (B12); Oonincx & de Boer 2012, Oonincx et al. 2015 (insects); Li et al. 2015 (mealworms
+  in Lunar Palace); Fry et al. 2018 and Shepon et al. 2016 (feed efficiency); Sinke et al. 2023
+  (cultivated meat); Perfect Day LCA (WSP, company-commissioned).
+- Nutrient loop: Mackowiak et al. 1996 (NTRS 20040089205); Verbeelen et al. 2021 (Front.
+  Microbiol.); Etter et al. 2011 (struvite); NASA ISS water recovery (98%).
+
 ## Food and power
 
 - Kusuma, Pattison & Bugbee 2020, "From physics to fixtures to food", Horticulture Research:

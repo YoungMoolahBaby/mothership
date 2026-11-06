@@ -52,6 +52,26 @@ computed properly instead of guessed.
 - Next: Jon's choices (how roomy, which shield, the dose target), refuelling on the tour, the
   magnet projects in cortenforge-cfsem (pass 4).
 
+## Pass 4: Jon's three choices (done 2026-11-06)
+
+- The shield is water for 10 mSv/yr (8.0 t/m^2, 18.5 Mt); 67 m^2 of ground a person all for
+  living; aeroponic mist farms anywhere in the tube (45 m^2 of racks and 63 m^3 a person, no soil).
+- Result: 19.4 million t (was 25.1), 245 MW, the tour 1.35 TW. Finding: the two trials of
+  ultrasonic (1.7 MHz) foggers grew plants poorly; air-assisted ~11 um mist did best (Jon's call).
+- Next: the active shield in cortenforge-cfsem, refuelling on the tour (pass 5).
+
+## Pass 5: the farms (done 2026-11-06)
+
+- Four topics in parallel; `params/crops.yaml`, `params/food.yaml`; `model.food_system`.
+- A 13-crop diet (53 m^2 of crop racks a person), herbs, spices, medicinal plants, a tea and
+  coffee grove, a plant-made-medicine facility, microbial protein, fungi on crop waste, fermented
+  dairy, algae, insects, a little egg and fish, and a 95%-closed nutrient loop.
+- Result: 211 MW (food 12.9 kW a person), protein 2.7 g/kg/day. Finding: ultrasonic misters
+  grew plants worst in the trials and cost 17 MW; high-pressure mist did best for 0.3 MW.
+- Jon then chose high-pressure mist and a vegan diet: **189 MW** (food 10.7 kW a person), crops 78%
+  of kcal on 55 m^2 of racks a person, protein 2.5 g/kg/day; 19.4 million t.
+- Next: the active shield in cortenforge-cfsem (pass 6).
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or
@@ -86,6 +106,25 @@ computed properly instead of guessed.
   sports science and medicine itself. To size: lab space and power, big facilities (a collider
   could run round the ring inside the still shield, which doesn't spin and shields its beam
   losses; a light source; telescopes; a zero-g lab at the hub; a data centre).
+- **2026-11-06, Jon's three choices** (pass 4, on my recommendation):
+  - The shield is **water, for 10 mSv/yr** (half the adult 20, for people who live aboard for
+    life, children included): ~8.0 t/m^2, still lighter than regolith at 20 mSv/yr (10.3), and
+    the tour passes water (Ceres, Callisto, Titan).
+  - **67 m^2 of ground a person, all for living**: the farms come off the ground.
+  - The farms are **aeroponic ultrasonic mist farms, "wherever it can"**: racks anywhere in the
+    tube, in or out of the living band, no soil.
+- **2026-11-06, the farms are the backbone** (Jon): "we can do research on state of the art
+  aeroponic practices first, as thats the backbone of this, as food/herbs/spices/medicine are
+  sacred to humans". The farms must give a complete, varied, delicious diet, herbs and spices,
+  and medicine, not only calories: pass 5 researches aeroponic practice, a full crop mix, herbs,
+  spices and medicinal plants, and the rest of the food system (fungi, fermentation, the
+  nutrient loop) before the active shield.
+- **2026-11-06, vegan, and the aeroponic system** (Jon): "ideally vegan/vegetarian too. and ok to
+  your recommendation for the aeroponic system". No insects, eggs or fish; dairy from precision
+  fermentation (no animals); B12 from bacterial fermentation. The farms run on high-pressure mist
+  (~0.5-0.7 MPa, 10-30 um), ultrasonic or dry fog only on propagation benches and a test bench;
+  many small independent loops with spare pumps and accumulators for ~1 h, lights dimmed on a mist
+  fault, UV and filtration on every return, ~20% of racks deep-flow hydroponics as a buffer.
 - **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
   planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
   body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
@@ -94,7 +133,7 @@ computed properly instead of guessed.
 
 ## Next
 
-1. **Pass 4** (`docs/RESEARCH.md`): Jon's choices (ground area a person, shield, dose target),
+1. **Pass 6** (`docs/RESEARCH.md`): the active shield as a cortenforge-cfsem project, then
    refuelling and moon flybys on the tour.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;

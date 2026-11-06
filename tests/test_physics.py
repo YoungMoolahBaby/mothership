@@ -193,3 +193,15 @@ def test_orbit_helpers():
     g = 398600.0 / 7000.0**2 * 1e3  # m/s^2 at 7,000 km
     assert ph.spiral_factor(1e-4 * g, 398600.0, 7000.0, 0.754) == pytest.approx(0.9245, abs=5e-4)
     assert ph.spiral_factor(1e-3 * g, 398600.0, 7000.0, 0.754) == pytest.approx(0.8657, abs=5e-4)
+
+
+def test_shield_areal_density_against_table():
+    # Globus & Strout 2017 Table 2 (OLTARIS): water 6 t/m^2 -> 26.5 mSv/yr, 7 -> 16.1; the
+    # e-fold from those two rows extends the table from its deepest row.
+    efold = 1.0 / np.log(26.5 / 16.1)
+    assert ph.shield_areal_density(7.0, 16.1, efold, 26.5) == pytest.approx(6.0)
+    assert ph.shield_areal_density(7.0, 16.1, efold, 16.1) == pytest.approx(7.0)
+    assert ph.shield_areal_density(7.0, 16.1, 2.01, 10.0) == pytest.approx(7.96, abs=0.01)
+    # regolith 10 -> 22.8, 11 -> 14.5: interpolating back gives the 10 t/m^2 row
+    efold = 1.0 / np.log(22.8 / 14.5)
+    assert ph.shield_areal_density(11.0, 14.5, efold, 22.8) == pytest.approx(10.0)

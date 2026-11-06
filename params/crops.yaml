@@ -1,0 +1,105 @@
+# The crop mix (pass 5): what the aeroponic racks grow for the ship's calories. Each crop's share
+# is a share of the calories that come from crops (the rest of the food system is food.yaml);
+# shares are a diet design (judgement, after the pass-5 researcher's table), normalised to 1 in
+# the model. Yields are BVAD Rev2 / NASA Biomass Production Chamber values (HPS lamps, NFT
+# hydroponics) in kcal of food a m^2 of grow area a day, low = poor stands, high = the best
+# demonstrated; light is the daily light integral that gave them. kcal/g and protein/g are per
+# gram of dry edible mass (USDA FoodData Central SR Legacy). Height is the grown crop (BVAD Table
+# 4-90). Sources: NASA BVAD Rev2 (2022) Tables 4-89/4-90/4-92 (pp. 186-190): https://ntrs.nasa.gov/
+# api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf; Bugbee & Salisbury 1988 (wheat
+# 'grain yield reached ... 60 grams per square meter per day'); Tibbitts & Wheeler 1988 (potato
+# '21.9 g m-2 day-1'). No staple crop has a reported yield grown aeroponically to maturity; EDEN
+# ISS warns aeroponics may 'lower the harvest index. There is no known literature addressing
+# these issues' (D2.5 Design Report p. 138).
+
+wheat:
+  share: {value: 0.21, unit: share of crop kcal, conf: "low", source: "diet design (pass 5); wheat takes ~1/3 of crop light for 1/5 of the kcal at BVAD's 115 mol"}
+  yield: {value: 75, low: 52, high: 226, unit: kcal/m^2/d, conf: "medium", source: "BVAD 20.00 g dw/m^2/d x 3.76 kcal/g; high Bugbee & Salisbury 1988, 60 g/m^2/d at up to 150 mol"}
+  light: {value: 115, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 20-24 h photoperiod"}
+  kcal_per_g: {value: 3.76, unit: kcal/g dw, conf: "high", source: "USDA FDC 168890"}
+  protein_per_g: {value: 0.145, unit: g/g dw, conf: "high", source: "USDA FDC 168890"}
+  height: {value: 0.5, unit: m, conf: "high", source: "BVAD Table 4-90"}
+rice:
+  share: {value: 0.06, unit: share of crop kcal, conf: "low", source: "diet design (pass 5)"}
+  yield: {value: 38, low: 26, high: 81, unit: kcal/m^2/d, conf: "medium", source: "BVAD 9.07 g dw/m^2/d x 4.16 kcal/g; Utah 'Super Dwarf' rice is 'extremely short (20-cm tall)' with 'a higher harvest index (50%)'"}
+  light: {value: 33, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 12 h"}
+  kcal_per_g: {value: 4.16, unit: kcal/g dw, conf: "high", source: "USDA FDC 169703 (brown rice)"}
+  protein_per_g: {value: 0.085, unit: g/g dw, conf: "high", source: "USDA FDC 169703"}
+  height: {value: 0.5, low: 0.2, high: 0.8, unit: m, conf: "medium", source: "BVAD 0.80 m; Utah Super Dwarf 0.2 m"}
+potato:
+  share: {value: 0.13, unit: share of crop kcal, conf: "low", source: "diet design (pass 5); 'potato proteins are classified as excellent quality proteins' (Herreman et al. 2020)"}
+  yield: {value: 78, low: 55, high: 130, unit: kcal/m^2/d, conf: "medium", source: "BVAD 21.06 g dw/m^2/d x 3.70 kcal/g; Tibbitts & Wheeler 1988: 'We have obtained a production of 21.9 g m-2 day-1 from a solid stand of potatoes'"}
+  light: {value: 28, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 12 h"}
+  kcal_per_g: {value: 3.70, unit: kcal/g dw, conf: "high", source: "USDA FDC 170026"}
+  protein_per_g: {value: 0.099, unit: g/g dw, conf: "high", source: "USDA FDC 170026"}
+  height: {value: 0.65, unit: m, conf: "high", source: "BVAD Table 4-90"}
+sweet_potato:
+  share: {value: 0.05, unit: share of crop kcal, conf: "low", source: "diet design (pass 5)"}
+  yield: {value: 57, low: 25, high: 94, unit: kcal/m^2/d, conf: "low", source: "BVAD 24.7 g dw/m^2/d conflicts with its own 51.72 g fresh at 71% water (~15 g dw); NASA JSC chamber 'yield 5.0 kg m-2' fresh over 119 days (~6.7 g dw/m^2/d)"}
+  light: {value: 28, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 12 h"}
+  kcal_per_g: {value: 3.79, unit: kcal/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  protein_per_g: {value: 0.07, unit: g/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  height: {value: 0.65, unit: m, conf: "high", source: "BVAD Table 4-90"}
+maize:
+  share: {value: 0.02, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): tortillas, polenta, popcorn"}
+  yield: {value: 40, low: 20, high: 80, unit: kcal/m^2/d, conf: "low", source: "judgement: no maize yield under electric light found"}
+  light: {value: 40, unit: mol/m^2/d, conf: "low", source: "judgement"}
+  kcal_per_g: {value: 4.3, unit: kcal/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  protein_per_g: {value: 0.11, unit: g/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  height: {value: 2.0, low: 1.5, high: 2.5, unit: m, conf: "medium", source: "judgement (dwarf maize)"}
+soybean:
+  share: {value: 0.09, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): tofu, tempeh, miso, soy milk"}
+  yield: {value: 22, low: 16, high: 39, unit: kcal/m^2/d, conf: "medium", source: "BVAD 4.54 g dw/m^2/d x 4.88 kcal/g"}
+  light: {value: 28, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 12 h"}
+  kcal_per_g: {value: 4.88, unit: kcal/g dw, conf: "high", source: "USDA FDC 174270"}
+  protein_per_g: {value: 0.40, unit: g/g dw, conf: "high", source: "USDA FDC 174270"}
+  height: {value: 0.55, unit: m, conf: "high", source: "BVAD Table 4-90"}
+peanut:
+  share: {value: 0.06, unit: share of crop kcal, conf: "low", source: "diet design (pass 5)"}
+  yield: {value: 34, low: 24, high: 55, unit: kcal/m^2/d, conf: "medium", source: "BVAD 5.63 g dw/m^2/d x 6.06 kcal/g"}
+  light: {value: 27, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90, 12 h"}
+  kcal_per_g: {value: 6.06, unit: kcal/g dw, conf: "high", source: "USDA FDC 172430"}
+  protein_per_g: {value: 0.276, unit: g/g dw, conf: "high", source: "USDA FDC 172430"}
+  height: {value: 0.65, unit: m, conf: "high", source: "BVAD Table 4-90"}
+pulses:
+  share: {value: 0.12, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): beans, lentils, chickpeas, peas, cowpeas (cowpea leaves too: 'protein content increased from 25% DW at 30 DAP to 45% DW', Purdue)"}
+  yield: {value: 39, low: 26, high: 55, unit: kcal/m^2/d, conf: "medium", source: "BVAD dry bean 10.00, pea 10.73 g dw/m^2/d x ~3.9 kcal/g"}
+  light: {value: 24, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90 (dry bean 18 h)"}
+  kcal_per_g: {value: 3.9, unit: kcal/g dw, conf: "high", source: "USDA FDC 172420 lentil 3.84, 173756 chickpea 4.10"}
+  protein_per_g: {value: 0.25, unit: g/g dw, conf: "high", source: "USDA: lentil 0.268, chickpea 0.222"}
+  height: {value: 0.5, unit: m, conf: "high", source: "BVAD Table 4-90"}
+oils:
+  share: {value: 0.07, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): canola, peanut, olive oil"}
+  yield: {value: 24, low: 12, high: 40, unit: kcal/m^2/d, conf: "low", source: "judgement: no canola or olive yield under electric light found"}
+  light: {value: 27, unit: mol/m^2/d, conf: "low", source: "judgement"}
+  kcal_per_g: {value: 8.84, unit: kcal/g oil, conf: "high", source: "USDA (oil)"}
+  protein_per_g: {value: 0.0, unit: g/g, conf: "high", source: "oil"}
+  height: {value: 1.0, low: 0.65, high: 1.5, unit: m, conf: "low", source: "judgement"}
+vegetables:
+  share: {value: 0.06, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): tomato, lettuce, peppers, greens"}
+  yield: {value: 28, low: 17, high: 40, unit: kcal/m^2/d, conf: "medium", source: "BVAD tomato 173.76, lettuce 131.35 g fresh/m^2/d"}
+  light: {value: 24, unit: mol/m^2/d, conf: "high", source: "BVAD Table 4-90 (tomato 27, lettuce 17)"}
+  kcal_per_g: {value: 3.3, unit: kcal/g dw, conf: "medium", source: "judgement from USDA"}
+  protein_per_g: {value: 0.2, unit: g/g dw, conf: "medium", source: "judgement from USDA"}
+  height: {value: 0.35, unit: m, conf: "high", source: "BVAD Table 4-90 (tomato 0.40, lettuce 0.25)"}
+fruit:
+  share: {value: 0.07, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): strawberries, dwarf fruit trees, bananas"}
+  yield: {value: 18, low: 8, high: 25, unit: kcal/m^2/d, conf: "low", source: "BVAD strawberry 77.88 g fresh/m^2/d at 22 mol; sunlit high-density apple '50Mt/ha on the 4th year' (~7 kcal/m^2/d), greenhouse banana 65.5 t/ha (~16); 'there were no cases of plant factories for production of fruit trees, because yield is low relative to space requirements' (TUAT)"}
+  light: {value: 22, unit: mol/m^2/d, conf: "medium", source: "BVAD strawberry"}
+  kcal_per_g: {value: 3.5, unit: kcal/g dw, conf: "medium", source: "judgement from USDA"}
+  protein_per_g: {value: 0.05, unit: g/g dw, conf: "medium", source: "judgement from USDA"}
+  height: {value: 1.5, low: 0.25, high: 3.5, unit: m, conf: "low", source: "strawberry 0.25 m, dwarf plum ~0.6, banana 2-3.5 (judgement)"}
+nuts:
+  share: {value: 0.04, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): flax, chia, walnut (ALA omega-3, NIH adequate intake 1.6 / 1.1 g)"}
+  yield: {value: 15, low: 5, high: 30, unit: kcal/m^2/d, conf: "low", source: "judgement: no yields under electric light found"}
+  light: {value: 27, unit: mol/m^2/d, conf: "low", source: "judgement"}
+  kcal_per_g: {value: 6.0, unit: kcal/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  protein_per_g: {value: 0.25, unit: g/g dw, conf: "medium", source: "USDA (not re-fetched)"}
+  height: {value: 2.0, low: 0.6, high: 3.0, unit: m, conf: "low", source: "flax 0.6 m to dwarf walnut 3 m (judgement)"}
+sugar:
+  share: {value: 0.02, unit: share of crop kcal, conf: "low", source: "diet design (pass 5): sugar beet"}
+  yield: {value: 25, low: 15, high: 40, unit: kcal/m^2/d, conf: "low", source: "judgement"}
+  light: {value: 20, unit: mol/m^2/d, conf: "low", source: "judgement"}
+  kcal_per_g: {value: 3.9, unit: kcal/g dw, conf: "medium", source: "sugar"}
+  protein_per_g: {value: 0.0, unit: g/g, conf: "high", source: "sugar"}
+  height: {value: 0.45, unit: m, conf: "low", source: "judgement"}

@@ -202,15 +202,117 @@ SP-413's minimum 40 m^2 a person gives 16 Mt, its 67 gives 25, 100 gives 36, and
 less mass, and Ceres, Callisto and Titan are on the route; regolith is only cheaper where the ship
 is built (lunar material at L5).
 
-## Next (pass 4)
+## Pass 4 (2026-11-06): Jon's three choices, mist farms
 
-1. **Jon's choices**: ground area a person (how roomy), the shield (regolith, water, active),
-   the dose target for lifelong residents (10 mSv/yr is ~11.8 t/m^2 of regolith).
+Jon took the three recommendations (`docs/PLAN.md`): a water shield for 10 mSv/yr, 67 m^2 of
+ground a person all for living, and farms as aeroponic ultrasonic mist racks "wherever it can".
+One researcher on the farms; the shield rows rechecked by hand in Globus & Strout's Table 2.
+
+1. [x] **Shield: water, 10 mSv/yr.** `habitat.shield.areal_density` -> the dose target and the
+   OLTARIS table's deepest rows, extended by their e-fold (`physics.shield_areal_density`):
+   water 7 t/m^2 gives 16.1 mSv/yr and the dose falls by e every 2.01 t/m^2 (6 -> 7), so 10
+   mSv/yr takes **8.0 t/m^2** (a 1 t/m^2 extrapolation past the table); regolith 11.8. A
+   `code_factor` (0.77-1.3) carries the transport codes' ~30% spread. Shield **18.5 million t**
+   (regolith for the same dose 27.4).
+2. [x] **Ground for living.** `ground_area_per_person` stays 67 but is all living ground now (SP-413
+   had 46.6 community + 20.4 farms); `usable_volume_per_person` 1,738 -> `community_volume_per_
+   person` **823** (SP-413's community subtotal) in the band. The tube stays 70 m (ground binds).
+3. [x] **Mist farms anywhere in the tube** (model: farms need only the tube's total volume, not the
+   band or the ground). Grow area from `life.food_per_grow_area` **60 kcal/m^2/d** (28-93: Johnson
+   et al. 2021 '40-50 m2' a person, Salisbury & Bugbee '30 m2' for 2,800 kcal, BVAD's all-crop
+   diet 65 m^2 for 1,850): **45 m^2 a person**; racks ~1 m a tier with access, **1.4 m^3/m^2**:
+   **63 m^3 a person** against SP-413's 915; **80 kg/m^2** of racks, water and crop (BVAD 101.5,
+   HPS era): 3.6 t a person against SP-413's 22 t of soil, so `interior_mass_per_person` 53 ->
+   **31**. Power: misters **20 W/m^2** (derived, low confidence), fans and pumps 6% of the lights
+   (Kozai 2013): food **16.3 kW** a person (was 14.5).
+
+**Finding: ultrasonic foggers grew plants poorly where tested.** Aeroponics works ("remarkably
+improved root growth") but gives no more food than hydroponics ("the greater root growth did not
+lead to greater shoot growth compared with hydroponics", Li et al. 2018). Of four misters, "the
+plants did not grow well" under the 4.89 um ultrasonic fogger and best under an 11.24 um
+air-assisted nozzle (Tunio et al. 2022); "the high-frequency (1.7 MHz) ultrasonic atomizer is not
+suitable for aeroponics cultivation" (Lakhiar et al. 2018, nutrient EC and pH drift). Jon's call:
+ultrasonic as chosen, or ~10-20 um air-assisted / high-pressure mist. Plants also look fine at
+lower gravity ("0.38 g may be enough", Kiss 2014), so farms could go in spokes or an inner ring.
+
+**Result** (5,000 draws): **19.4 million t central** (P50 24.5, P10-P90 17.4-35.8), down from 25.1:
+the water shield at half the dose (-5.4 Mt) and no soil (-0.2 Mt). **245 MW** (food 16.3 kW a
+person). The tour needs **1.35 TW** of jet power (was 1.7). How roomy the ship is still drives the
+spread (`ground_area_per_person` +0.99).
+
+## Pass 5 (2026-11-06): the farms, the backbone
+
+Jon: "we can do research on state of the art aeroponic practices first, as thats the backbone of
+this, as food/herbs/spices/medicine are sacred to humans". Four topics in parallel: aeroponic
+engineering; a complete diet; herbs, spices and medicinal plants; the rest of the food system and
+the nutrient loop. New: `params/crops.yaml` (13 crops), `params/food.yaml` (other food, gardens,
+plant-made medicine, nutrient loop); `life.yaml` reworked (LED efficacy and delivery, yield gain,
+rack geometry, mist power); `model.food_system`.
+
+1. [x] **Mist: high-pressure, not ultrasonic (finding; Jon chose ultrasonic).** Two comparative
+   trials put an ~11 um high-pressure nozzle first and the 1.7 MHz ultrasonic fogger last, below
+   soil (Tunio et al. 2023: shoot fresh weight 73.74 against 2.73 g a plant). Fog at ~3-5 um sits
+   on the floor where "Aerosol droplets < 2 um are thought unlikely to deposit on the root
+   surface" (Eldridge et al. 2020); ultrasonic atomising drifts the solution ("the EC value
+   decreased and pH increased", Lakhiar et al. 2018), heats the root zone (~90 Wh a litre), and
+   its transducers are rated for demineralised water. Only company data favour it (LettUs Grow).
+   Continuous fine "dry fog" (8.85 um, two-fluid nozzle) matched hydroponics (Hikosaka et al.
+   2014). Power: ultrasonic **17 MW** for the ship's racks, high-pressure **0.3 MW**.
+2. [x] **Practice for a ship where a farm failure is a famine:** roots survive ~1 h without mist
+   and die within ~12 h (CIP: "if an irrigation pump breaks down on a Friday night and it is not
+   repaired in the following 12 hours ... the plants ... will die"); power cuts are "the greatest
+   risk factor". So: many small independent loops with spare pumps and accumulators for ~1 h,
+   lights dimmed on a mist fault, UV (Fusarium "completely eliminated ... at a UV-dose of 70 mJ
+   cm-2", Runia 1994) and filtration on every return, EC ~1.6 dS/m, pH ~5.8, roots below 20 C,
+   and a share of deep-flow hydroponic racks as a water-buffered hedge (~56 L/m^2 against ~15).
+3. [x] **A complete diet from 13 crops** (BVAD Rev2 / NASA Biomass Production Chamber yields and
+   light, USDA composition): wheat 21% of crop kcal, potato 13, pulses 12, soybean 9, oils 7,
+   fruit 7, rice 6, peanut 6, vegetables 6, sweet potato 5, nuts 4, maize 2, sugar 2. **53 m^2 of
+   crop racks a person** (BVAD's all-crop diet took 65 m^2 for 1,850 kcal); 1.09 kcal of food a
+   mol of light. No staple has been grown aeroponically to harvest with a reported yield, and
+   EDEN ISS warns aeroponics may "lower the harvest index". Fresh food matters: 85% of Antarctic
+   crews said food grown at the station "would have improved their overall well-being"; "The
+   most common gripe was the boring food" (Mars-500).
+4. [x] **Herbs, spices, medicine, beverages**: herbs 0.12 m^2 a person (basil "optimal when DLI is
+   14 mol"), spices 1.0 (saffron forces in stacked racks on ~3.6 mol a day; ginger and chili
+   grow indoors; cinnamon, pepper and vanilla have no indoor yields), medicinal plants 0.2
+   ("Aeroponics appeared to be the most productive system in CE for medicinal crops where the herb
+   ... or roots were harvested", Hayden 2006; UV-B gave no reliable artemisinin gain), a tea,
+   coffee and cacao grove 3 m^2 (tea plausible; coffee has no controlled-environment data at all).
+   **Plant-made medicine**: ~60 m^2 of Nicotiana benthamiana makes ~1 kg of purified antibody or
+   vaccine protein a year ("yielding up to 3-5 g/kg of FW", "usually within 4 to 7 days"; Health
+   Canada approved the plant-made vaccine Covifenz in 2022), ~30 kW; small-molecule drugs still
+   need a chemistry line.
+5. [x] **The rest of the food system** (shares of all kcal): hydrogen-oxidising bacteria on cabin
+   CO2 10% (~0.0066 kWh/kcal, ~22x less than LED crops, ~60x less per kg of protein), fungi on
+   crop waste 6% (the crops leave ~0.7 kg dry a person a day), precision-fermented dairy 4%,
+   algae 2% (DHA; not B12), mealworms on waste 2%, eggs and fish 1% (fed from crops each kcal
+   costs ~6-15x a crop kcal: 1% is ~9 MW). B12 and vitamin D from fermentation and UV-B; iodine
+   from seaweed. Crops make **75% of the kcal**; protein **2.7 g/kg/day** (need ~1.6).
+6. [x] **The nutrient loop**: ~95 kg of nutrient salts a person a year (BVAD), urine nitrified at
+   "95-100% efficiency" (MELiSSA), phosphate as struvite ("more than 90%"), Lunar Palace 365's
+   "material closure degree of 98.2%"; at 95% closure the make-up is ~48 t a year ship-wide, a
+   lifetime's stock ~0.01% of the ship. Water recovery 98% (ISS with its brine processor).
+
+**Result** (5,000 draws): **19.4 million t** (farms change power, not mass); **211 MW** (was
+245): food **12.9 kW** a person (lights and fans ~9.8, ultrasonic misters 1.7, microbes, fungi, algae and
+animals 1.4, the loop 0.03). With high-pressure mist instead: ~194 MW.
+
+**Jon's calls** (same day): "ideally vegan/vegetarian too. and ok to your recommendation for the
+aeroponic system". `life.mist_w_per_grow_area` 30 (ultrasonic) -> **0.5 W/m^2** (high-pressure;
+ultrasonic kept as an option, 17.8 MW); insects and eggs/fish 0; `life.deep_flow_share` **0.2**
+of racks as a water buffer (+41 kg/m^2 of water). Result: **189 MW** (food **10.7 kW** a person:
+lights and fans ~10.1, microbes, fungi, dairy and algae 0.5), crops **78%** of kcal on **55 m^2**
+of racks a person (59 with the gardens), protein **2.5 g/kg/day**; 19.4 million t.
+
+## Next (pass 6)
+
+1. **cortenforge-cfsem: the active shield** (coils, field, forces, stored energy -> structure
+   mass), the only option that could cut the 18.5 Mt water shield several times; then the
+   collider's dipoles round the ring and the hospital's MRI magnet.
 2. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
    water gives 0.112 kg of H2 a kg), moon flybys in the Jupiter and Saturn systems.
-3. **cortenforge-cfsem projects**: the active shield's coils (field, forces, stored energy), the
-   collider's dipoles round the ring, the hospital's MRI magnet.
-4. Model: farms in low-g decks (plants may not need 1 g), O'Neill cylinders; heat pumps on the
-   habitat radiators (fewer m^2 for more power); the lifelong ceiling (VO2max falls ~10% a decade
-   even in trained people, Tanaka & Seals 2008; lifelong exercisers at ~75 keep about 1.5x the
-   VO2max of sedentary peers, Gries 2018).
+3. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
+   enough", Kiss 2014), O'Neill cylinders; heat pumps on the habitat radiators; the lifelong
+   ceiling (VO2max falls ~10% a decade even in trained people, Tanaka & Seals 2008; lifelong
+   exercisers at ~75 keep about 1.5x the VO2max of sedentary peers, Gries 2018).

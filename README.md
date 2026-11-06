@@ -9,8 +9,8 @@ sending expeditions down to planets and moons.
 Every number lives in `params/*.yaml` with a range, a confidence and a source; the report runs a
 Monte Carlo over the ranges and ranks what drives the mass.
 
-Built so far: the whole-ship model (phase 0) and three research passes (122 parameters, none
-placeholders). Its job is to show where the mass is and which choices and numbers matter next
+Built so far: the whole-ship model (phase 0), research passes 1-5 and Jon's first design choices
+(250 parameters, none placeholders). Its job is to show where the mass is and which choices and numbers matter next
 (`docs/RESEARCH.md`).
 
 ## Run
@@ -25,19 +25,25 @@ uv run pytest               # the physics against closed forms and textbook valu
 
 - **Habitat**: a torus spun for gravity (outer floor radius = g / w^2). People live on a ground
   plane across the tube's widest chord, within a band of the floor's gravity (SP-413: 0.9-1 g),
-  and the tube is the smallest that holds everyone's ground (and the rinks') and the lived-in
-  volume in that band; past a size limit, rings are stacked along the spin axis. With the
-  Stanford torus study's numbers it reproduces that design (67 m^2 a person on a 65 m tube).
-- **Shield**: a still (non-spinning) shell round each ring, as in the Stanford torus design,
-  sized by mass per area of regolith; the report also prices water, an active magnetic shield
-  and spinning the shield.
+  and the tube is the smallest that holds everyone's ground (and the rinks'), the lived-in
+  volume in that band and the farms; past a size limit, rings are stacked along the spin axis.
+  With the Stanford torus study's numbers it reproduces that design (67 m^2 a person on a 65 m
+  tube).
+- **Shield**: a still (non-spinning) shell of water round each ring, thick enough for 10 mSv/yr
+  (Jon's choice), from the OLTARIS dose tables; the report also prices regolith, an active
+  magnetic shield and spinning the shield.
 - **Structure**: the pressure shell (thin torus, peak stress on the inner equator) and the
   spinning hoop that holds everything against the spin (k = rho w^2 R^2 / sigma).
 - **Spin stability**: the stack's spin-axis over cross-axis moment of inertia; a body spins
   stably (with energy loss) only about its largest axis.
-- **Life and power**: food grown under LEDs, plus everything else per person; stellarator plants
-  with a spare; radiators for the plants' waste heat and for the habitat (all electric power ends
-  as heat inside).
+- **Food** (the backbone: "food/herbs/spices/medicine are sacred to humans"): a 13-crop diet
+  under LEDs in aeroponic mist racks anywhere in the tube, each crop at its measured yield and
+  light; herbs, spices, medicinal plants and a tea and coffee grove; a plant-made-medicine
+  facility; microbial protein from cabin CO2, fungi and insects on crop waste, fermented dairy,
+  algae (vegan, Jon's choice); high-pressure mist with redundant loops and a deep-flow buffer; a
+  nutrient loop recycling ~95%.
+- **Power**: food plus everything else per person; stellarator plants with a spare; radiators for
+  the plants' waste heat and for the habitat (all electric power ends as heat inside).
 - **Hockey**: spun at 1 rpm (Jon's call). Rinks lie across the tube, their long side parallel to
   the spin axis, where skating feels no Coriolis force; skating along the ring changes a skater's
   weight by (1 +- v w / g)^2. Ice sheets and roller rinks are counted from rink time a person;
@@ -55,18 +61,21 @@ uv run pytest               # the physics against closed forms and textbook valu
 - **Drive**: a power-limited (Stuhlinger) drive with its own plants, for three scenarios: `park`
   (no move), `tour` (the tour over 20 years of thrust), `brisk` (the same in 2 years).
 
-## Results after research pass 3 (2026-11-06, no placeholders, 5,000 draws)
+## Results after pass 5, the farms (2026-11-06, no placeholders, 5,000 draws)
 
 For 10,000 people (central / P50 / P10-P90):
 
-- Ship without drive: 25.1 / 31.5 / 22.6-45.7 million t, about 2,500 t a person. The shield
-  (10.3 t/m^2 of regolith for 20 mSv/yr) is 23.9 million t of it. Water would do the same for
-  15.3 million t, and the tour passes water (Ceres, Callisto, Titan).
+- Ship without drive: 19.4 / 24.5 / 17.4-35.8 million t, about 1,900 t a person. The shield is
+  8.0 t/m^2 of water for 10 mSv/yr: 18.5 million t (regolith for the same dose 27.4).
 - One ring: outer floor 894 m from the axis at 1 rpm and 1 g, a 70 m tube (SP-413's 65 m plus the
-  rinks' ground); electric power 228 MW (food under lights 14.5 kW a person for athletes' 2,700
-  kcal; science 29 MW), 2 plants with the spare.
-- How roomy it is drives everything: 40 m^2 of ground a person gives 16 million t, SP-413's 67
-  gives 25, 100 gives 36, Kalpana One's ~170 about 60.
+  rinks' ground); 67 m^2 of ground a person, all for living. Electric power 189 MW: food 10.7 kW a
+  person, science 29 MW; 2 plants with the spare.
+- Food (vegan): 78% of the athletes' 2,700 kcal from 13 crops on 55 m^2 of racks a person (59 with
+  herbs, spices, medicine and the grove), the rest from microbial protein, fungi on crop waste,
+  precision-fermented dairy and algae; protein 2.5 g/kg a day. High-pressure mist (0.3 MW for the
+  ship) grew plants best in the trials; ultrasonic fog grew them worst and would cost 17.8 MW.
+- How roomy it is drives everything: 40 m^2 of ground a person gives 12 million t, 67 gives 19,
+  100 gives 28, Kalpana One's ~170 needs two rings and 46.
 - Hockey: 14 ice sheets and 4 roller rinks (4 h of ice and 1 h of roller a person a week), 48 m^3 a
   person of rinks, training, recovery and sports medicine; 1.6 injuries a person a year, about 630
   surgeries a year ship-wide. A trained skater at 8.7 m/s weighs 1.19x skating with the spin,
@@ -76,9 +85,9 @@ For 10,000 people (central / P50 / P10-P90):
 - Science: 3,000 people doing it, 16 m^3 a person of labs; a collider round the ring with 16 T
   magnets reaches 2.9 TeV a beam (the Tevatron ~1, the LHC 6.8) for 15 MW and 7,600 t.
 - The tour is 69 km/s, not the 30 assumed before: Callisto inside Jupiter's well costs 14.6 and
-  Titan 10.2, coming home from Saturn 15.7. It needs about 1.7 TW of jet power and 3.6 million t
-  of drive and propellant over 20 years of thrust; `brisk` (2 years) 6.7 TW and 14.8 million t.
-  Living needs 0.23 GW.
+  Titan 10.2, coming home from Saturn 15.7. It needs about 1.4 TW of jet power and 2.8 million t
+  of drive and propellant over 20 years of thrust; `brisk` (2 years) 5.2 TW and 11.4 million t.
+  Living needs 0.19 GW.
 - Expeditions: 4 reusable 6-crew landers, about 90 t of propellant a round trip from the ship's
   parking orbit at 7 body radii; surface stays of about two weeks (radiation, coming back to 1 g).
 - Details and sources: `docs/RESEARCH.md`, `docs/SOURCES.md`.

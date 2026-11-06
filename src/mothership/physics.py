@@ -154,15 +154,20 @@ def ground_area(R_floor, r, band):
     return chord * 2.0 * np.pi * (R_floor - d)
 
 
-def tube_radius_for(R_floor, band, volume, ground, r_min, r_max, iterations=80):
-    """Smallest tube radius (between r_min and r_max) whose gravity band holds `volume` and whose
-    widest ground holds `ground`; both grow with r, so bisect. Returns r_max where even that
-    falls short (the caller then adds rings)."""
-    R_floor, band, volume, ground, r_min, r_max = np.broadcast_arrays(
-        *(np.asarray(a, dtype=float) for a in (R_floor, band, volume, ground, r_min, r_max))
+def tube_radius_for(R_floor, band, volume, ground, r_min, r_max, total=0.0, iterations=80):
+    """Smallest tube radius (between r_min and r_max) whose gravity band holds `volume`, whose
+    widest ground holds `ground` and whose whole volume holds `total` (what can live anywhere in
+    the tube, e.g. farms, plus `volume`); all grow with r, so bisect. Returns r_max where even
+    that falls short (the caller then adds rings)."""
+    R_floor, band, volume, ground, r_min, r_max, total = np.broadcast_arrays(
+        *(np.asarray(a, dtype=float) for a in (R_floor, band, volume, ground, r_min, r_max, total))
     )
     lo, hi = np.minimum(r_min, r_max), r_max.copy()
-    ok = lambda r: (band_volume(R_floor, r, band) >= volume) & (ground_area(R_floor, r, band) >= ground)
+    ok = lambda r: (
+        (band_volume(R_floor, r, band) >= volume)
+        & (ground_area(R_floor, r, band) >= ground)
+        & (torus_volume(R_floor - r, r) >= total)
+    )
     done = ok(lo)
     for _ in range(iterations):
         mid = 0.5 * (lo + hi)
@@ -211,3 +216,10 @@ def spiral_factor(acceleration, gm, r, coefficient):
     c = 0.754). `acceleration` in m/s^2, gm in km^3/s^2, r in km."""
     eps = acceleration / (gm / r**2 * 1e3)
     return np.clip(1.0 - coefficient * eps**0.25, 0.0, 1.0)
+
+
+def shield_areal_density(anchor_areal, anchor_dose, efold, dose):
+    """Passive shield (t/m^2) for a yearly `dose`, extending a transport-code table from its
+    deepest row (anchor_areal t/m^2 gives anchor_dose) at one e-fold of dose per `efold` t/m^2:
+    anchor_areal + efold ln(anchor_dose / dose)."""
+    return anchor_areal + efold * np.log(anchor_dose / dose)

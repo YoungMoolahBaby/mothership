@@ -73,6 +73,69 @@ def sortie_dv(v: Mapping[str, float | np.ndarray], body: str):
     return v["expeditions.sortie_dv"] + extra
 
 
+# The crop mix (params/crops.yaml) and the rest of the food system (params/food.yaml).
+CROPS = ("wheat", "rice", "potato", "sweet_potato", "maize", "soybean", "peanut", "pulses", "oils",
+         "vegetables", "fruit", "nuts", "sugar")
+OTHER_FOOD = ("scp", "fungi", "dairy", "algae", "insects", "animals")
+GARDENS = ("herbs", "spices", "medicinal", "grove")
+
+
+def food_system(v: Mapping[str, float | np.ndarray], n) -> dict[str, np.ndarray]:
+    """The ship's food (pass 5; Jon: "food/herbs/spices/medicine are sacred to humans").
+    Calories come from the other sources at their shares (single-cell protein, fungi on crop
+    waste, fermented dairy, algae, insects, animals) and the LED crop mix for the rest; each crop
+    takes the grow area its yield needs and the daily light it was grown under. The gardens
+    (herbs, spices, medicinal plants, a tea and coffee grove) take area a person; a plant-made-
+    medicine facility (Nicotiana) a fixed area. Racks stand crop height + lamps and root chamber
+    apart, with aisles. Returns ship-wide area (m^2), volume (m^3), power (W), protein (g/day a
+    person) and the crops' kcal per mol of light."""
+    kcal = v["life.food_energy"]
+    other_kcal = {s: kcal * v[f"food.{s}.share"] for s in OTHER_FOOD}
+    crop_kcal = kcal - sum(other_kcal.values())
+    total_share = sum(v[f"crops.{c}.share"] for c in CROPS)
+    overhead = v["life.tier_overhead"]
+    area = photons = volume = protein = 0.0
+    for c in CROPS:
+        k = crop_kcal * v[f"crops.{c}.share"] / total_share
+        a = k / (v[f"crops.{c}.yield"] * v["life.yield_gain"])
+        area, photons = area + a, photons + a * v[f"crops.{c}.light"]
+        volume = volume + a * (v[f"crops.{c}.height"] + overhead)
+        protein = protein + k / v[f"crops.{c}.kcal_per_g"] * v[f"crops.{c}.protein_per_g"]
+    crop_area, crop_photons = area, photons
+    for g in GARDENS:
+        a = v[f"food.garden.{g}_area"]
+        h = v["food.garden.grove_height"] if g == "grove" else v["food.garden.specialty_height"]
+        area, photons = area + a, photons + a * v[f"food.garden.{g}_light"]
+        volume = volume + a * (h + overhead)
+    for s in OTHER_FOOD:
+        protein = protein + other_kcal[s] * v[f"food.{s}.protein_per_kcal"]
+    # ship-wide from here
+    pharma = v["food.pharma.grow_area"]
+    shelves = n * v["food.fungi.shelf_area"]
+    area, photons = n * area, n * photons
+    volume = (n * volume + (pharma + shelves) * (v["food.garden.specialty_height"] + overhead)) * v["life.access_factor"]
+    volume = volume + n * v["food.loop.volume"]
+    light_w = photons * 1e6 / DAY / (v["life.led_efficacy"] * v["life.light_delivery"])
+    racks = area + pharma
+    mist_w = racks * v["life.mist_w_per_grow_area"]
+    other_w = n * sum(other_kcal[s] * v[f"food.{s}.kwh_per_kcal"] for s in OTHER_FOOD) * 1e3 / (DAY / HOUR)
+    farm_w = light_w * (1.0 + v["life.farm_aux_fraction"]) + mist_w
+    power = farm_w + other_w + v["food.pharma.power_kw"] * 1e3 + n * v["food.loop.power_w"]
+    return {
+        "area": racks,
+        "crop_area": n * crop_area,
+        "volume": volume,
+        "power": power,
+        "light_w": light_w,
+        "mist_w": mist_w,
+        "ultrasonic_w": racks * v["life.ultrasonic_w_per_grow_area"],
+        "other_w": other_w,
+        "protein": protein,
+        "crop_kcal_per_mol": crop_kcal / crop_photons,
+        "crop_share": crop_kcal / kcal,
+    }
+
+
 def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     """Everything but the drive. Masses in tonnes, power in MW, lengths in m."""
     n = v["mission.population"]
@@ -106,17 +169,24 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     # Science (Jon: "like cern too"): labs for the people doing it.
     researchers = n * v["science.share"]
     science_volume = researchers * v["science.lab_volume_per_researcher"]
-    lived_in = n * v["habitat.usable_volume_per_person"] + athletic_volume + science_volume
+    lived_in = n * v["habitat.community_volume_per_person"] + athletic_volume + science_volume
+    # Farms (Jon: aeroponic ultrasonic mist farms, "wherever it can"): racks anywhere in the tube,
+    # in or out of the living band, on no one's ground; their volume from grow area a person.
+    food = food_system(v, n)
+    grow_area, farm_volume = food["area"], food["volume"]
     ground = n * v["habitat.ground_area_per_person"] + (ice_sheets + roller_rinks) * (
         pad_l * pad_w + v["athletics.rink.support_area"]
     )
     band = v["habitat.gravity_band"]
     r_min = ph.box_tube_radius(pad_l, pad_h)  # a rink hall across the tube
     r_max = np.maximum(v["habitat.max_tube_ratio"] * R, r_min)
-    rings = np.maximum(
-        np.ceil(lived_in / ph.band_volume(R, r_max, band)), np.ceil(ground / ph.ground_area(R, r_max, band))
-    )
-    r = ph.tube_radius_for(R, band, lived_in / rings, ground / rings, r_min, r_max)
+    total = lived_in + farm_volume
+    rings = np.maximum.reduce([
+        np.ceil(lived_in / ph.band_volume(R, r_max, band)),
+        np.ceil(ground / ph.ground_area(R, r_max, band)),
+        np.ceil(total / ph.torus_volume(R - r_max, r_max)),
+    ])
+    r = ph.tube_radius_for(R, band, lived_in / rings, ground / rings, r_min, r_max, total / rings)
     Rf = R
     R = Rf - r  # the torus's major radius (tube centre)
     volume = rings * ph.torus_volume(R, r)
@@ -128,7 +198,8 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     area = rings * ph.torus_area(R, r)
     shell = area * t_shell * rho
     air = volume * p * M_AIR / (R_GAS * v["habitat.air_temperature"])
-    interior = n * v["habitat.interior_mass_per_person"] * 1e3
+    farm_mass = grow_area * (v["life.farm_mass_per_grow_area"] + v["life.deep_flow_share"] * v["life.deep_flow_extra_water"])
+    interior = (n * v["habitat.interior_mass_per_person"] + farm_mass) * 1e3
 
     # Care by robots (Jon: massage, cooking etc. are AI/robotic): massage tables sized by the
     # hours of table massage a person gets, kitchen lines by meals (their power by energy a
@@ -154,15 +225,23 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     # Still shield round the tube.
     gap = v["habitat.shield.gap"]
     shield_area = rings * ph.torus_area(R, r + gap)
-    shield = shield_area * v["habitat.shield.areal_density"] * 1e3
-    # Options (not in the total): water instead of regolith; an active magnetic shield over a thin
-    # passive one; spinning the shield with the habitat (its ring must then carry it, SP-413's
-    # reason for a still shield).
-    shield_water = shield_area * v["habitat.shield.water_areal_density"] * 1e3
+    # Water, thick enough for the dose target (Jon's choices: water, 10 mSv/yr), from the deepest
+    # row of the OLTARIS table and its e-fold. Options (not in the total): regolith for the same
+    # dose; an active magnetic shield over a thin passive one; spinning the shield with the
+    # habitat (its ring must then carry it, SP-413's reason for a still shield).
+    dose = v["habitat.shield.dose_target"] / v["habitat.shield.code_factor"]
+    areal = {
+        m: ph.shield_areal_density(
+            v[f"habitat.shield.{m}.anchor_areal"], v[f"habitat.shield.{m}.anchor_dose"], v[f"habitat.shield.{m}.efold"], dose
+        )
+        for m in ("water", "regolith")
+    }
+    shield = shield_area * areal["water"] * 1e3
+    shield_regolith = shield_area * areal["regolith"] * 1e3
     shield_active = shield_area * (v["habitat.shield.active_mass_per_area"] + v["habitat.shield.active_residual"]) * 1e3
 
     # Power: food under lights plus everything else; all of it ends as heat in the habitat.
-    food_w = ph.food_power(v["life.food_energy"], v["life.led_to_par"], v["life.par_to_food"])
+    food_w = food["power"] / n
     ice_w = ice_sheets * v["athletics.ice_plant_kw"] * 1e3
     # Science power: labs, the data centre, a collider round the ring inside the still shield
     # (at its outer equator, Rf + gap from the axis), a light source, a zero-g lab at the hub.
@@ -232,6 +311,15 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         "expeditions_t": expeditions / 1e3,
         "researchers": researchers,
         "science_m3_per_person": science_volume / n,
+        "farm_m3_per_person": farm_volume / n,
+        "grow_m2_per_person": grow_area / n,
+        "crop_m2_per_person": food["crop_area"] / n,
+        "crop_share": food["crop_share"],
+        "crop_kcal_per_mol": food["crop_kcal_per_mol"],
+        "protein_g_per_kg": food["protein"] / v["life.body_mass"],
+        "mist_mw": food["mist_w"] / 1e6,
+        "ultrasonic_mist_mw": food["ultrasonic_w"] / 1e6,
+        "other_food_mw": food["other_w"] / 1e6,
         "science_mw": science_w / 1e6,
         "collider_tev": collider_tev,
         "collider_t": collider / 1e3,
@@ -241,7 +329,8 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         "ring_spin_factor": k,
         "spin_inertia_ratio": i_spin / i_cross,
         "shield_t": shield / 1e3,
-        "shield_water_t": shield_water / 1e3,
+        "shield_t_per_m2": areal["water"],
+        "shield_regolith_t": shield_regolith / 1e3,
         "shield_active_t": shield_active / 1e3,
         "spinning_shield_extra_t": ph.ring_structure_mass(shield, k) / 1e3,
         "shell_t": shell / 1e3,

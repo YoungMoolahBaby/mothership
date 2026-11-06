@@ -2,7 +2,7 @@
 
 Every number the model uses lives in params/*.yaml as a leaf {value, low, high, unit, conf,
 source, note}; low and high default to value. Leaves flatten to dotted names prefixed by the
-file stem, e.g. ``habitat.shield.areal_density``. Monte Carlo draws are triangular(low, value,
+file stem, e.g. ``habitat.shield.water.efold``. Monte Carlo draws are triangular(low, value,
 high).
 """
 

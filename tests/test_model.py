@@ -90,3 +90,29 @@ def test_science_parts():
     mw = (n * v["science.share"] * v["science.kw_per_researcher"] + n * v["science.data_kw_per_person"] + v["science.zero_g_kw"]) / 1e3
     mw += v["science.collider.power_mw"] + v["science.light_source_mw"]
     assert float(s["science_mw"]) == pytest.approx(mw)
+
+
+def test_food_system_accounts():
+    from mothership.model import CROPS, GARDENS, OTHER_FOOD, food_system
+    v = values(load_params())
+    q = dict(v)
+    for s in OTHER_FOOD:
+        q[f"food.{s}.share"] = 0.0
+    q["life.yield_gain"] = 1.0
+    n = 1.0
+    f = food_system(q, n)
+    shares = sum(q[f"crops.{c}.share"] for c in CROPS)
+    crop_area = sum(q["life.food_energy"] * q[f"crops.{c}.share"] / shares / q[f"crops.{c}.yield"] for c in CROPS)
+    assert float(f["crop_area"]) == pytest.approx(crop_area)
+    gardens = sum(q[f"food.garden.{g}_area"] for g in GARDENS)
+    assert float(f["area"]) == pytest.approx(crop_area + gardens + q["food.pharma.grow_area"])
+    protein = sum(
+        q["life.food_energy"] * q[f"crops.{c}.share"] / shares / q[f"crops.{c}.kcal_per_g"] * q[f"crops.{c}.protein_per_g"]
+        for c in CROPS
+    )
+    assert float(f["protein"]) == pytest.approx(protein)
+    assert float(f["crop_share"]) == pytest.approx(1.0)
+    # moving calories to single-cell protein cuts the food power
+    r = dict(q)
+    r["food.scp.share"] = 0.2
+    assert float(food_system(r, n)["power"]) < float(f["power"])

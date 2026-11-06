@@ -1,8 +1,9 @@
 # The spinning habitat: a torus (or a stack of tori) spun for gravity, inside a radiation shield
 # that does not spin (as in the Stanford torus, NASA SP-413, 1977), so the shield's mass loads
-# no structure. People live where spin gravity is within gravity_band of the outer floor's; the
-# rest of the tube is enclosed air. Research pass 1 (2026-11-06) replaced volume_per_person and
-# max_tube_ratio with usable_volume_per_person, gravity_band and tube_ratio (docs/RESEARCH.md).
+# no structure. People live on a ground plane across the tube and in floors within gravity_band
+# of the outer floor's gravity; farms (aeroponic racks) go anywhere in the tube. The tube is the
+# smallest that holds the ground, the lived-in volume in the band and the farms (pass 3-4,
+# docs/RESEARCH.md). The shield is water for the dose target (Jon's choices, pass 4).
 
 gravity_g:
   value: 1.0
@@ -27,9 +28,9 @@ ground_area_per_person:
   value: 67
   low: 40
   high: 155
-  unit: m^2 of ground (projected area) a person
+  unit: m^2 of ground (projected area) a person, for living (farms are off the ground)
   conf: "medium"
-  source: "SP-413 ch. 3: 'there should be at least 40 m^2 of projected area per inhabitant. Projected area means area projected onto the largest plane perpendicular to the direction of the pseudogravity'; Table 3-2 totals 67.0 m^2 projected (155.2 m^2 of floor) a person, incl. ~20 of farms. App. 4B: 'In a torus the projected area is a strip through the diameter of the tube of the torus', Ap = 4 pi r R; ch. 5: 'the central plain running the full circumference of the torus along the middle of the tube'; ch. 4: 'the radius needed to enclose the 670,000 m^2 of projected area can be quite small' (test_ground_area_reproduces_sp413). High: roomier living, SP-413's whole floor area 155 or Kalpana One's '170m2 living area for each of 3,000 residents' (Globus et al. 2007)"
+  source: "Jon's choice (2026-11-06): SP-413's 67 m^2 a person, all of it for living now that the farms are aeroponic racks off the ground (SP-413's 67 had 46.6 community + 20.4 farms). SP-413 ch. 3: 'there should be at least 40 m^2 of projected area per inhabitant. Projected area means area projected onto the largest plane perpendicular to the direction of the pseudogravity'; app. 4B: 'In a torus the projected area is a strip through the diameter of the tube of the torus', Ap = 4 pi r R; ch. 5: 'the central plain running the full circumference of the torus along the middle of the tube' (test_ground_area_reproduces_sp413). High: SP-413's whole floor area 155, Kalpana One's '170m2 living area for each of 3,000 residents' (Globus et al. 2007)"
 max_tube_ratio:
   value: 0.2
   low: 0.15
@@ -37,20 +38,20 @@ max_tube_ratio:
   unit: largest tube radius / outer floor radius before adding rings
   conf: "low"
   source: "judgement: SP-413 ch. 4 'The desire to keep structural mass small favors small radii of curvature' (its own 0.073); a cap so a fast-spinning ship stacks rings rather than fattening one tube. At 1 rpm one ring holds the ship well under it"
-usable_volume_per_person:
-  value: 1738
-  low: 1040
-  high: 3500
-  unit: m^3 of lived-in volume per person (homes, work, community, farms)
+community_volume_per_person:
+  value: 823
+  low: 500
+  high: 1600
+  unit: m^3 of lived-in volume a person in the gravity band (homes, work, community, open space; not farms)
   conf: "medium"
-  source: "SP-413 Table 3-2: 1,738 m^3 a person (community 823, agriculture 915) at 67 m^2 projected area; low end scales to its 40 m^2 minimum ('at least 40 m^2 of projected area per inhabitant', ch. 3); high end a placeholder for roomier living (Kalpana One encloses ~21,000 m^3 a person)"
+  source: "SP-413 Table 3-2 community subtotal 823.3 m^3 a person (residential 147, public open space 500 at 50 m height, transportation 72, service industry 24, ...); farms (its 915 m^3 of agriculture) are now aeroponic racks sized separately (life.*). Low: SP-428's 518 m^3 of public space at 36.5 m height for a smaller open-space allowance (judgement); high: roomier open space for the extra living ground (judgement)"
 interior_mass_per_person:
-  value: 53
-  low: 30
-  high: 80
-  unit: t per person (floors, buildings, soil, water, equipment; not the shell or shield)
+  value: 31
+  low: 20
+  high: 50
+  unit: t per person (floors, buildings, water, equipment; not the shell, shield or farms)
   conf: "medium"
-  source: "SP-413 Table 5-3 'Internal masses': 530,000 t for 10,000 people (soil 220,000 t, structures 77,000, misc 80,000, machinery 40,000); soil is 22 t a person, so the farming method moves this most. Range a judgement"
+  source: "SP-413 Table 5-3 'Internal masses': 530,000 t for 10,000 people, of which soil 220,000 t (22 t a person); aeroponic farms use no soil, so 53 - 22 = 31 (farm racks and water are life.farm_mass_per_grow_area). Range a judgement"
 air_pressure:
   value: 70
   low: 50.8
@@ -86,20 +87,54 @@ shell:
     conf: "medium"
     source: "A514-class quenched and tempered steel plate (ASTM A514: 760-895 MPa tensile, 690 MPa minimum yield). Central ASME VIII-2 style min(UTS / 2.4, 2/3 yield) = 317; NASA-STD-5001B Table 5 (habitable modules, 'Internal pressure only': yield factor 1.65, ultimate 2.0) gives 380; low: ASME VIII-1 (UTS / 3.5) 217, or NASA's factors on SP-413's rolled steel 213; high: SP-413 app. 4A's rule, 'A safety factor of 1.5 is applied to the yield stress to give safe working values' (690 / 1.5). SP-413 itself used aluminium ('aluminum is assumed as the principal structural material', working stress 234 MPa at 2,650 kg/m^3): allowable per density steel 41, aluminium 2219-T87 84, carbon/epoxy ~320 kN m/kg, so an aluminium shell would weigh ~0.48 of steel's"
 shield:
-  areal_density:
-    value: 10.3
-    low: 9.5
-    high: 11.1
-    unit: t/m^2 of regolith (the design's shield)
+  dose_target:
+    value: 10
+    unit: mSv a year inside the shield (galactic cosmic rays, deep space)
+    conf: "high"
+    source: "Jon's choice (2026-11-06): half the 20 mSv/yr Globus & Strout set for adults ('For adults only the average dose over many years is relevant'), for people who live aboard for life, children included; NASA's 600 mSv career limit is 30 years at 20 mSv/yr, 60 at 10"
+  code_factor:
+    value: 1.0
+    low: 0.77
+    high: 1.3
+    unit: true dose / OLTARIS dose
     conf: "medium"
-    source: "Globus & Strout 2017 (OLTARIS, free-space GCR, solar minimum, 'conservative'): 20 mSv/yr 'requires 10-11 tons of lunar regolith per square meter'; Table 2: 10 t/m^2 22.8, 11 t/m^2 14.5 mSv/yr, log-interpolated to 20 at 10.3; range for the transport code (Geant3 vs Geant4 free-space doses differ ~30%, Ambroglini et al. 2016). Dose falls by e every ~2.2 t/m^2 here (10 mSv/yr ~11.8); the plateau ('Adding more than 20 g/cm2 is not helpful, unless you are adding meters of material', Clowdsley 2021) is far thinner. Lifelong residents: NASA's 600 mSv career limit is 30 years at 20 mSv/yr"
-  water_areal_density:
-    value: 6.6
-    low: 6.0
-    high: 7.2
-    unit: t/m^2 of water for the same dose (an option)
-    conf: "medium"
-    source: "Globus & Strout 2017: '6-7 tons of water or polyethylene radiation shielding per square meter of hull is sufficient in deep space'; Table 2: water 6 t/m^2 26.5, 7 t/m^2 16.1 mSv/yr, log-interpolated to 20 at 6.6. Water from C-type asteroids ('A 500-t, carbonaceous C-type asteroid may contain up to 100 t of water', KISS 2018), Ceres, icy moons; ~2 MJ/kg to extract at 10% water (Janhunen et al., EMMI)"
+    source: "transport codes differ ~30% for free-space doses (Geant3 vs Geant4, Ambroglini et al. 2016); Globus & Strout's doses are for solar minimum ('calculated for a low solar activity period from 17 June 1977 to 17 June 1978 and are thus conservative'; 'about a factor of three difference in the space radiation between solar minima and maxima')"
+  water:
+    anchor_areal:
+      value: 7
+      unit: t/m^2 of water, the deepest row of Globus & Strout's Table 2
+      conf: "high"
+      source: "Globus & Strout 2017 Table 2 (OLTARIS, free space): water 5, 6, 7 t/m^2 -> 43, 26.5, 16.1 mSv/yr"
+    anchor_dose:
+      value: 16.1
+      unit: mSv/yr at anchor_areal
+      conf: "high"
+      source: "Globus & Strout 2017 Table 2: water 7 t/m^2, '16.1' mSv/yr ('6-7 tons of water or polyethylene radiation shielding per square meter of hull is sufficient in deep space' for 20)"
+    efold:
+      value: 2.01
+      low: 1.9
+      high: 2.1
+      unit: t/m^2 of water per e-fold of dose
+      conf: "medium"
+      source: "derived from Table 2: 1 / ln(26.5 / 16.1) = 2.01 (6 -> 7 t/m^2), 1 / ln(43 / 26.5) = 2.07 (5 -> 6); the table stops at 7, so 10 mSv/yr (~8.0 t/m^2) is a 1 t/m^2 extrapolation. The GCR plateau ('Adding more than 20 g/cm2 is not helpful, unless you are adding meters of material', Clowdsley 2021) is far thinner. Water from C-type asteroids ('A 500-t, carbonaceous C-type asteroid may contain up to 100 t of water', KISS 2018), Ceres, icy moons; ~2 MJ/kg to extract at 10% water (Janhunen et al., EMMI)"
+  regolith:
+    anchor_areal:
+      value: 11
+      unit: t/m^2 of lunar regolith, the deepest row of Table 2
+      conf: "high"
+      source: "Globus & Strout 2017 Table 2: regolith 9, 10, 11 t/m^2 -> 34.9, 22.8, 14.5 mSv/yr; 20 mSv/yr 'requires 10-11 tons of lunar regolith per square meter'"
+    anchor_dose:
+      value: 14.5
+      unit: mSv/yr at anchor_areal
+      conf: "high"
+      source: "Globus & Strout 2017 Table 2: regolith 11 t/m^2, '14.5' mSv/yr"
+    efold:
+      value: 2.21
+      low: 2.0
+      high: 2.5
+      unit: t/m^2 of regolith per e-fold of dose
+      conf: "medium"
+      source: "derived from Table 2: 1 / ln(22.8 / 14.5) = 2.21 (10 -> 11 t/m^2), 2.30 (9 -> 10), 2.51 (8 -> 9)"
   active_mass_per_area:
     value: 1.1
     low: 0.4
