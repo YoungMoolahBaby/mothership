@@ -27,11 +27,9 @@ gravity_band:
   source: "SP-413 ch. 3: 'This choice of a 10 percent variation is arbitrary, but also maintains conditions as Earth-like as possible'. Low: Queijo 1988 (NASA CR-181617 sec. 5.2.1), decks +-3% about 1 g, 'This difference is not expected to have any significant influence on human physiology and performance' (6.2% span). High: Jensen 2024 designs over 0.95-1.1 g (13.6%). No physiological data on floor-to-floor gravity: 'It is not known if the gravity gradient has any critical influences on the cardiovascular and neurovestibular systems' (Clement et al. 2015). Head-to-foot gradient at 894 m is 0.0011 g/m, far inside Hall's listed limits (AIAA 99-4524 Table 1)"
 ground_area_per_person:
   value: 67
-  low: 40
-  high: 155
   unit: m^2 of ground (projected area) a person, for living (farms are off the ground)
-  conf: "medium"
-  source: "Jon's choice (2026-11-06): SP-413's 67 m^2 a person, all of it for living now that the farms are aeroponic racks off the ground (SP-413's 67 had 46.6 community + 20.4 farms). SP-413 ch. 3: 'there should be at least 40 m^2 of projected area per inhabitant. Projected area means area projected onto the largest plane perpendicular to the direction of the pseudogravity'; app. 4B: 'In a torus the projected area is a strip through the diameter of the tube of the torus', Ap = 4 pi r R; ch. 5: 'the central plain running the full circumference of the torus along the middle of the tube' (test_ground_area_reproduces_sp413). High: SP-413's whole floor area 155, Kalpana One's '170m2 living area for each of 3,000 residents' (Globus et al. 2007)"
+  conf: "high"
+  source: "Jon's choice (2026-11-06), fixed (a design choice, not an unknown; 40 gives ~8 Mt less shield, 100 ~5 Mt more, Kalpana One's 170 two rings): SP-413's 67 m^2 a person, all of it for living now that the farms are aeroponic racks off the ground (SP-413's 67 had 46.6 community + 20.4 farms). SP-413 ch. 3: 'there should be at least 40 m^2 of projected area per inhabitant. Projected area means area projected onto the largest plane perpendicular to the direction of the pseudogravity'; app. 4B: 'In a torus the projected area is a strip through the diameter of the tube of the torus', Ap = 4 pi r R; ch. 5: 'the central plain running the full circumference of the torus along the middle of the tube' (test_ground_area_reproduces_sp413). High: SP-413's whole floor area 155, Kalpana One's '170m2 living area for each of 3,000 residents' (Globus et al. 2007)"
 max_tube_ratio:
   value: 0.2
   low: 0.15
@@ -99,19 +97,19 @@ shield:
     conf: "high"
     source: "design decision (pass 6, 2026-11-06; Jon: 'your call, engineering wise'): the water alone keeps the dose within ICRP's occupational single-year ceiling, '20 mSv per year, averaged over defined periods of 5 years, with no single year exceeding 50 mSv' (ICRP Publication 103, Table 6), so a magnet failure is survivable for as long as repairs take; 4.7 t/m^2 of water also stops solar particle events outright. The magnet brings it to dose_target"
   magnet_mass_per_area:
-    value: 0.207
-    low: 0.16
-    high: 0.51
+    value: 0.236
+    low: 0.146
+    high: 0.64
     unit: t/m^2 of the fail-safe hybrid's magnet over the habitat's shield area
     conf: "low"
-    source: "computed in cortenforge-cfsem projects/active-shield (`failsafe`, 2026-11-06): with 4.72 t/m^2 of water, the smallest magnet for 10 mSv/yr is 50 T m (1.25 T across a 40 m shell, 75-115 m round the tube): leftovers 47.9 mSv/yr of primaries, x2 for secondaries, through the water -> 9.1 mSv/yr; stored 7.74e13 J (~18 kt of TNT); carbon-fibre structure at 1,200 MPa, Q = 3, 0.30 Mt; REBCO at ~65 K (J_e ~300 A/mm^2, judgement from Jc ~ exp(-T/T*), T* 20-30 K, Senatore et al. 2016) 0.18 Mt; 0.48 Mt over 2.326e6 m^2. Range: Q 2-10"
+    source: "computed in cortenforge-cfsem projects/active-shield (`failsafe`, 2026-11-06): with 4.72 t/m^2 of water, the smallest magnet for 10 mSv/yr is 50 T m (1.25 T across a 40 m shell, 75-115 m round the tube): leftovers 47.9 mSv/yr of primaries, x2 for secondaries, through the water -> 9.1 mSv/yr; stored 7.74e13 J (~18 kt of TNT); carbon-fibre structure at 1,200 MPa, Q = 3, 0.30 Mt. Conductor MgB2 (pass 7 engineering call: REBCO would need ~3e7 km of tape, ~6,000 years of today's world output, 'an annual production capacity exceeding 5,000 km (12 mm width)', Zhao et al. 2025), ~200 A/mm^2 operating at ~20 K over the run's 6.15e12 A m at 8,000 kg/m^3: 0.25 Mt; 0.55 Mt over 2.326e6 m^2. Range: Q 2-10, J_e 100-350 A/mm^2"
   magnet_cryo_mw:
-    value: 55
+    value: 40
     low: 20
-    high: 150
+    high: 300
     unit: MW electric for the magnet's cryocoolers
     conf: "low"
-    source: "computed in cortenforge-cfsem active-shield: heat leak ~1.25 W/m^2 onto the 2.44e6 m^2 inner winding from the 293 K habitat (multilayer insulation at an effective emissivity ~0.003, judgement) lifted at ~65 K for ~18 W/W (cryocoolers at 20-30% of Carnot at megawatt scale: 'increasing to roughly 30% in the megawatt-range', ter Brake & Wiegerinck 2002); 131 MW if run at 40 K. A cryocooler failure warms the magnet, which quenches and turns off: the fail-safe case"
+    source: "derived (pass 7): MgB2 at ~20 K ('Operation of MgB2 is up to 29 K', CERN) behind an ~80 K intercept shield: ~1.25 W/m^2 from the 293 K habitat onto the shield's 2.44e6 m^2 (multilayer insulation at an effective emissivity ~0.003, judgement) is ~3 MW at 80 K at ~11 W/W (25% of Carnot; 'increasing to roughly 30% in the megawatt-range', ter Brake & Wiegerinck 2002), ~34 MW; the 80 K to 20 K leak ~17 kW at 50-140 W/W, ~1-2 MW; supports and margin to ~40. High end: no intercept, 3 MW at 20 K (~300 MW). A cryocooler failure warms the magnet, which quenches and turns off: the fail-safe case"
   code_factor:
     value: 1.0
     low: 0.77

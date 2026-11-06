@@ -184,6 +184,29 @@ Sources behind parameters and checks. Exact quotes live in the `source` fields o
 - Nutrient loop: Mackowiak et al. 1996 (NTRS 20040089205); Verbeelen et al. 2021 (Front.
   Microbiol.); Etter et al. 2011 (struvite); NASA ISS water recovery (98%).
 
+## Building it (pass 7)
+
+- Lunar ice: Crawford 2015 (arXiv 1410.6865); Brown et al. 2022 (Icarus 377, via Elvis & McDowell
+  2026, Front. Space Technol.); Li et al. 2018 (PNAS); Mitrofanov et al. 2010 (LEND).
+- Lunar water extraction: Kornuta et al. 2019, REACH 13:100026 (https://www.osti.gov/servlets/purl/1503160);
+  Colorado School of Mines / NASA NIAC thermal mining.
+- Asteroids: Garenne et al. 2014 (GCA 137); KISS Asteroid Retrieval Feasibility Study 2012
+  (https://www.kiss.caltech.edu/final_reports/Asteroid_final_report.pdf); Watanabe et al. 2019
+  (Ryugu); Rivkin & DeMeo 2019 (arXiv 1812.02285); Garcia Yarnoz et al. 2013; JPL NHATS; Lauretta
+  et al. (Bennu, arXiv 2404.12536); Grady et al. LPSC 2024 (Bennu N).
+- Mass drivers: SP-413 ch. 5; SP-428 'Mass Drivers III'.
+- Metals and oxygen: SP-413 ch. 5 (aluminium refinery); Leger et al. 2025 (PNAS, ilmenite);
+  Schreiner 2015 (MIT, molten regolith electrolysis); Guerrero-Gonzalez & Zabel 2023; Azami et al.
+  (arXiv 2408.05823); Boston Metal (company); IAI 2019 (Earth aluminium).
+- Conductors: Zhao et al. 2025 (Superconductivity; HTS output); Molodyk & Larbalestier 2023
+  (Science 380); Shanghai Superconductor and Faraday Factory (company); Lee et al. 2020 (Sam Dong
+  MgB2); Columbus/ASG (company); Ballarino (CERN); Desai et al. 1984 and Corruccini (aluminium).
+- Carbon fibre: Composites United 2024; ATA CFT; Chen et al. 2025 (Resour. Conserv. Recycl. 219).
+- Earth launch and bootstrapping: SP-413 ch. 4, 6 (Tables 6-4, 6-7; schedule); O'Neill 1974;
+  NASA CP-2255 (1980) self-replicating lunar factory; Metzger et al. 2013 (arXiv 1612.03238);
+  Jones 2018 (NASA Ames, launch costs); NASA OTPS 2024 space solar power; SpaceX (company);
+  NASA ISS facts; Three Gorges (Waterpower 2000).
+
 ## Food and power
 
 - Kusuma, Pattison & Bugbee 2020, "From physics to fixtures to food", Horticulture Research:

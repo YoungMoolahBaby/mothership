@@ -386,6 +386,58 @@ def voyage(v: Mapping[str, float | np.ndarray], dry_t, scenario: str) -> dict[st
     }
 
 
+def build(v: Mapping[str, float | np.ndarray], s: Mapping[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """Building it (pass 7): the shield water from near-Earth asteroids and lunar polar ice, the
+    structure and interior from lunar metals, the magnet's carbon-fibre structure (carbon from the
+    asteroid ore) and MgB2 wire; the energy to mine, refine and deliver each to the build site;
+    what launches from Earth. Energy-limited: the bulk build takes the total energy over the build
+    site's power, after the preparation years. Masses in t, energy in J."""
+    mj = 1e6
+    b = lambda key: v[f"build.{key}"]
+    magnet = s["magnet_t"] * 1e3
+    water = s["shield_t"] * 1e3 - magnet
+    nea = water * b("water.nea_share")
+    lunar = water - nea
+    dv, ve = b("water.nea_return_dv") * 1e3, b("water.tug_ve") * 1e3
+    tug = dv * ve / (2.0 * b("water.tug_efficiency"))  # J per kg moved, low-thrust (dv << ve)
+    e_water = nea * (b("water.nea_extract") * mj + tug) + lunar * (b("water.lunar_extract") + b("water.lunar_transport")) * mj
+    conductor = magnet * b("materials.conductor_share")
+    structure = magnet - conductor
+    launch = b("materials.moon_launch_energy") * mj
+    steel = (s["shell_t"] + s["ring_t"]) * 1e3
+    interior = s["interior_t"] * 1e3
+    e_dry = (
+        steel * (b("materials.steel_energy") * mj + launch)
+        + interior * (b("materials.interior_energy") * mj + launch)
+        + structure * b("materials.carbon_fibre_energy") * mj
+        + conductor * (b("materials.conductor_energy") * mj + launch)
+    )
+    energy = e_water + e_dry
+    power = b("schedule.build_power") * 1e9
+    bulk_years = energy / power / YEAR
+    earth = b("earth.launched")
+    per = b("earth.launches_per_payload")
+    wire_km = conductor / b("materials.wire_kg_per_km")
+    return {
+        "water_mt": water / 1e9,
+        "nea_water_mt": nea / 1e9,
+        "lunar_water_mt": lunar / 1e9,
+        "tug_propellant_mt": nea * dv / ve / 1e9,
+        "lunar_share_of_mapped": lunar / (b("water.lunar_recovery") * b("water.lunar_mapped") * 1e9),
+        "energy_j": energy,
+        "energy_water_j": e_water,
+        "energy_gw_yr": energy / 1e9 / YEAR,
+        "bulk_years": bulk_years,
+        "program_years": b("schedule.prep_years") + bulk_years,
+        "earth_t": earth * np.ones_like(np.asarray(water, dtype=float)),
+        "launches": earth / b("earth.payload") * per,
+        "launch_cost_busd": earth * 1e3 * b("earth.cost_per_kg") * per / 1e9,
+        "arrays_t": power / b("schedule.array_w_per_kg") / 1e3,
+        "wire_km": wire_km,
+        "wire_lines": wire_km / (b("materials.wire_line_km_per_year") * bulk_years),
+    }
+
+
 def run(v: Mapping[str, float | np.ndarray]) -> dict[str, dict[str, np.ndarray]]:
     s = ship(v)
-    return {"ship": s, **{sc: voyage(v, s["dry_t"], sc) for sc in SCENARIOS}}
+    return {"ship": s, "build": build(v, s), **{sc: voyage(v, s["dry_t"], sc) for sc in SCENARIOS}}

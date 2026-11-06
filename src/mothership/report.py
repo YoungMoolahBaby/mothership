@@ -64,6 +64,22 @@ SHIP_ROWS = [
     ("dry_t", "ship without drive", "t", "{:,.0f}"),
     ("habitat_t_per_person", "per person", "t", "{:,.0f}"),
 ]
+BUILD_ROWS = [
+    ("water_mt", "shield water", "Mt", "{:,.2f}"),
+    ("nea_water_mt", "of which from near-Earth asteroids", "Mt", "{:,.2f}"),
+    ("lunar_water_mt", "of which lunar polar ice", "Mt", "{:,.2f}"),
+    ("lunar_share_of_mapped", "lunar ice taken / recoverable mapped ice (34 Mt in 8 craters)", "", "{:.2f}"),
+    ("tug_propellant_mt", "asteroid water burned by the tugs", "Mt", "{:,.3f}"),
+    ("energy_gw_yr", "energy to mine, refine and deliver", "GW yr", "{:,.1f}"),
+    ("bulk_years", "bulk build at the build site's power", "years", "{:,.1f}"),
+    ("program_years", "go-ahead to move-in", "years", "{:,.0f}"),
+    ("arrays_t", "solar arrays for the build site", "t", "{:,.0f}"),
+    ("earth_t", "launched from Earth", "t", "{:,.0f}"),
+    ("launches", "launches (100 t class, with a tug to L5)", "", "{:,.0f}"),
+    ("launch_cost_busd", "launch cost", "billion USD", "{:,.0f}"),
+    ("wire_km", "MgB2 wire for the magnet", "km", "{:,.3g}"),
+    ("wire_lines", "wire lines running through the bulk build", "", "{:,.0f}"),
+]
 VOYAGE_ROWS = [
     ("start_t", "start mass", "t", "{:,.0f}"),
     ("propellant_t", "propellant", "t", "{:,.0f}"),
@@ -138,6 +154,21 @@ def build(params: dict[str, Param], n: int = 5000, seed: int = 1) -> str:
         f"Across the draws: spin stable with margin in {float(np.mean(mc['ship']['spin_stable'])):.0%}; "
         f"rings needed P10 / P50 / P90 {' / '.join(f'{x:.0f}' for x in _pct(np.asarray(mc['ship']['rings'], dtype=float)))}.",
     ]
+    lines += [
+        "",
+        "## Building it",
+        "",
+        "Shield water from near-Earth asteroids and lunar polar ice, metals from the Moon, the magnet's "
+        "carbon from the asteroid ore and MgB2 wire; the energy to mine, refine and deliver it to L5 "
+        "over the build site's power, after the preparation years; what launches from Earth.",
+        "",
+        "| | central | P10 | P50 | P90 | unit |",
+        "|---|---|---|---|---|---|",
+    ]
+    for key, label, unit, fmt in BUILD_ROWS:
+        c = float(base["build"][key])
+        p10, p50, p90 = _pct(np.asarray(mc["build"][key], dtype=float))
+        lines.append(f"| {label} | {_fmt(fmt, c)} | {_fmt(fmt, p10)} | {_fmt(fmt, p50)} | {_fmt(fmt, p90)} | {unit} |")
     parts = tour_dv(values(params))
     lines += [
         "",

@@ -72,6 +72,14 @@ computed properly instead of guessed.
   of kcal on 55 m^2 of racks a person, protein 2.5 g/kg/day; 19.4 million t.
 - Next: the active shield in cortenforge-cfsem (pass 6).
 
+## Pass 7: building it (done 2026-11-06)
+
+- Shield water 70% from one Bennu-class asteroid, 30% lunar ice; metals from the Moon; carbon and
+  nitrogen from the asteroid ore; ~40,000 t and ~540 launches from Earth (~$54 billion).
+- The magnet's conductor is MgB2 (REBCO would take ~6,000 years of today's tape output).
+- ~3.4e17 J: ~21 years of bulk build at 0.5 GW after ~13 years of preparation, ~34 years from
+  go-ahead to move-in. Carbon fibre is half the build energy.
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or
@@ -132,6 +140,9 @@ computed properly instead of guessed.
   mSv/yr with the magnet on (9.1, computed in cortenforge-cfsem active-shield). A magnet or
   cryocooler failure is survivable, solar storms are stopped by the water alone, and the shield
   is 11.4 Mt against 18.5 Mt of water alone, for 55 MW of cryocoolers and ~18 kt of TNT stored.
+- **2026-11-06, the magnet's conductor: MgB2** (engineering call, pass 7): REBCO tape at ~3e7 km
+  would take ~6,000 years of today's world output; MgB2 wire suits the 1.25 T field at ~20 K, from
+  abundant magnesium, made by the build's own wire lines.
 - **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
   planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
   body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
@@ -140,9 +151,9 @@ computed properly instead of guessed.
 
 ## Next
 
-1. **Pass 7** (`docs/RESEARCH.md`): the hybrid's open items in cortenforge-cfsem (transport for
-   the secondaries, the structure, quench protection, the cryogenic budget), refuelling and moon
-   flybys on the tour.
+1. **Pass 8** (`docs/RESEARCH.md`): the hybrid's open items in cortenforge-cfsem (transport for
+   the secondaries, the structure, quench protection, the cryogenic budget), the magnet's
+   structure material (carbon fibre vs steel), refuelling and moon flybys on the tour.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;
    reactor magnets (the stellarator project: stored energy, forces, structure mass); spin dynamics

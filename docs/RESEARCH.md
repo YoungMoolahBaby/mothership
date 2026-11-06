@@ -339,15 +339,60 @@ Table 6), so any repair time is survivable. New: `habitat.shield.failsafe_dose` 
 55 (131 at 40 K). Result: **12.4 million t** (was 19.4), **244 MW**, the tour **0.86 TW** (was
 1.35).
 
-## Next (pass 7)
+## Pass 7 (2026-11-06): building it
+
+Three topics in parallel: the shield water; materials and manufacturing; Earth launch,
+bootstrapping and schedule. `habitat.ground_area_per_person` fixed at Jon's 67 (a choice, not an
+unknown: the mass spread is now 12.3-14.1 Mt). New: `params/build.yaml`, `model.build`, a
+"Building it" section in the report.
+
+1. [x] **The shield water**: a single Bennu-class carbonaceous asteroid (445-581 m at 9-20% water)
+   holds all ~11 Mt, while lunar ice is scarce ("of order 34 million tons" in eight mapped craters,
+   Brown et al. 2022; a "generous baseline" of a billion tons). So **70% from near-Earth asteroids,
+   30% lunar** (judgement): 7.7 + 3.3 Mt; the lunar part is ~24% of the recoverable mapped ice.
+   Lunar: thermal mining 5.2 MJ/kg (Kornuta et al. 2019) plus a mass driver ("this system can
+   launch 1.1 Mt/yr", SP-413) ~4.9 MJ/kg; asteroid: ~7 MJ/kg to dehydrate (derived, unsourced)
+   plus ~2 MJ/kg of tug at 0.3 km/s on water propellant (0.3 Mt of it burned).
+2. [x] **Materials**: steel ~30 MJ/kg (ilmenite reduction, "24.3 (+- 5.8) kWh is needed per kg of
+   liquid oxygen produced", Leger et al. 2025), aluminium ~111 (SP-413's refinery), oxygen a
+   by-product; carbon and nitrogen from the asteroid ore (Bennu "4.5-4.7 wt.% C", "900 - 1200 ppm
+   N"); carbon fibre 562 MJ/kg median (Chen et al. 2025).
+3. [x] **The magnet's conductor: MgB2, not REBCO (engineering call).** REBCO would be ~3e7 km of
+   12 mm tape, ~6,000 years of today's world output ("an annual production capacity exceeding
+   5,000 km", Zhao et al. 2025) and $0.2-2.7 trillion; cryo-resistive aluminium would dissipate
+   ~150 GW. MgB2 wire suits the 1.25 T field (20 K; "Critical current at 20K, 1 T 1'000 A" in
+   2 mm^2, Columbus): 0.25 Mt, ~1.5e7 km, ~240 lines of 3,000 km/yr through the build, Mg from the
+   Moon, ~8 kt of boron from Earth. Cryocoolers behind an ~80 K intercept shield: ~40 MW.
+   `habitat.shield.magnet_mass_per_area` 0.207 -> **0.236**, `magnet_cryo_mw` 55 -> **40**.
+4. [x] **From Earth**: ~40,000 t (5,000-300,000; SP-413's Table 6-7 sums to ~269 kt, much of it
+   hydrogen this ship gets from asteroids): people, belongings, electronics, robots, fusion and
+   magnet parts, seeds, the first factories, perhaps the nitrogen. **~540 launches** of 100 t with a
+   solar-electric tug to L5 (~2,200 chemical), **~$54 billion** at $1,000/kg.
+5. [x] **Schedule**: ~3.4e17 J (10.6 GW yr) to mine, refine and deliver; at **0.5 GW** of build-site
+   power (solar, ~4,500 t of arrays at 110 W/kg) the bulk build is **~21 years** (10 at 1 GW), after
+   **~13 years** of preparation (SP-413: "5 yr research on Earth, 3 to 5 yr for development and
+   testing in orbit near Earth, 5 yr to build up operations on the Moon and at L5"): **~34 years
+   from go-ahead to move-in** (SP-413 planned 22). For scale, ~1 Mt a year is ~10% of the Three
+   Gorges' tonnage rate.
+
+**Finding: carbon fibre is half the build.** The magnet's 0.3 Mt of carbon-fibre structure takes
+~50% of the energy (5.4 of 10.6 GW yr) at 562 MJ/kg; the 11 Mt of water ~31%. A steel structure
+(~3x the mass at ~30 MJ/kg) would cut the build energy by ~40% for ~0.6 Mt more ship; or carbon
+fibre made with solar heat.
+
+## Next (pass 8)
 
 1. **cortenforge-cfsem: the hybrid's open items**: transport for the secondaries (x2 assumed: at
    x3 the dose with the magnet on is ~14 mSv/yr; the fail-safe limit doesn't move), the support
-   structure's stresses (Q), quench protection, the cryogenic budget and REBCO's current at 65 K
-   and ~1-2 T; then the collider's dipoles round the ring and the hospital's MRI magnet.
-2. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
+   structure's stresses (Q) and its material (carbon fibre is half the build energy; steel ~3x the
+   mass at ~1/20 the energy a kg), quench protection, the cryogenic budget (the ~80 K intercept)
+   and MgB2's current at ~20 K and 1-2 T; then the collider's dipoles round the ring and the
+   hospital's MRI magnet.
+2. **The build**: the asteroid water's extraction energy (unsourced), hauling lunar ice from the
+   poles, the build-site power (0.5 GW sets ~21 years), a schedule with the industry's growth.
+3. **Refuelling and staging** (model): split the tour at refuel stops (Ceres, Callisto, Titan;
    water gives 0.112 kg of H2 a kg), moon flybys in the Jupiter and Saturn systems.
-3. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
+4. Model: farms in low-g spokes or an inner ring (plants look fine at lower g: "0.38 g may be
    enough", Kiss 2014), O'Neill cylinders; heat pumps on the habitat radiators; the lifelong
    ceiling (VO2max falls ~10% a decade even in trained people, Tanaka & Seals 2008; lifelong
    exercisers at ~75 keep about 1.5x the VO2max of sedentary peers, Gries 2018).

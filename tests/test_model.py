@@ -116,3 +116,17 @@ def test_food_system_accounts():
     r = dict(q)
     r["food.scp.share"] = 0.2
     assert float(food_system(r, n)["power"]) < float(f["power"])
+
+
+def test_build_accounts():
+    v = values(load_params())
+    r = run(v)
+    s, b = r["ship"], r["build"]
+    water = float(s["shield_t"]) - float(s["magnet_t"])
+    assert float(b["water_mt"]) * 1e6 == pytest.approx(water)
+    assert float(b["nea_water_mt"]) + float(b["lunar_water_mt"]) == pytest.approx(float(b["water_mt"]))
+    from mothership.constants import YEAR
+    assert float(b["bulk_years"]) == pytest.approx(float(b["energy_j"]) / (v["build.schedule.build_power"] * 1e9) / YEAR)
+    assert float(b["program_years"]) == pytest.approx(v["build.schedule.prep_years"] + float(b["bulk_years"]))
+    # the water is most of the energy
+    assert 0.0 < float(b["energy_water_j"]) < float(b["energy_j"])

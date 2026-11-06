@@ -1,0 +1,177 @@
+# Building it (pass 7, 2026-11-06): where the ship's materials come from, the energy to mine,
+# refine and deliver them to the build site (Earth-Moon L5, SP-413's site), what must launch
+# from Earth, and how long it takes. Energy-limited: the bulk build takes the total energy over
+# the build site's power, after the preparation years.
+
+water:
+  nea_share:
+    value: 0.7
+    low: 0.4
+    high: 0.9
+    unit: share of the shield water from near-Earth asteroids (the rest lunar polar ice)
+    conf: "low"
+    source: "judgement (pass 7): one Bennu-class carbonaceous NEA holds it all (11 Mt at 9-20% water is 55-122 Mt of rock, D = 445-581 m at Ryugu's 'bulk density, 1.19 +- 0.02 grams per cubic centimeter'), while lunar ice is scarce: 'The total water content of all eight is estimated to be of order 34 million tons' (Brown et al. 2022, of eight mapped craters), against 'One billion tons of water will be taken here as a generous baseline' (Elvis & McDowell 2026). Rivkin & DeMeo 2019 expect '17 +- 9 of them to be more accessible on a round trip than the surface of the Moon' (Ch asteroids > 1 km)"
+  lunar_extract:
+    value: 6.2
+    low: 4.0
+    high: 17.0
+    unit: MJ/kg of water, lunar thermal mining (heat and electricity)
+    conf: "medium"
+    source: "Kornuta et al. 2019 (REACH 13:100026): 'heating the icy regolith mixture from 40 K to 220 K followed by sublimation', 580 kW thermal at 4 wt% (370 kW at 30 wt%) for 2,450 t/yr at 70% solar availability: 5.2 (3.3-7.5) MJ/kg; plus ~1 MJ/kg electric for robots and pumps (judgement; high = all of its 765 kWe support load, 9.9)"
+  lunar_transport:
+    value: 4.9
+    low: 3.2
+    high: 8.0
+    unit: MJ/kg, lunar mass driver to L2 and on to L5
+    conf: "medium"
+    source: "SP-413 ch. 5: 'accelerates five 10-kg masses of lunar material to lunar escape velocity of 2400 m/s'; 'With a 70 percent duty cycle, this system can launch 1.1 Mt/yr'; 'The total capacity is 220 MW': 4.4 MJ/kg (SP-428: 3.0); L2 to L5 ~0.34 km/s, ~0.5 MJ/kg (judgement). The ice is at the poles: ~2,730 km from an equatorial launcher, not costed"
+  nea_extract:
+    value: 7.0
+    low: 4.0
+    high: 11.0
+    unit: MJ/kg of water from carbonaceous rock (dehydrating phyllosilicates)
+    conf: "low"
+    source: "derived (pass 7, no sourced figure found): ore at cp ~0.8 kJ/kg K heated ~620 K is 0.5 MJ/kg of ore, 2.5-5.5 MJ/kg of water at 20-9% water, plus ~2.5-4 MJ/kg to dehydrate and vaporise; water released 'mostly between 400 and 770 C' (Garenne et al. 2014: CM 'total mass loss ranging from 12.9 wt.% ... up to 16.9 wt.%')"
+  nea_return_dv:
+    value: 0.3
+    low: 0.16
+    high: 1.0
+    unit: km/s to bring the material to Earth-Moon space
+    conf: "low"
+    source: "KISS Asteroid Retrieval 2012 p. 28: 'NEA return to lunar gravity assist = 160 m/s'; Garcia Yarnoz et al. 2013: '12 different objects retrievable with less than 500 m/s' (all small); 1 km/s for a large, less favourable body (judgement)"
+  tug_ve:
+    value: 7.8
+    low: 7.8
+    high: 29.4
+    unit: km/s exhaust speed of the tugs (water as propellant, or xenon ion drives)
+    conf: "medium"
+    source: "KISS 2012: '~40-kW solar electric propulsion system with a specific impulse of 3,000 s' (29.4 km/s, xenon); water propellant at ~7.8 km/s so the asteroid fuels its own trip (judgement)"
+  tug_efficiency:
+    value: 0.6
+    low: 0.5
+    high: 0.7
+    unit: jet power / electric power
+    conf: "medium"
+    source: "KISS 2012 Table 4 at 60% system efficiency (1,306 t delivered on 7.7 t of xenon over 6.0 years)"
+  lunar_mapped:
+    value: 34
+    low: 34
+    high: 1000
+    unit: Mt of lunar polar water known in place (for the share the ship would take)
+    conf: "low"
+    source: "Brown et al. 2022 (Icarus 377): 'of order 34 million tons' in eight mapped craters; Elvis & McDowell 2026: 'One billion tons ... as a generous baseline'; Crawford 2015's 2,900 Mt is an upper bound"
+  lunar_recovery:
+    value: 0.4
+    low: 0.33
+    high: 0.9
+    unit: fraction of lunar ice in place that can be recovered
+    conf: "low"
+    source: "judgement after Elvis & McDowell 2026: 'the fraction of water that can be recovered will surely not be 100%'; 'Oil fields, for example, have recovered fractions of 33%-50%'"
+materials:
+  steel_energy:
+    value: 30
+    low: 15
+    high: 80
+    unit: MJ/kg, iron and steel from lunar ilmenite or asteroid iron-nickel
+    conf: "low"
+    source: "derived: hydrogen reduction of ilmenite 'a total of 24.3 (+- 5.8) kWh is needed per kg of liquid oxygen produced' (Leger et al., PNAS 2025) -> ~25 MJ/kg Fe at one O per Fe; Boston Metal (company) molten oxide electrolysis '4 MWh ELECTRICITY' a tonne of steel (14.4 MJ/kg); thermodynamic floor 7.4"
+  interior_energy:
+    value: 60
+    low: 30
+    high: 120
+    unit: MJ/kg, the interior (steel, aluminium, glass, water, racks; judgement mix)
+    conf: "low"
+    source: "judgement between steel (~30 MJ/kg) and SP-413's lunar aluminium refinery ('capable of producing about 150 t/day of aluminum', 115 MW electric + 76 MW solar heat: ~111 MJ/kg)"
+  carbon_fibre_energy:
+    value: 560
+    low: 200
+    high: 1100
+    unit: MJ/kg of carbon fibre (the magnet's structure)
+    conf: "medium"
+    source: "Chen et al. 2025 (Resour. Conserv. Recycl. 219): 'the lowest CED is 198 MJ per kg ... while the highest is 1984 per kg ... with a median value of 562 MJ per kg'; carbon from the shield's own asteroid ore (Bennu 'carbon-rich (4.5-4.7 wt.% C)', Lauretta et al.): ~140 Mt of rock holds ~6 Mt of C against 0.3 Mt needed"
+  conductor_energy:
+    value: 80
+    low: 40
+    high: 200
+    unit: MJ/kg of MgB2 wire (magnesium, boron, copper or iron sheath; judgement)
+    conf: "low"
+    source: "judgement: a metal wire like copper or steel products; magnesium from lunar regolith, boron from Earth (~7.6 kt, pass 7 researcher)"
+  conductor_share:
+    value: 0.45
+    low: 0.35
+    high: 0.6
+    unit: share of the magnet's mass that is conductor (the rest carbon-fibre structure)
+    conf: "low"
+    source: "derived: MgB2 at ~200 A/mm^2 operating (Sam Dong: 1,000 A/mm^2 over the superconductor at 2 T, 20 K; Columbus '1'000 A' at 20 K, 1 T in 2 mm^2) over the active-shield run's 6.15e12 A m at 8,000 kg/m^3 = 0.25 Mt, with 0.30 Mt of structure"
+  wire_kg_per_km:
+    value: 16
+    low: 12
+    high: 20
+    unit: kg per km of MgB2 wire (2 mm^2)
+    conf: "medium"
+    source: "derived: 2 mm^2 x 8,000 kg/m^3 = 16 kg/km (Columbus/ASG 1.6 mm wire, 'Critical current at 20K, 1 T 1'000 A')"
+  wire_line_km_per_year:
+    value: 3000
+    low: 1000
+    high: 10000
+    unit: km of wire a year a production line
+    conf: "low"
+    source: "Columbus/ASG (company): plant 'throughput of 2 Km/day, and is under scaling up to 3'000 Km/year'; REBCO for comparison: 'an annual production capacity exceeding 5,000 km (12 mm width)' worldwide (Zhao et al. 2025), so a REBCO magnet (~3e7 km) would take ~6,000 years of today's output"
+  moon_launch_energy:
+    value: 5.0
+    low: 4.0
+    high: 6.0
+    unit: MJ/kg to deliver lunar materials to L5
+    conf: "medium"
+    source: "SP-413 lunar mass driver: launcher 192 MW for 1.1 Mt/yr (4-5.5 MJ/kg); SP-428 3.0"
+earth:
+  launched:
+    value: 40000
+    low: 5000
+    high: 300000
+    unit: t launched from Earth (people, belongings, electronics, robots, fusion and magnet parts, seeds, first factories, nitrogen)
+    conf: "low"
+    source: "judgement (pass 7): SP-413: 'only a small percentage of the mass, including initial structures, machinery, special equipment, atmospheric gases other than oxygen, biomass, and hydrogen for water, comes from Earth' (Table 6-7 sums to ~269 kt, 27 t a person, much of it hydrogen this ship gets from asteroids); O'Neill 1974: 'The remaining 10000 tons must come from the Earth'; ~44 kt of nitrogen for the air could come from Earth or the asteroid ore ('900 - 1200 ppm N', Grady et al. 2024)"
+  payload:
+    value: 100
+    low: 35
+    high: 200
+    unit: t to low Earth orbit a launch
+    conf: "low"
+    source: "SpaceX (company): Starship V3 'to target a fully reusable payload capacity of over 100 tons to Low Earth Orbit' (SatNews 2026-05-14)"
+  launches_per_payload:
+    value: 1.35
+    low: 1.35
+    high: 6.9
+    unit: launches per payload delivered to L5
+    conf: "medium"
+    source: "derived (pass 7): a solar-electric tug from LEO at ~7 km/s and Isp 2,000-3,000 s needs 0.27-0.43 t of propellant a tonne (1.35 launches per payload); chemical with refuelling 5.5-6.9 (3.97 km/s out, 0.84 back, Isp 380 s); Artemis III needs 'around 15 to 17 launches of Starship'"
+  cost_per_kg:
+    value: 1000
+    low: 100
+    high: 2700
+    unit: USD per kg to low Earth orbit
+    conf: "low"
+    source: "NASA OTPS 2024 space solar power slides: 'Launch costs reduced from $100M ($1000/kg) to $50M ($500/kg)', with 'Starship launch cost of $50M may not be reached by 2050'; Falcon 9 '$2,720/kg' (Jones 2018, NASA Ames)"
+schedule:
+  build_power:
+    value: 0.5
+    low: 0.15
+    high: 2.0
+    unit: GW of power at the build site (solar arrays, then the ship's own plants)
+    conf: "low"
+    source: "judgement (pass 7): ~1-4e17 J over 10-15 years is 0.2-1.3 GW; SP-413 solar plants 'a specific plant mass of 14t/MW'"
+  array_w_per_kg:
+    value: 110
+    low: 70
+    high: 250
+    unit: W/kg of solar arrays (from Earth, or made on the Moon)
+    conf: "medium"
+    source: "Redwire (company, pv magazine 2025): 'its power-to-mass ratio is 100 W to 120 W per kg'"
+  prep_years:
+    value: 13
+    low: 10
+    high: 20
+    unit: years from go-ahead to the start of bulk production (research, test in orbit, lunar and asteroid industry)
+    conf: "low"
+    source: "SP-413 ch. 6: '5 yr research on Earth, 3 to 5 yr for development and testing in orbit near Earth, 5 yr to build up operations on the Moon and at L5'; a lunar industry 'can be achieved with as little as 12 metric tons (MT) landed on the Moon during a period of about 20 years' (Metzger et al. 2013)"
