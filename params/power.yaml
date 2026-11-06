@@ -1,21 +1,21 @@
 # Fusion power plants (stellarators: steady state) and the radiators that reject the heat.
 # All electric power ends as heat inside the habitat, and is radiated at habitat temperature;
-# the plants' own waste heat is radiated hotter.
+# the plants' own waste heat is radiated hotter. Research pass 1 (2026-11-06).
 
 unit_mwe:
   value: 500
   low: 200
   high: 1000
   unit: MWe per plant
-  conf: "placeholder"
-  source: "placeholder: power-plant-scale stellarator"
+  conf: "low"
+  source: "ARC (CFS) 'is a 200-250 MWe tokamak reactor' (Sorbom et al. 2015); ARIES-CS compact stellarator 'Net Electric Power 1000 MWe'; the middle is a judgement"
 specific_mass:
   value: 20
-  low: 5
+  low: 10
   high: 60
   unit: t per MWe (plant, shielding toward the habitat, conversion)
-  conf: "placeholder"
-  source: "placeholder: ITER is about 23,000 t for 500 MW of fusion heat and no electricity; compact high-field designs aim far lower (research queue)"
+  conf: "low"
+  source: "ARIES-CS fusion power core 'FPC Mass = 11,000 tonnes' at 1000 MWe net (~11 t/MWe, core only); ITER 'will weigh 23,000 tonnes' for 500 MW of fusion heat (~130 t/MWe if it made electricity at 35%); space Brayton conversion adds a few t/MWe. No study gives a whole stellarator plant built for space"
 spares:
   value: 1
   low: 1
@@ -24,19 +24,19 @@ spares:
   conf: "high"
   source: "design rule: one plant can always be down for maintenance"
 thermal_efficiency:
-  value: 0.4
-  low: 0.3
-  high: 0.5
+  value: 0.25
+  low: 0.2
+  high: 0.3
   unit: electric out / heat in
-  conf: "low"
-  source: "placeholder range for thermal cycles at space-radiator temperatures (research queue)"
+  conf: "medium"
+  source: "'Space Brayton conversion system designs tend to optimize at efficiencies of about 20 to 25 percent with radiator temperatures in the 400 to 600 K range' (Siamidis, NASA TM-2005-213337); JIMO Brayton 21.7%; Discovery II ~29.8% at a 1700 K turbine inlet"
 plant_radiator_temp:
-  value: 700
-  low: 500
-  high: 900
+  value: 500
+  low: 400
+  high: 600
   unit: K
-  conf: "placeholder"
-  source: "placeholder"
+  conf: "medium"
+  source: "same Siamidis range, 400-600 K, at the efficiencies above; JIMO NaK radiator 556 K in, 399 K out. Hotter (Discovery II 966-1325 K) needs other efficiencies, not modelled"
 habitat_radiator_temp:
   value: 290
   low: 275
@@ -46,15 +46,15 @@ habitat_radiator_temp:
   source: "placeholder: rejects heat from a habitat kept near room temperature"
 emissivity:
   value: 0.9
-  low: 0.85
-  high: 0.95
+  low: 0.8
+  high: 0.92
   unit: dimensionless
-  conf: "medium"
-  source: "typical radiator coatings"
+  conf: "high"
+  source: "Z-93 'emittance values approximately 0.92' (NASA TM-104335); JIMO, Siamidis and Discovery II all design with 0.9"
 radiator_areal_density:
-  value: 8
-  low: 3
-  high: 15
-  unit: kg per m^2 of two-sided panel
-  conf: "placeholder"
-  source: "placeholder (research queue)"
+  value: 10
+  low: 2
+  high: 18
+  unit: kg per m^2 of two-sided panel (planform), whole heat-rejection system
+  conf: "low"
+  source: "Mason 2002: 'an areal density of 6 kg/m2 (based on planform area)'; Siamidis: '5.1 kg/m2 (based on total surface area)' = 10.2 planform; JIMO '8.8 kg/m2 (based on total surface area)' = 17.6 planform; Discovery II C-C heat pipes 1.0-1.5 kg/m2 (basis unclear)"

@@ -24,12 +24,16 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     g, rpm = v["habitat.gravity_g"], v["habitat.rpm"]
     w = ph.omega(rpm)
     R = ph.spin_radius(g, rpm)
-    volume = n * v["habitat.volume_per_person"]
-    # As many rings as the volume needs, each tube no wider than max_tube_ratio x R; the rings
-    # stack along the spin axis, each in its own still shield.
-    ring_max = ph.torus_volume(R, v["habitat.max_tube_ratio"] * R)
-    rings = np.ceil(volume / ring_max)
-    r = ph.torus_tube_radius(volume / rings, R)
+    # R is the outer floor's distance from the spin axis (gravity_g there). People live where
+    # gravity is within gravity_band of that (SP-413: 0.9-1 g), so a ring holds the tube's
+    # volume within band x R of the floor; as many rings as the usable volume needs, stacked along
+    # the spin axis, each in its own still shield.
+    r = v["habitat.tube_ratio"] * R
+    usable_ring = ph.band_volume(R, r, v["habitat.gravity_band"])
+    rings = np.ceil(n * v["habitat.usable_volume_per_person"] / usable_ring)
+    Rf = R
+    R = Rf - r  # the torus's major radius (tube centre)
+    volume = rings * ph.torus_volume(R, r)
 
     # Pressure shell, air, interior.
     p = v["habitat.air_pressure"] * 1e3
@@ -41,7 +45,7 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     interior = n * v["habitat.interior_mass_per_person"] * 1e3
 
     # The spinning ring carries the shell, air and interior (and itself) against the spin.
-    k = ph.ring_spin_factor(rho, w, R, sigma)
+    k = ph.ring_spin_factor(rho, w, Rf, sigma)  # at the outer floor, the worst case
     ring = ph.ring_structure_mass(shell + air + interior, k)
 
     # Still shield round the tube.
@@ -72,12 +76,14 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
     i_spin, i_cross = rings * i_one, rings * i_one_cross + stack
     dry = shield + shell + ring + air + interior + plant_mass + radiators
     return {
-        "radius_m": R,
+        "radius_m": Rf,
+        "tube_centre_m": R,
         "tube_radius_m": r,
-        "tube_over_radius": r / R,
+        "tube_over_radius": r / Rf,
+        "volume_per_person_m3": volume / n,
         "rings": rings,
         "spin_stable": i_spin / i_cross >= v["habitat.min_inertia_ratio"],
-        "rim_speed_m_s": w * R,
+        "rim_speed_m_s": w * Rf,
         "shell_thickness_mm": t_shell * 1e3,
         "ring_spin_factor": k,
         "spin_inertia_ratio": i_spin / i_cross,

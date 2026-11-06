@@ -1,6 +1,7 @@
 """The whole model: it runs, adds up, and its Monte Carlo is ordered."""
 
 import numpy as np
+import pytest
 
 from mothership.cli import main
 from mothership.model import SCENARIOS, run
@@ -17,14 +18,14 @@ def test_central_run_adds_up():
     r = run(values(load_params()))
     s = r["ship"]
     assert np.isfinite(s["dry_t"])
-    assert sum(float(s[k]) for k in PARTS) == float(s["dry_t"])
+    assert sum(float(s[k]) for k in PARTS) == pytest.approx(float(s["dry_t"]), rel=1e-12)
     park = r["park"]
     assert float(park["start_t"]) == float(s["dry_t"])  # no burn, no drive
     for sc in SCENARIOS:
         v = r[sc]
         if bool(v["feasible"]):
             total = float(s["dry_t"]) + float(v["propellant_t"]) + float(v["drive_t"]) + float(v["tanks_t"])
-            assert total == np.float64(v["start_t"]).item() or abs(total / float(v["start_t"]) - 1) < 1e-9
+            assert total == pytest.approx(float(v["start_t"]), rel=1e-9)
 
 
 def test_monte_carlo_ordered_and_deterministic():

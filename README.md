@@ -18,8 +18,10 @@ uv run pytest               # the physics against closed forms and textbook valu
 
 ## The model (phase 0)
 
-- **Habitat**: a torus spun for gravity (radius = g / w^2), as many rings as the volume needs,
-  each tube no wider than a set fraction of the radius, rings stacked along the spin axis.
+- **Habitat**: a torus spun for gravity (outer floor radius = g / w^2). People live where gravity
+  is within a band of the floor's (SP-413: 0.9-1 g), so a ring holds only the tube's volume in
+  that band; as many rings as the lived-in volume needs, stacked along the spin axis. With the
+  Stanford torus study's numbers it reproduces that design (830 m ring, 65 m tube, 69 million m^3).
 - **Shield**: a still (non-spinning) shell round each ring, as in the Stanford torus design,
   sized by mass per area.
 - **Structure**: the pressure shell (thin torus, peak stress on the inner equator) and the
@@ -32,19 +34,20 @@ uv run pytest               # the physics against closed forms and textbook valu
 - **Drive**: a power-limited (Stuhlinger) drive with its own plants, for three scenarios: `park`
   (no move), `tour` (30 km/s over 20 years), `brisk` (30 km/s over 2 years).
 
-## First results (2026-11-06, placeholders, 5,000 draws)
+## Results after research pass 1 (2026-11-06, 3 placeholders left, 5,000 draws)
 
 For 10,000 people (central / P50 / P10-P90):
 
-- Ship without drive: 10.9 / 12.5 / 8.0-21.1 million t, about 1,100 t a person. The shield is
-  9.9 million t of the 10.9: 91% of the ship.
-- Spin radius 224 m at 2 rpm and 1 g, 2 rings; electric power 292 MW (food under lights is 24 kW a
-  person, most of it), 2 plants with the spare.
-- Moving it: `tour` needs about 220 GW of jet power and 0.9 million t of drive and propellant;
-  `brisk` about 770 GW and 3.3 million t. Living needs 0.3 GW.
-- What drives the mass: volume per person, rpm (a faster spin means a smaller radius, more rings
-  and more shield), shield mass per area. Spin stability fails in 44% of draws: fast spins need
-  long ring stacks, and a long stack tumbles.
+- Ship without drive: 23.0 / 21.0 / 13.2-34.4 million t, about 2,300 t a person. The shield (10
+  t/m^2 of regolith for 20 mSv/yr) is 21.9 million t of the 23.0: 95% of the ship.
+- One ring like the Stanford torus: outer floor 894 m from the axis at 1 rpm and 1 g, 65 m tube;
+  electric power 185 MW (food under lights 13.5 kW a person, most of it), 2 plants with the spare.
+- Moving it: `tour` (30 km/s over 20 years) needs about 660 GW of jet power and 1.3 million t of
+  drive and propellant; `brisk` (2 years) about 2.3 TW and 4.7 million t. Living needs 0.19 GW.
+- What drives the mass now: the gravity band people live in (how much of a tube is usable), lived-in
+  volume per person, shield mass per area, tube shape. Spin is stable in 91% of draws.
+- Pass 0 (placeholders) had 10.9 million t: the sourced shield and SP-413's big, slow ring doubled
+  it. Details: `docs/RESEARCH.md`.
 
 ## Related
 

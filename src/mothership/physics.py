@@ -95,3 +95,30 @@ def stuhlinger(dv, burn_time, alpha, tankage=0.0, n_grid=800):
     i = np.argmax(f, axis=-1)
     best = np.take_along_axis(f, i[..., None], axis=-1)[..., 0]
     return best, u[i], v_ch
+
+
+def segment_area(r, depth):
+    """Area of the part of a circle of radius r within `depth` of one edge (a circular segment;
+    depth is clipped to 0..2r)."""
+    b = np.clip(depth, 0.0, 2.0 * r)
+    h = r - b
+    return r**2 * np.arccos(h / r) - h * np.sqrt(np.maximum(2.0 * r * b - b**2, 0.0))
+
+
+def segment_centroid(r, depth):
+    """Distance from the circle's centre to that segment's centroid, towards the edge:
+    4 r sin^3(t/2) / (3 (t - sin t)), t the segment's central angle."""
+    b = np.clip(depth, 1e-12, 2.0 * r)
+    t = 2.0 * np.arccos((r - b) / r)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        d = 4.0 * r * np.sin(t / 2.0) ** 3 / (3.0 * (t - np.sin(t)))
+    return np.where(t < 2.0 * np.pi - 1e-9, d, 0.0)
+
+
+def band_volume(R_floor, r, band):
+    """Volume of a torus tube (tube radius r, outer floor at R_floor from the spin axis) where the
+    spin gravity is within `band` (a fraction) of the floor's: radii R_floor (1 - band) to
+    R_floor. Pappus: the segment's area times the path of its centroid."""
+    depth = band * R_floor
+    centre = R_floor - r
+    return 2.0 * np.pi * (centre + segment_centroid(r, depth)) * segment_area(r, depth)

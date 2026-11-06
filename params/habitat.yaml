@@ -1,42 +1,70 @@
-# The spinning habitat: a torus (ring) like the Stanford torus, spun for gravity, inside a
-# radiation shield that does not spin (as in the Stanford torus design), so the shield's mass
-# loads no structure.
+# The spinning habitat: a torus (or a stack of tori) spun for gravity, inside a radiation shield
+# that does not spin (as in the Stanford torus, NASA SP-413, 1977), so the shield's mass loads
+# no structure. People live where spin gravity is within gravity_band of the outer floor's; the
+# rest of the tube is enclosed air. Research pass 1 (2026-11-06) replaced volume_per_person and
+# max_tube_ratio with usable_volume_per_person, gravity_band and tube_ratio (docs/RESEARCH.md).
 
 gravity_g:
   value: 1.0
-  low: 0.8
+  low: 0.9
   high: 1.0
-  unit: g (9.80665 m/s^2) at the floor
-  conf: "placeholder"
-  source: "design target 1 g for a normal life; how much less stays healthy over a lifetime is unknown (research queue)"
+  unit: g (9.80665 m/s^2) at the outer floor
+  conf: "low"
+  source: "SP-413 ch. 3: 'humans permanently in space should live between 0.9 g and 1 g'; no human data on long-term partial g (Clement et al. 2015: 'It is not known whether Mars gravity is effective or not'); mice lose bone in proportion to unloading even at 70% load (Ellman et al. 2013), so nothing supports going lower"
 rpm:
-  value: 2
+  value: 1
   low: 1
-  high: 3
+  high: 2
   unit: revolutions per minute
-  conf: "placeholder"
-  source: "a comfort limit near 2 rpm is commonly quoted for spinning habitats; to source (research queue)"
-volume_per_person:
-  value: 5000
-  low: 1500
-  high: 8000
-  unit: m^3 of pressurized volume per person (homes, work, farms, parks, air)
-  conf: "placeholder"
-  source: "Stanford-torus scale is about 7,500 m^3 a person (130 m tube on a 1.8 km ring for 10,000; to verify against NASA SP-413); lower bound a guess"
+  conf: "medium"
+  source: "SP-413 ch. 3: '1 rpm is set as the upper limit of permissible rotation rate for the principal living quarters'; Globus & Hall 2015: 'Up to 2 rpm should be no problem for residents'. Up to 4 rpm may be acceptable with training for visitors (Globus & Hall 2015), but nothing covers children or lifetimes"
+gravity_band:
+  value: 0.1
+  low: 0.05
+  high: 0.2
+  unit: fraction of floor gravity spanned by the lived-in band (floors from R (1 - band) to R)
+  conf: "low"
+  source: "SP-413 ch. 3 sets the band at 0.9-1 g and calls the 10% range arbitrary; habitable volume is where 'the pseudogravity does not vary more than the specified amount' (app. 4B)"
+tube_ratio:
+  value: 0.073
+  low: 0.05
+  high: 0.2
+  unit: tube radius / outer floor radius
+  conf: "medium"
+  source: "SP-413 Table 4-1: major radius 830 m, minor radius 65 m (65 / 895 = 0.073); 'The desire to keep structural mass small favors small radii of curvature' (ch. 4). The high end is not sourced"
+usable_volume_per_person:
+  value: 1738
+  low: 1040
+  high: 3500
+  unit: m^3 of lived-in volume per person (homes, work, community, farms)
+  conf: "medium"
+  source: "SP-413 Table 3-2: 1,738 m^3 a person (community 823, agriculture 915) at 67 m^2 projected area; low end scales to its 40 m^2 minimum ('at least 40 m^2 of projected area per inhabitant', ch. 3); high end a placeholder for roomier living (Kalpana One encloses ~21,000 m^3 a person)"
 interior_mass_per_person:
-  value: 50
-  low: 20
-  high: 150
+  value: 53
+  low: 30
+  high: 80
   unit: t per person (floors, buildings, soil, water, equipment; not the shell or shield)
-  conf: "placeholder"
-  source: "placeholder: no source yet (research queue)"
+  conf: "medium"
+  source: "SP-413 Table 5-3 'Internal masses': 530,000 t for 10,000 people (soil 220,000 t, structures 77,000, misc 80,000, machinery 40,000); soil is 22 t a person, so the farming method moves this most. Range a judgement"
 air_pressure:
-  value: 101.3
-  low: 60
+  value: 70
+  low: 50.8
   high: 101.3
   unit: kPa
+  conf: "medium"
+  source: "SP-413 Table 4-3: 50.8 kPa (pO2 22.7, pN2 26.6); NASA exploration atmosphere 56.5 kPa / 34% O2 (Wessel et al. 2018), where '31.4% O2 is the calculated upper limit that would not increase burning rate'; ~70 kPa gives sea-level inspired O2 at <= 30% O2 (pass 1 derivation). La Rinconada (~53 kPa, normal air) shows chronic illness without enrichment (Hancco et al. 2020)"
+air_temperature:
+  value: 293
+  low: 288
+  high: 298
+  unit: K
+  conf: "medium"
+  source: "room temperature; sets the air's mass with air_pressure"
+min_inertia_ratio:
+  value: 1.2
+  unit: spin-axis / largest cross-axis moment of inertia, least allowed
   conf: "placeholder"
-  source: "sea level 101.3 kPa; reduced-pressure, oxygen-enriched air saves shell mass (research queue for the lowest healthy value)"
+  source: "placeholder margin above 1 (a body spins stably, with energy loss, only about its largest axis; Explorer 1 tumbled in 1958)"
 shell:
   density:
     value: 7850
@@ -52,37 +80,16 @@ shell:
     source: "placeholder: high-strength steel with a safety margin; to set from a code (research queue)"
 shield:
   areal_density:
-    value: 7
-    low: 4.5
-    high: 10
+    value: 10
+    low: 6.5
+    high: 11
     unit: t/m^2
-    conf: "placeholder"
-    source: "Earth's atmosphere is 10.3 t/m^2 (101.3 kPa / g); the Stanford torus used a slag shield of a few t/m^2 (to verify); the active-shield project could replace this"
+    conf: "medium"
+    source: "Globus & Strout 2017 (OLTARIS, free-space GCR, solar minimum): 20 mSv/yr 'requires 10-11 tonnes of lunar regolith per square meter' (10 t/m^2: 22.8 mSv/yr, 11: 14.5); '6-7 tonnes of water or polyethylene ... is sufficient' (7 t/m^2 water 16.1, polyethylene 12.3 mSv/yr); SP-413's 4.5 t/m^2 'is quite low'. Central value regolith (built from lunar or asteroid material); low end water/polyethylene. Lifelong residents: NASA's 600 mSv career limit is 30 years at 20 mSv/yr"
   gap:
-    value: 5
-    low: 2
-    high: 20
+    value: 1.5
+    low: 1
+    high: 5
     unit: m between the spinning tube and the still shield
-    conf: "placeholder"
-    source: "placeholder: room for the bearing-free gap and access"
-air_temperature:
-  value: 293
-  low: 288
-  high: 298
-  unit: K
-  conf: "medium"
-  source: "room temperature; sets the air's mass with air_pressure"
-max_tube_ratio:
-  value: 0.4
-  low: 0.25
-  high: 0.5
-  unit: largest tube radius / spin radius for one ring; more volume takes more rings
-  conf: "placeholder"
-  source: "placeholder: the Stanford torus was 0.07; a fat tube puts the inner floor at much lower gravity than the outer"
-min_inertia_ratio:
-  value: 1.2
-  low: 1.2
-  high: 1.2
-  unit: spin-axis / largest cross-axis moment of inertia, least allowed
-  conf: "placeholder"
-  source: "placeholder margin above 1 (a body spins stably, with energy loss, only about its largest axis; Explorer 1 tumbled in 1958)"
+    conf: "medium"
+    source: "SP-413 ch. 5: 'a gap of approximately 1-1/2 m between it and the torus'; ch. 4: 'separated by only a meter or two'"

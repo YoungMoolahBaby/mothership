@@ -14,6 +14,15 @@ computed properly instead of guessed.
 - Result: the still shield is about 91% of the ship; volume per person, rpm and shield mass per
   area drive everything; moving the ship takes hundreds of GW against 0.3 GW to live.
 
+## Research pass 1 (done 2026-11-06)
+
+- 19 placeholders -> 3, from NASA SP-413, Globus & Strout, NASA BVAD, ARIES-CS, Siamidis, DFD
+  and Discovery II (`docs/RESEARCH.md`, `docs/SOURCES.md`); key quotes checked by hand.
+- Model change: the habitat is sized by lived-in volume within a gravity band (SP-413's method),
+  not the whole tube; it reproduces the Stanford torus geometry (a test).
+- Result: 23.0 million t central (was 10.9), shield 95%; power 185 MW; `tour` ~660 GW, `brisk`
+  ~2.3 TW. Next: the gravity band, farm volume, shield material (pass 2).
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or

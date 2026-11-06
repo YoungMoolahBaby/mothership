@@ -94,3 +94,28 @@ def test_stack_sum():
     for n in range(1, 7):
         z = (np.arange(n) - (n - 1) / 2) * 3.0
         assert np.sum(z**2) == pytest.approx(9.0 * n * (n**2 - 1) / 12)
+
+
+def test_segment_area_and_centroid_by_integration():
+    r = 50.0
+    for depth in (5.0, 30.0, 50.0, 80.0, 100.0):
+        # Strips across the circle from the edge (x = r) inwards to x = r - depth.
+        x = np.linspace(r - depth, r, 200001)
+        w = 2 * np.sqrt(np.maximum(r**2 - x**2, 0.0))
+        area = np.trapezoid(w, x)
+        assert ph.segment_area(r, depth) == pytest.approx(area, rel=1e-6)
+        if depth < 2 * r:
+            assert ph.segment_centroid(r, depth) == pytest.approx(np.trapezoid(w * x, x) / area, rel=1e-6)
+    assert ph.segment_area(r, 2 * r) == pytest.approx(np.pi * r**2)
+
+
+def test_stanford_torus_geometry():
+    # SP-413: 1 rpm, outer floor at 1 g -> 895 m; tube radius 65 m -> major radius 830 m and
+    # '69 X 10^6 m^3 which is enclosed by the torus'; it lives in 1,738 m^3 a person x 10,000.
+    R_floor = ph.spin_radius(1.0, 1.0)
+    r = 65.0
+    assert R_floor - r == pytest.approx(830, abs=1.0)  # SP-413 rounds to 830; exact 829.3
+    assert ph.torus_volume(R_floor - r, r) == pytest.approx(69e6, rel=0.01)
+    usable = ph.band_volume(R_floor, r, 0.1)
+    assert usable > 10_000 * 1738  # one ring is enough
+    assert usable < ph.torus_volume(R_floor - r, r)

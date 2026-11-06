@@ -10,10 +10,12 @@ from .model import SCENARIOS, run
 from .params import Param, draw, values
 
 SHIP_ROWS = [
-    ("radius_m", "spin radius", "m", "{:,.0f}"),
+    ("radius_m", "spin radius (outer floor)", "m", "{:,.0f}"),
+    ("tube_centre_m", "ring radius (tube centre)", "m", "{:,.0f}"),
     ("rings", "rings", "", "{:,.0f}"),
     ("tube_radius_m", "tube radius", "m", "{:,.0f}"),
     ("rim_speed_m_s", "rim speed", "m/s", "{:,.0f}"),
+    ("volume_per_person_m3", "enclosed volume per person", "m^3", "{:,.0f}"),
     ("shell_thickness_mm", "pressure shell", "mm steel", "{:,.0f}"),
     ("power_mw", "electric power", "MW", "{:,.0f}"),
     ("food_kw_per_person", "of which food, per person", "kW", "{:,.1f}"),

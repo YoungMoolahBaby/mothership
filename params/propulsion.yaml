@@ -1,17 +1,18 @@
 # Moving the ship: a power-limited (fusion or electric) drive, sized by the Stuhlinger model.
-# The drive carries its own power plants; the habitat's plants run the city.
+# The drive carries its own power plants; the habitat's plants run the city. Research pass 1
+# (2026-11-06).
 
 jet_specific_power:
-  value: 500
-  low: 100
-  high: 2000
+  value: 1000
+  low: 300
+  high: 7500
   unit: W of jet power per kg of drive (plants, radiators, thrusters or nozzle)
-  conf: "placeholder"
-  source: "fusion-rocket concepts aim near 1 kW/kg of power plant; jet efficiency and radiators lower it (research queue)"
+  conf: "low"
+  source: "Direct Fusion Drive: 'The estimated range for the specific power is between 0.75 kW/kg to 1.25 kW/kg' (arXiv 2009.12621), 'between 0.3 and 1.5 kW/kg' (arXiv 2002.12686); Discovery II (NASA TM-2005-213559) 4,830 MW jet over 646 t dry = ~7.5 kW/kg; NASA: missions 'require ... specific powers (alpha) of ... 5 to 50 kW/kg'. Nuclear-electric today ~0.015 kW/kg jet (JIMO 41 kg/kWe)"
 tankage:
-  value: 0.05
-  low: 0.02
-  high: 0.1
+  value: 0.1
+  low: 0.03
+  high: 0.15
   unit: kg of tanks per kg of propellant
-  conf: "placeholder"
-  source: "placeholder"
+  conf: "medium"
+  source: "Discovery II 'Propellant cryo-tankage 88' t for 'Hydrogen propellant 861' t (0.10); NASA TM-104503: 'tankage fraction was assumed to be 0.09 for NBPH2 and 0.03 for either TPH2 or SLH2'; DFD Earth-Mars study 'ktank = 0.10'"

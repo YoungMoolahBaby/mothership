@@ -1,4 +1,5 @@
-# Power to live: food grown under lights, and everything else.
+# Power to live: food grown under lights, and everything else. Research pass 1 (2026-11-06).
+# Food power per person = food_energy / (led_to_par x par_to_food).
 
 food_energy:
   value: 2500
@@ -6,25 +7,25 @@ food_energy:
   high: 3000
   unit: kcal per person per day
   conf: "medium"
-  source: "typical adult intake range 2,000-3,000 kcal a day"
+  source: "typical adult intake range 2,000-3,000 kcal a day; NASA BVAD Rev2 (2022) plans '12.707 MJ/CM-d (~3000 kcal' per crew member"
 led_to_par:
-  value: 0.5
-  low: 0.4
+  value: 0.45
+  low: 0.3
   high: 0.65
-  unit: fraction of electric power reaching plants as photosynthetic light
-  conf: "low"
-  source: "horticultural LEDs; to source from fixture efficacy tables (research queue)"
+  unit: W of PAR reaching the canopy per W electric (fixture efficiency x delivery)
+  conf: "medium"
+  source: "fixtures: 'fixture efficacies of 2.5 to 2.8 umol J-1 for white + red fixtures' (Kusuma, Pattison & Bugbee 2020) at ~4.6-4.9 umol per J of PAR = ~0.54-0.57 W/W, limits 3.4-4.1 umol/J (~0.7-0.77); delivery: NASA BVAD Rev2 Table 4-86 'Light Delivery Efficiency' 0.3 low, 0.8 nominal. 0.57 x 0.8 = 0.45"
 par_to_food:
-  value: 0.01
-  low: 0.005
-  high: 0.02
-  unit: fraction of light energy ending up as edible food energy
-  conf: "placeholder"
-  source: "placeholder: crops store a few percent of light chemically and only part is edible (research queue)"
+  value: 0.02
+  low: 0.01
+  high: 0.04
+  unit: edible food energy / PAR energy at the canopy
+  conf: "medium"
+  source: "derived from NASA BVAD Rev2 Tables 4-89/4-90 (edible yield and light per crop): wheat ~1.3%, soybean ~1.4%, lettuce ~2%, rice ~2%, white potato ~5.4%, sweet potato ~6%; the all-crop diet ~2.7% before losses. Best-case wheat (Bugbee & Salisbury 1988) ~3%. Cross-check: 12-30 m^2 a person at ~600 W/m^2 of lighting = 7-18 kW (Salisbury, Bugbee & Bubenheim 1987)"
 other_power_per_person:
   value: 5
-  low: 2
-  high: 15
+  low: 3
+  high: 10
   unit: kW electric per person (homes, life support, industry, transport)
-  conf: "placeholder"
-  source: "US averages about 1.4 kW of electricity and about 9 kW of primary energy per person; a closed ship also recycles air and water (research queue)"
+  conf: "low"
+  source: "SP-413 ch. 5: 'The habitat's electrical power consumption per capita is 3 kW' (sunlit farms, so no crop lighting) and solar cells 'supply 50 MW of electric power required by the habitat' (5 kW a person); ISS ECLSS 5.31 kW for ~7 crew (BVAD Table 3-2), ~0.8 kW each; US electricity ~1.46 kW and primary energy ~9.3 kW a person (EIA)"
