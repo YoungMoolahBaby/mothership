@@ -1,0 +1,43 @@
+# Who lives aboard, and what the ship is asked to do. Scenarios are definitions, not estimates:
+# each is a speed change (delta-v) spread over a burn time; the report sizes the ship for each.
+
+population:
+  value: 10000
+  unit: people
+  conf: "high"
+  source: "design choice: a town of 10,000, the size of the 1975 NASA/Stanford torus study, for comparison"
+
+scenario:
+  park:
+    dv:
+      value: 0
+      unit: km/s
+      conf: "high"
+      source: "scenario: the ship stays where it is built (a city in orbit)"
+    years:
+      value: 1
+      unit: years
+      conf: "high"
+      source: "scenario: no burn"
+  tour:
+    dv:
+      value: 30
+      unit: km/s
+      conf: "high"
+      source: "scenario: a slow solar-system tour, roughly Earth orbit to the outer planets and back over decades"
+    years:
+      value: 20
+      unit: years of thrusting
+      conf: "high"
+      source: "scenario definition"
+  brisk:
+    dv:
+      value: 30
+      unit: km/s
+      conf: "high"
+      source: "scenario: the same delta-v in 2 years"
+    years:
+      value: 2
+      unit: years of thrusting
+      conf: "high"
+      source: "scenario definition"

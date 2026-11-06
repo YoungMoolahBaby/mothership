@@ -1,0 +1,17 @@
+# Moving the ship: a power-limited (fusion or electric) drive, sized by the Stuhlinger model.
+# The drive carries its own power plants; the habitat's plants run the city.
+
+jet_specific_power:
+  value: 500
+  low: 100
+  high: 2000
+  unit: W of jet power per kg of drive (plants, radiators, thrusters or nozzle)
+  conf: "placeholder"
+  source: "fusion-rocket concepts aim near 1 kW/kg of power plant; jet efficiency and radiators lower it (research queue)"
+tankage:
+  value: 0.05
+  low: 0.02
+  high: 0.1
+  unit: kg of tanks per kg of propellant
+  conf: "placeholder"
+  source: "placeholder"

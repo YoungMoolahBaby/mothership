@@ -1,0 +1,30 @@
+# Power to live: food grown under lights, and everything else.
+
+food_energy:
+  value: 2500
+  low: 2000
+  high: 3000
+  unit: kcal per person per day
+  conf: "medium"
+  source: "typical adult intake range 2,000-3,000 kcal a day"
+led_to_par:
+  value: 0.5
+  low: 0.4
+  high: 0.65
+  unit: fraction of electric power reaching plants as photosynthetic light
+  conf: "low"
+  source: "horticultural LEDs; to source from fixture efficacy tables (research queue)"
+par_to_food:
+  value: 0.01
+  low: 0.005
+  high: 0.02
+  unit: fraction of light energy ending up as edible food energy
+  conf: "placeholder"
+  source: "placeholder: crops store a few percent of light chemically and only part is edible (research queue)"
+other_power_per_person:
+  value: 5
+  low: 2
+  high: 15
+  unit: kW electric per person (homes, life support, industry, transport)
+  conf: "placeholder"
+  source: "US averages about 1.4 kW of electricity and about 9 kW of primary energy per person; a closed ship also recycles air and water (research queue)"

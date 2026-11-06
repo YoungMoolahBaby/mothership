@@ -1,0 +1,40 @@
+"""The whole model: it runs, adds up, and its Monte Carlo is ordered."""
+
+import numpy as np
+
+from mothership.cli import main
+from mothership.model import SCENARIOS, run
+from mothership.params import check_params, draw, load_params, values
+
+PARTS = ("shield_t", "shell_t", "ring_t", "air_t", "interior_t", "plants_t", "radiators_t")
+
+
+def test_params_clean():
+    assert check_params(load_params()) == []
+
+
+def test_central_run_adds_up():
+    r = run(values(load_params()))
+    s = r["ship"]
+    assert np.isfinite(s["dry_t"])
+    assert sum(float(s[k]) for k in PARTS) == float(s["dry_t"])
+    park = r["park"]
+    assert float(park["start_t"]) == float(s["dry_t"])  # no burn, no drive
+    for sc in SCENARIOS:
+        v = r[sc]
+        if bool(v["feasible"]):
+            total = float(s["dry_t"]) + float(v["propellant_t"]) + float(v["drive_t"]) + float(v["tanks_t"])
+            assert total == np.float64(v["start_t"]).item() or abs(total / float(v["start_t"]) - 1) < 1e-9
+
+
+def test_monte_carlo_ordered_and_deterministic():
+    params = load_params()
+    a = run(draw(params, 2000, 3))["ship"]["dry_t"]
+    b = run(draw(params, 2000, 3))["ship"]["dry_t"]
+    assert np.array_equal(a, b)
+    p10, p50, p90 = np.percentile(a, [10, 50, 90])
+    assert p10 <= p50 <= p90
+
+
+def test_cli_check_passes():
+    assert main(["check"]) == 0

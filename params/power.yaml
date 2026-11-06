@@ -1,0 +1,60 @@
+# Fusion power plants (stellarators: steady state) and the radiators that reject the heat.
+# All electric power ends as heat inside the habitat, and is radiated at habitat temperature;
+# the plants' own waste heat is radiated hotter.
+
+unit_mwe:
+  value: 500
+  low: 200
+  high: 1000
+  unit: MWe per plant
+  conf: "placeholder"
+  source: "placeholder: power-plant-scale stellarator"
+specific_mass:
+  value: 20
+  low: 5
+  high: 60
+  unit: t per MWe (plant, shielding toward the habitat, conversion)
+  conf: "placeholder"
+  source: "placeholder: ITER is about 23,000 t for 500 MW of fusion heat and no electricity; compact high-field designs aim far lower (research queue)"
+spares:
+  value: 1
+  low: 1
+  high: 2
+  unit: plants beyond the need
+  conf: "high"
+  source: "design rule: one plant can always be down for maintenance"
+thermal_efficiency:
+  value: 0.4
+  low: 0.3
+  high: 0.5
+  unit: electric out / heat in
+  conf: "low"
+  source: "placeholder range for thermal cycles at space-radiator temperatures (research queue)"
+plant_radiator_temp:
+  value: 700
+  low: 500
+  high: 900
+  unit: K
+  conf: "placeholder"
+  source: "placeholder"
+habitat_radiator_temp:
+  value: 290
+  low: 275
+  high: 305
+  unit: K
+  conf: "placeholder"
+  source: "placeholder: rejects heat from a habitat kept near room temperature"
+emissivity:
+  value: 0.9
+  low: 0.85
+  high: 0.95
+  unit: dimensionless
+  conf: "medium"
+  source: "typical radiator coatings"
+radiator_areal_density:
+  value: 8
+  low: 3
+  high: 15
+  unit: kg per m^2 of two-sided panel
+  conf: "placeholder"
+  source: "placeholder (research queue)"
