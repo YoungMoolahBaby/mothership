@@ -118,6 +118,23 @@ def test_food_system_accounts():
     assert float(food_system(r, n)["power"]) < float(f["power"])
 
 
+def test_magnet_structure():
+    from mothership.model import STRUCTURE, STRUCTURES, magnet_parts, ship
+
+    v = values(load_params())
+    assert STRUCTURE in STRUCTURES
+    s = ship(v)
+    # structure = Q rho E / sigma, conductor as given, and they make up the magnet
+    q, e = v["habitat.shield.magnet_q"], v["habitat.shield.magnet_energy"]
+    rho, sigma = v[f"magnet.{STRUCTURE}.density"], v[f"magnet.{STRUCTURE}.allowable"] * 1e6
+    assert float(s["magnet_structure_t"]) * 1e3 == pytest.approx(q * rho * e / sigma)
+    assert float(s["magnet_conductor_t"]) == pytest.approx(v["habitat.shield.conductor_mass"])
+    assert float(s["magnet_t"]) == pytest.approx(float(s["magnet_structure_t"]) + float(s["magnet_conductor_t"]))
+    # every candidate has its parameters, and a stronger-per-density material is lighter
+    masses = {m: float(magnet_parts(v, m)[1]) for m in STRUCTURES}
+    assert masses["cfrp"] < masses[STRUCTURE] < masses["steel_316ln"]
+
+
 def test_build_accounts():
     v = values(load_params())
     r = run(v)

@@ -136,7 +136,24 @@ def food_system(v: Mapping[str, float | np.ndarray], n) -> dict[str, np.ndarray]
     }
 
 
-def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
+# The shield magnet's support structure (params/magnet.yaml): the design's material, and the
+# candidates the report compares. It holds the magnetic pressure at ~20 K with the coils.
+# Pass 8 engineering call: unidirectional glass fibre in epoxy (glass from lunar regolith, the
+# epoxy's carbon from the asteroid ore; contracts with the wire; ~1/14 of carbon fibre's energy a kg).
+STRUCTURE = "glass_ud"
+STRUCTURES = ("cfrp", "steel_316ln", "invar", "aluminium_2219", "titanium", "g10cr", "glass_ud", "lunar_glass")
+
+
+def magnet_parts(v: Mapping[str, float | np.ndarray], structure: str) -> tuple[np.ndarray, np.ndarray]:
+    """The shield magnet's conductor and structure (kg): the structure holds the stored energy E
+    at the virial bound Q rho E / sigma of the chosen material."""
+    m = lambda key: v[f"magnet.{structure}.{key}"]
+    e = v["habitat.shield.magnet_energy"]
+    structure_kg = v["habitat.shield.magnet_q"] * m("density") * e / (m("allowable") * 1e6)
+    return v["habitat.shield.conductor_mass"] * 1e3, structure_kg
+
+
+def ship(v: Mapping[str, float | np.ndarray], structure: str = STRUCTURE) -> dict[str, np.ndarray]:
     """Everything but the drive. Masses in tonnes, power in MW, lengths in m."""
     n = v["mission.population"]
 
@@ -241,7 +258,8 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         v["habitat.shield.regolith.anchor_areal"], v["habitat.shield.regolith.anchor_dose"], v["habitat.shield.regolith.efold"],
         v["habitat.shield.dose_target"] / code,
     )
-    magnet = shield_area * v["habitat.shield.magnet_mass_per_area"] * 1e3
+    conductor_kg, structure_kg = magnet_parts(v, structure)
+    magnet = conductor_kg + structure_kg
     shield = shield_area * water_fs * 1e3 + magnet
     shield_water_only = shield_area * water_only * 1e3
     shield_regolith = shield_area * regolith * 1e3
@@ -339,6 +357,8 @@ def ship(v: Mapping[str, float | np.ndarray]) -> dict[str, np.ndarray]:
         "shield_t": shield / 1e3,
         "shield_t_per_m2": water_fs,
         "magnet_t": magnet / 1e3,
+        "magnet_conductor_t": conductor_kg / 1e3,
+        "magnet_structure_t": structure_kg / 1e3,
         "cryo_mw": cryo_w / 1e6,
         "shield_water_only_t": shield_water_only / 1e3,
         "shield_regolith_t": shield_regolith / 1e3,
@@ -386,10 +406,10 @@ def voyage(v: Mapping[str, float | np.ndarray], dry_t, scenario: str) -> dict[st
     }
 
 
-def build(v: Mapping[str, float | np.ndarray], s: Mapping[str, np.ndarray]) -> dict[str, np.ndarray]:
+def build(v: Mapping[str, float | np.ndarray], s: Mapping[str, np.ndarray], structure: str = STRUCTURE) -> dict[str, np.ndarray]:
     """Building it (pass 7): the shield water from near-Earth asteroids and lunar polar ice, the
-    structure and interior from lunar metals, the magnet's carbon-fibre structure (carbon from the
-    asteroid ore) and MgB2 wire; the energy to mine, refine and deliver each to the build site;
+    structure and interior from lunar metals, the magnet's support structure (`structure`, from
+    params/magnet.yaml) and MgB2 wire; the energy to mine, refine and deliver each to the build site;
     what launches from Earth. Energy-limited: the bulk build takes the total energy over the build
     site's power, after the preparation years. Masses in t, energy in J."""
     mj = 1e6
@@ -401,15 +421,16 @@ def build(v: Mapping[str, float | np.ndarray], s: Mapping[str, np.ndarray]) -> d
     dv, ve = b("water.nea_return_dv") * 1e3, b("water.tug_ve") * 1e3
     tug = dv * ve / (2.0 * b("water.tug_efficiency"))  # J per kg moved, low-thrust (dv << ve)
     e_water = nea * (b("water.nea_extract") * mj + tug) + lunar * (b("water.lunar_extract") + b("water.lunar_transport")) * mj
-    conductor = magnet * b("materials.conductor_share")
-    structure = magnet - conductor
+    conductor = s["magnet_conductor_t"] * 1e3
+    structure_kg = s["magnet_structure_t"] * 1e3
+    e_structure = structure_kg * (v[f"magnet.{structure}.energy"] + v[f"magnet.{structure}.delivery"]) * mj
     launch = b("materials.moon_launch_energy") * mj
     steel = (s["shell_t"] + s["ring_t"]) * 1e3
     interior = s["interior_t"] * 1e3
     e_dry = (
         steel * (b("materials.steel_energy") * mj + launch)
         + interior * (b("materials.interior_energy") * mj + launch)
-        + structure * b("materials.carbon_fibre_energy") * mj
+        + e_structure
         + conductor * (b("materials.conductor_energy") * mj + launch)
     )
     energy = e_water + e_dry
@@ -426,6 +447,7 @@ def build(v: Mapping[str, float | np.ndarray], s: Mapping[str, np.ndarray]) -> d
         "lunar_share_of_mapped": lunar / (b("water.lunar_recovery") * b("water.lunar_mapped") * 1e9),
         "energy_j": energy,
         "energy_water_j": e_water,
+        "energy_structure_j": e_structure,
         "energy_gw_yr": energy / 1e9 / YEAR,
         "bulk_years": bulk_years,
         "program_years": b("schedule.prep_years") + bulk_years,

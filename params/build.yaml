@@ -82,13 +82,6 @@ materials:
     unit: MJ/kg, the interior (steel, aluminium, glass, water, racks; judgement mix)
     conf: "low"
     source: "judgement between steel (~30 MJ/kg) and SP-413's lunar aluminium refinery ('capable of producing about 150 t/day of aluminum', 115 MW electric + 76 MW solar heat: ~111 MJ/kg)"
-  carbon_fibre_energy:
-    value: 560
-    low: 200
-    high: 1100
-    unit: MJ/kg of carbon fibre (the magnet's structure)
-    conf: "medium"
-    source: "Chen et al. 2025 (Resour. Conserv. Recycl. 219): 'the lowest CED is 198 MJ per kg ... while the highest is 1984 per kg ... with a median value of 562 MJ per kg'; carbon from the shield's own asteroid ore (Bennu 'carbon-rich (4.5-4.7 wt.% C)', Lauretta et al.): ~140 Mt of rock holds ~6 Mt of C against 0.3 Mt needed"
   conductor_energy:
     value: 80
     low: 40
@@ -96,13 +89,6 @@ materials:
     unit: MJ/kg of MgB2 wire (magnesium, boron, copper or iron sheath; judgement)
     conf: "low"
     source: "judgement: a metal wire like copper or steel products; magnesium from lunar regolith, boron from Earth (~7.6 kt, pass 7 researcher)"
-  conductor_share:
-    value: 0.45
-    low: 0.35
-    high: 0.6
-    unit: share of the magnet's mass that is conductor (the rest carbon-fibre structure)
-    conf: "low"
-    source: "derived: MgB2 at ~200 A/mm^2 operating (Sam Dong: 1,000 A/mm^2 over the superconductor at 2 T, 20 K; Columbus '1'000 A' at 20 K, 1 T in 2 mm^2) over the active-shield run's 6.15e12 A m at 8,000 kg/m^3 = 0.25 Mt, with 0.30 Mt of structure"
   wire_kg_per_km:
     value: 16
     low: 12

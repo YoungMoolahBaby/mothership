@@ -207,6 +207,17 @@ Sources behind parameters and checks. Exact quotes live in the `source` fields o
   Jones 2018 (NASA Ames, launch costs); NASA OTPS 2024 space solar power; SpaceX (company);
   NASA ISS facts; Three Gorges (Waterpower 2000).
 
+## The magnet's structure (pass 8)
+
+- ITER magnet allowables: Summers, Miller & Heim 1989 (LLNL, https://www.osti.gov/servlets/purl/5807154);
+  NCSX/FIRE structural design criteria (PPPL); SPARC TFMC (arXiv 2308.12301).
+- NIST cryogenic materials data (thermal contraction fits: 316, 5083, G-10CR, Invar, Ti-6Al-4V):
+  https://trc.nist.gov/cryogenics/materials/
+- McHenry & Reed, NBSIR 79-1609 (cryogenic toughness); Ogawa et al. 1986 (9Ni steels); Kasen et al.
+  and NBSIR 80-1627 (G-10CR); Convair 1973 (2219-T87 at 20 K, NASA); NASA TP-3288 (Ti-6Al-4V ELI in
+  liquid hydrogen); NOL TR 71-201 and Rivers et al. 2001 (carbon fibre composites at cryogenic
+  temperatures); Vaniman & Papike 1977 (lunar chromium); RWTH MoonFibre (via Azami et al.).
+
 ## Food and power
 
 - Kusuma, Pattison & Bugbee 2020, "From physics to fixtures to food", Horticulture Research:

@@ -1,0 +1,48 @@
+# The shield magnet's support structure (pass 8): candidate materials at ~20 K, where the
+# structure sits with the coils. allowable is the design stress at 20 K (ITER's rule, min(2/3
+# yield, 1/2 ultimate), for metals; 1/3 ultimate for composites, after NCSX), energy the energy to
+# make a kg, delivery the energy to bring it to L5 (~5 MJ/kg from the Moon by mass driver, ~2
+# for asteroid metal by tug, 0 where it is made from the asteroid ore already brought for the
+# shield). The design's material is model.STRUCTURE; the report compares them all.
+# structure mass = Q rho E / sigma: at Q = 3 and E = 7.74e13 J, 2.32e14 x rho/sigma kg.
+
+cfrp:
+  allowable: {value: 1200, low: 800, high: 1600, unit: MPa, conf: "medium", source: "Toray T1100G composite 3,460 MPa tension, 1,870 compression ('Normalized to 60% fiber volume'); at -253 C impregnated tow '22.2' x10^8 N/m^2 (NOL TR 71-201, 1972-era fibre); but 'most composite materials will microcrack at LH2 temperature due to large transverse thermal residual stresses' (Rivers et al. 2001, NASA). Allowable judgement, safety factor ~2-3"}
+  density: {value: 1550, unit: kg/m^3, conf: "medium", source: "derived, 60% fibre at 1.79 g/cm^3 in epoxy"}
+  energy: {value: 562, low: 198, high: 1100, unit: MJ/kg, conf: "medium", source: "Chen et al. 2025 (Resour. Conserv. Recycl. 219): 'the lowest CED is 198 MJ per kg ... while the highest is 1984 per kg ... with a median value of 562 MJ per kg'. No route found for making carbon fibre in space"}
+  delivery: {value: 0, unit: MJ/kg, conf: "low", source: "carbon from the shield's asteroid ore (Bennu 'carbon-rich (4.5-4.7 wt.% C)'); its contraction differs from the wire by ~0.25-0.3% (sliding interfaces needed, pass-8 researcher)"}
+steel_316ln:
+  allowable: {value: 650, low: 460, high: 825, unit: MPa, conf: "medium", source: "ITER: 'the maximum allowable stresses in the magnet conduit and case is S m = minimum (2/3 sigma y, 1/2 sigma u)' with 316LN at 4 K '980 1500 270' (yield, ultimate MPa, K_IC) and 'the 650 MPa limit for 316 LN' (Summers, Miller & Heim 1989, LLNL); low: NCSX's 1/3 ultimate '459.6 Mpa'; high: JK2LB class (825). SPARC's TF case of Nitronic 50 at 20 K had 'stresses approaching 1 GPa during operation'"}
+  density: {value: 7950, unit: kg/m^3, conf: "high", source: "handbook"}
+  energy: {value: 50, low: 30, high: 100, unit: MJ/kg, conf: "low", source: "ICE 'Stainless steel' 56.7 MJ/kg (Earth); in space ~30 MJ/kg steel plus Cr and Ni (judgement). Chromium is the bottleneck: lunar ferrobasalt is 'Cr2O3~0.2--0.3%' (Vaniman & Papike 1977), so ~0.48 Mt of Cr for 2.8 Mt of steel means ~280 Mt of basalt"}
+  delivery: {value: 4, unit: MJ/kg, conf: "low", source: "judgement: iron and nickel from asteroid metal by tug (~2), chromium from the Moon by mass driver (~5)"}
+invar:
+  allowable: {value: 450, low: 300, high: 600, unit: MPa, conf: "low", source: "judgement: no 4-20 K strength found for Fe-36Ni; it is austenitic, so it stays tough when cold (raw meteoritic Fe-Ni and 9% Ni steel do not: 9Ni steels 'showed the clear ductile and brittle transition and a low energy brittle fracture below 30 K', Ogawa et al. 1986; 'Even the cryogenic nickel steels are brittle at 4K', McHenry & Reed, NBSIR 79-1609)"}
+  density: {value: 8050, unit: kg/m^3, conf: "medium", source: "judgement (Fe-36Ni)"}
+  energy: {value: 10, low: 3, high: 30, unit: MJ/kg, conf: "low", source: "judgement: asteroid metal arrives reduced ('Ni is always present; the concentration is nearly always higher than 5% and may be as high as about 25%'); melting ~1.2 MJ/kg; enriching the nickel to 36% (carbonyl process) not costed. It contracts only ~0.04% to 20 K (NIST), ~0.2% less than the wire"}
+  delivery: {value: 2, unit: MJ/kg, conf: "low", source: "judgement: asteroid metal by tug"}
+aluminium_2219:
+  allowable: {value: 313, low: 270, high: 370, unit: MPa, conf: "medium", source: "2219-T87 at 20 K: yield 456-566 MPa (mean 491), ultimate 576-717 (mean 627) (Convair 1973, NASA, Table 2); ITER rule min(327, 313); 5083-O 'a typical yield strength of 171 MPa (25 ksi) at 4K' (McHenry & Reed), ~114 allowable"}
+  density: {value: 2840, unit: kg/m^3, conf: "high", source: "2219"}
+  energy: {value: 130, low: 111, high: 155, unit: MJ/kg, conf: "medium", source: "SP-413's lunar aluminium refinery ~111 MJ/kg; ICE general 155; 2219 needs 6.3% copper, scarce (judgement)"}
+  delivery: {value: 5, unit: MJ/kg, conf: "medium", source: "lunar highlands by mass driver"}
+titanium:
+  allowable: {value: 730, low: 600, high: 850, unit: MPa, conf: "low", source: "Ti-6Al-4V ELI 'average ultimate strength of 129.1 ksi at 70 F and 212.2 ksi at -423 F' (1,463 MPa at 20 K; NASA TP-3288), half the ultimate; but 'Titanium alloys are brittle at 4K, expensive and difficult to fabricate' (McHenry & Reed)"}
+  density: {value: 4430, unit: kg/m^3, conf: "high", source: "Ti-6Al-4V"}
+  energy: {value: 685, low: 650, high: 720, unit: MJ/kg, conf: "low", source: "commercial database (spotmaterial.com); from lunar ilmenite via Kroll or FFC, vanadium scarce (judgement)"}
+  delivery: {value: 5, unit: MJ/kg, conf: "medium", source: "lunar by mass driver"}
+g10cr:
+  allowable: {value: 287, low: 165, high: 290, unit: MPa, conf: "medium", source: "G-10CR (woven E-glass/epoxy) at 4 K: 'Tensile Strength (Warp) 862', fill 496 (NCSX Table 4-5, after Kasen et al.); NCSX: 'Warp and Fill tensile allowable with a Factor of Safety F.S.=3 or 1/3 ultimate is 167 Mpa'; 1/3 of warp 287. Its warp contracts 0.242% to 20 K (NIST), matching the wire. The standard cryogenic support material"}
+  density: {value: 1900, unit: kg/m^3, conf: "high", source: "derived from NBSIR 80-1627 (13.188 g / 6.93 cm^3)"}
+  energy: {value: 40, low: 20, high: 80, unit: MJ/kg, conf: "low", source: "judgement: glass melting ~2 MJ/kg plus furnace losses, ~30% epoxy at ~100 MJ/kg"}
+  delivery: {value: 5, unit: MJ/kg, conf: "low", source: "glass from lunar regolith by mass driver; the epoxy's carbon (~0.2 Mt) from the asteroid ore"}
+glass_ud:
+  allowable: {value: 500, low: 290, high: 760, unit: MPa, conf: "low", source: "derived (pass-8 researcher, judgement scaling): all fibre one way, 862 x 74/42 ~ 1,520 MPa ultimate at 4 K (G-10CR's 'a 42:32 warp-to-fill ratio', NBSIR 80-1627), at 1/3 ultimate; low end G-10CR's warp allowable. No unidirectional glass/epoxy data at 4-20 K found"}
+  density: {value: 2000, unit: kg/m^3, conf: "medium", source: "judgement (unidirectional glass/epoxy)"}
+  energy: {value: 40, low: 20, high: 80, unit: MJ/kg, conf: "low", source: "judgement as G-10CR; basalt fibre 'Embodied energy MJ/kg 18' (database); fibre spun from regolith simulant 'as thin as 17 um' (RWTH MoonFibre, Azami et al.)"}
+  delivery: {value: 5, unit: MJ/kg, conf: "low", source: "glass from lunar regolith by mass driver; the epoxy's carbon from the asteroid ore (0.93 x 0.3 x 0.75 ~ 0.2 Mt of ~6 Mt available)"}
+lunar_glass:
+  allowable: {value: 140, low: 80, high: 300, unit: MPa, conf: "low", source: "judgement: fibre drawn from regolith melt at ~700 MPa (Tucker & Ethridge simulant fibre ~60 ksi uncoated, 102 coated with 8 wt% boria: unverified, search text only), 1/5 for a composite allowable"}
+  density: {value: 2000, unit: kg/m^3, conf: "low", source: "judgement"}
+  energy: {value: 20, low: 10, high: 40, unit: MJ/kg, conf: "low", source: "judgement: melt and draw only, glass or regolith matrix (no strength data for glass-matrix composites found)"}
+  delivery: {value: 5, unit: MJ/kg, conf: "medium", source: "lunar by mass driver"}

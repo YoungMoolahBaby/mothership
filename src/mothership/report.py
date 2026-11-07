@@ -169,7 +169,29 @@ def build(params: dict[str, Param], n: int = 5000, seed: int = 1) -> str:
         c = float(base["build"][key])
         p10, p50, p90 = _pct(np.asarray(mc["build"][key], dtype=float))
         lines.append(f"| {label} | {_fmt(fmt, c)} | {_fmt(fmt, p10)} | {_fmt(fmt, p50)} | {_fmt(fmt, p90)} | {unit} |")
-    parts = tour_dv(values(params))
+    # Magnet structure options: each material at the central values, against the design's.
+    from .model import STRUCTURE, STRUCTURES, build as build_of, ship as ship_of
+
+    cv = values(params)
+    lines += [
+        "",
+        "## The magnet's structure",
+        "",
+        f"The magnet's support holds {float(cv['habitat.shield.magnet_energy']):.2e} J at Q = {float(cv['habitat.shield.magnet_q']):.0f} "
+        f"(structure = Q rho E / sigma), at ~20 K with the coils. The design uses `{STRUCTURE}`. Central values:",
+        "",
+        "| material | MPa at 20 K | kg/m^3 | MJ/kg | structure t | ship t | build GW yr | bulk years |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for m in STRUCTURES:
+        sm = ship_of(cv, m)
+        bm = build_of(cv, sm, m)
+        tag = " (design)" if m == STRUCTURE else ""
+        lines.append(
+            f"| {m}{tag} | {cv[f'magnet.{m}.allowable']:,.0f} | {cv[f'magnet.{m}.density']:,.0f} | {cv[f'magnet.{m}.energy']:,.0f} | "
+            f"{float(sm['magnet_structure_t']):,.0f} | {float(sm['dry_t']):,.0f} | {float(bm['energy_gw_yr']):.1f} | {float(bm['bulk_years']):.1f} |"
+        )
+    parts = tour_dv(cv)
     lines += [
         "",
         f"## The tour: {' -> '.join(['earth', *TOUR, 'earth'])}",

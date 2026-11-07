@@ -376,17 +376,48 @@ unknown: the mass spread is now 12.3-14.1 Mt). New: `params/build.yaml`, `model.
    Gorges' tonnage rate.
 
 **Finding: carbon fibre is half the build.** The magnet's 0.3 Mt of carbon-fibre structure takes
-~50% of the energy (5.4 of 10.6 GW yr) at 562 MJ/kg; the 11 Mt of water ~31%. A steel structure
-(~3x the mass at ~30 MJ/kg) would cut the build energy by ~40% for ~0.6 Mt more ship; or carbon
-fibre made with solar heat.
+~50% of the energy (5.4 of 10.6 GW yr) at 562 MJ/kg; the 11 Mt of water ~31%. (Pass 8
+corrects the steel estimate written here at first: steel is ~9.5x carbon fibre's mass, not ~3x.)
 
-## Next (pass 8)
+## Pass 8 (2026-11-06): the magnet's structure
+
+Carbon fibre against steel and the other materials that work at ~20 K, where the structure sits
+with the coils (one researcher; ITER, NCSX, NIST and NASA cryogenic data). The model now computes
+the structure as Q rho E / sigma from the magnet's stored energy (`habitat.shield.magnet_energy`
+7.74e13 J, `magnet_q` 3, `conductor_mass` 0.25 Mt) and the chosen material (`params/magnet.yaml`,
+`model.STRUCTURE`), and the report compares them all:
+
+| material | MPa at 20 K | structure Mt | ship Mt | build GW yr | bulk years |
+|---|---|---|---|---|---|
+| carbon fibre | 1,200 | 0.30 | 12.46 | 10.6 | 21.3 |
+| stainless 316LN (ITER) | 650 | 2.84 | 15.00 | 10.1 | 20.3 |
+| Invar (Fe-36Ni) | 450 (judgement) | 4.15 | 16.31 | 6.9 | 13.7 |
+| aluminium 2219 | 313 | 2.11 | 14.26 | 14.3 | 28.6 |
+| titanium Ti-6Al-4V ELI | 730 | 1.41 | 13.57 | 36.1 | 72.2 |
+| G-10CR glass/epoxy | 287 | 1.54 | 13.70 | 7.5 | 15.0 |
+| **unidirectional glass/epoxy** | **500** | **0.93** | **13.09** | **6.6** | **13.2** |
+| fibre from lunar glass | 140 (unverified) | 3.32 | 15.48 | 7.9 | 15.8 |
+
+- **Engineering call: unidirectional glass fibre in epoxy.** It costs 0.63 Mt more ship (+5%) for
+  38% less build energy and **~8 years less bulk build** (go-ahead to move-in ~34 -> ~26 years);
+  the glass comes from lunar regolith (fibre has been spun from simulant "as thin as 17 um",
+  RWTH MoonFibre), the epoxy's ~0.2 Mt of carbon from the asteroid ore, and its contraction to 20 K
+  matches the wire (G-10CR's warp 0.242%; carbon fibre's mismatch of ~0.25-0.3% needs sliding
+  joints). Carbon fibre has no known route to being made in space.
+- Ruled out: raw asteroid iron-nickel and 9% Ni steel are brittle at 20 K ("a low energy brittle
+  fracture below 30 K", Ogawa et al. 1986); 316LN is proven but heavy, and its chromium would
+  take ~280 Mt of lunar basalt ("Cr2O3~0.2--0.3%"); aluminium and titanium lose on both mass and
+  energy ("Titanium alloys are brittle at 4K, expensive and difficult to fabricate").
+- Its weak point: no unidirectional glass/epoxy data at 4-20 K were found; 500 MPa scales G-10CR's
+  "Tensile Strength (Warp) 862" to all-warp fibre at 1/3 of ultimate. At G-10CR's own 287 MPa the
+  structure is 1.54 Mt and the build 7.5 GW yr, still better than carbon fibre on build time.
+
+## Next (pass 9)
 
 1. **cortenforge-cfsem: the hybrid's open items**: transport for the secondaries (x2 assumed: at
    x3 the dose with the magnet on is ~14 mSv/yr; the fail-safe limit doesn't move), the support
-   structure's stresses (Q) and its material (carbon fibre is half the build energy; steel ~3x the
-   mass at ~1/20 the energy a kg), quench protection, the cryogenic budget (the ~80 K intercept)
-   and MgB2's current at ~20 K and 1-2 T; then the collider's dipoles round the ring and the
+   structure's stresses (Q) and a cryogenic test of unidirectional glass/epoxy, quench
+   protection, the cryogenic budget (the ~80 K intercept) and MgB2's current at ~20 K and 1-2 T; then the collider's dipoles round the ring and the
    hospital's MRI magnet.
 2. **The build**: the asteroid water's extraction energy (unsourced), hauling lunar ice from the
    poles, the build-site power (0.5 GW sets ~21 years), a schedule with the industry's growth.

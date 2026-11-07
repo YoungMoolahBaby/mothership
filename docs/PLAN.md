@@ -80,6 +80,14 @@ computed properly instead of guessed.
 - ~3.4e17 J: ~21 years of bulk build at 0.5 GW after ~13 years of preparation, ~34 years from
   go-ahead to move-in. Carbon fibre is half the build energy.
 
+## Pass 8: the magnet's structure (done 2026-11-06)
+
+- Structure = Q rho E / sigma from the magnet's stored energy and the material; eight materials at
+  ~20 K compared in the report (`params/magnet.yaml`).
+- Engineering call: unidirectional glass fibre in epoxy (glass from the Moon, carbon for the epoxy
+  from the asteroid ore): 0.93 Mt, ship 13.1 Mt (+5%), build energy -38%, ~26 years from go-ahead
+  to move-in (was ~34). Steel is ~9.5x carbon fibre's mass, not ~3x as first written.
+
 ## Decisions
 
 - **2026-11-06, own repo** (Jon): the sizing model lives here; subsystems that need cfsem or
@@ -143,6 +151,10 @@ computed properly instead of guessed.
 - **2026-11-06, the magnet's conductor: MgB2** (engineering call, pass 7): REBCO tape at ~3e7 km
   would take ~6,000 years of today's world output; MgB2 wire suits the 1.25 T field at ~20 K, from
   abundant magnesium, made by the build's own wire lines.
+- **2026-11-06, the magnet's structure: glass fibre** (engineering call, pass 8; Jon asked for carbon
+  fibre against steel): unidirectional glass/epoxy, buildable from lunar glass and asteroid carbon,
+  contracting with the wire, ~1/14 of carbon fibre's energy a kg; carbon fibre is lighter but has
+  no space production route and was half the build energy; steel is ~9.5x carbon fibre's mass.
 - **2026-11-06, missions to other planets** (Jon): the ship travels and sends expeditions down to
   planets and moons while it stays in orbit. To size: landers and their propellant (a lander per
   body type: airless moons, Mars-like, thick atmospheres), a hangar at the still hub (docking is
@@ -151,9 +163,9 @@ computed properly instead of guessed.
 
 ## Next
 
-1. **Pass 8** (`docs/RESEARCH.md`): the hybrid's open items in cortenforge-cfsem (transport for
-   the secondaries, the structure, quench protection, the cryogenic budget), the magnet's
-   structure material (carbon fibre vs steel), refuelling and moon flybys on the tour.
+1. **Pass 9** (`docs/RESEARCH.md`): the hybrid's open items in cortenforge-cfsem (transport for
+   the secondaries, the structure's stresses, quench protection, the cryogenic budget), the
+   build's open points, refuelling and moon flybys on the tour.
 2. **Subsystems from cortenforge-cfsem**, each replacing a guess with a computed number:
    active radiation shield (cfsem fields + particle orbits) against the 10 Mt passive shield;
    reactor magnets (the stellarator project: stored energy, forces, structure mass); spin dynamics
